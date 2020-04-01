@@ -1,0 +1,27 @@
+{
+  "name": "gitbook-frontend",
+  "version": "1.0.0",
+  "description": "前端知识体系系列",
+  "main": "index.js",
+  "scripts": {
+    "init": "gitbook init",
+    "build": "gitbook build",
+    "serve": "gitbook serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wchaochao/gitbook-frontend.git"
+  },
+  "keywords": [
+    "gitbook"
+  ],
+  "author": "wchaochao",
+  "bugs": {
+    "url": "https://github.com/wchaochao/gitbook-frontend/issues"
+  },
+  "homepage": "https://github.com/wchaochao/gitbook-frontend#readme",
+  "devDependencies": {
+    "gitbook": "^3.2.2",
+    "gitbook-cli": "^2.3.0"
+  }
+}
