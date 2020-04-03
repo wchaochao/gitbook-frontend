@@ -2,65 +2,84 @@
 
 * [Introduction](README.md)
 
+## 目录
+
 ## XML篇
 
-* [XML](lib/xml/index.md)
-* [htmlparser2源码](lib/xml/htmlparser2.md)
-* [DOM标准](lib/xml/dom.md)
-* [jQuery源码](lib/xml/jquery.md)
+* [XML基础](lib/xml/base.md)
+* DTD
+
+## htmlparser2篇
+
+* [Tokenizer](lib/xml/tokenzier.md)
+* Parser
+* DOMHandler
+
+## DOM标准篇
+
+* [节点](lib/dom/node.md)
+* 节点监控
+* [事件](lib/dom/event.md)
+* 事件中断
+* 选区
+* jQuery源码
 
 ## HTML篇
 
-* [HTML](lib/html/index.md)
-* [HTML标准](lib/html/standard.md)
-* [EJS](lib/html/ejs.md)
+* [HTML基础](lib/dom/base.md)
+* HTML标准
+* EJS
 
 ## CSS篇
 
-* [CSS](lib/css/index.md)
-* [cssom源码](lib/css/cssom.md)
-* [CSS接口](lib/css/css-interface.md)
-* [CSS预处理器](lib/css/css-preprocessor.md)
+* CSS基础
+* CSS接口
+* cssom源码
+* CSS预处理器
 
 ## JavaScript篇
 
-* [ES5标准](lib/javascript/es5.md)
-* [ES6标准](lib/javascript/es6.md)
-* [acorn源码](lib/javascript/acorn.md)
-* [TypeScript](lib/javascript/typescript.md)
-* [Lodash源码](lib/javascript/lodash.md)
+* ES5标准
+* ES6标准
+* acorn源码
+* TypeScript
+* Lodash源码
 
-## 浏览器篇
+## Web API
 
-* [Web API](lib/browser/web-api.md)
-* [浏览器](lib/browser/index.md)
-* [axios源码](lib/browser/axios.md)
-* [ueditor源码](lib/browser/ueditor.md)
+* [Web Component](lib/web-api/web-component.md)
+* axios源码
+* ueditor源码
 
 ## 工程篇
 
-* [travis CI](lib/project/travis-ci.md)
-* [git](lib/project/git.md)
-* [npm](lib/project/npm.md)
-* [eslint](lib/project/eslint.md)
-* [babel](lib/project/babel.md)
-* [webpack](lib/project/webpack.md)
-* [mocha](lib/project/mocha.md)
-* [chai](lib/project/chai.md)
-* [karma](lib/project/karma.md)
+* travis CI
+* git
+* npm
+* eslint
+* babel
+* webpack
+* mocha
+* chai
+* karma
 
 ## 框架篇
 
-* [snabbdom源码](lib/frame/snabbdom.md)
-* [vue源码](lib/frame/vue.md
-* [vue-router源码](lib/frame/vue-router.md)
-* [vuex源码](lib/frame/vuex.md)
-* [vue ssr源码](lib/frame/ssr.md)
-* [vue3](lib/frame/vue3.md)
-* [react](lib/frame/react.md)
+* snabbdom源码
+* vue源码
+* vue-router源码
+* vuex源码
+* vue ssr源码
+* vue3
+* react
+
+## 微前端篇
+
+* [微前端](lib/micro-frontend/index.md)
+* single-spa
 
 ## 编程篇
 
-* [JavaScript设计模式](lib/program/javascript-design-mode.md)
-* [HeadFirst设计模式](lib/headfirst-design-mode.md)
-* [编程语言实现模式](lib/language-implement.md)
+* JavaScript设计模式
+* HeadFirst设计模式
+* 编程语言实现模式

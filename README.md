@@ -10,22 +10,35 @@
 
 ### XML篇
 
-* XML
-* htmlparser2源码
-* DOM标准
+* XML基础
+* DTD
+
+### htmlparser2篇
+
+* Tokenizer
+* Parser
+* DOMHandler
+
+### DOM标准篇
+
+* 节点
+* 节点监控
+* 事件
+* 事件中断
+* 选区
 * jQuery源码
 
 ### HTML篇
 
-* HTML
+* HTML基础
 * HTML标准
 * EJS
 
 ### CSS篇
 
-* CSS
-* cssom源码
+* CSS基础
 * CSS接口
+* cssom源码
 * CSS预处理器
 
 ### JavaScript篇
@@ -36,10 +49,9 @@
 * TypeScript
 * Lodash源码
 
-### 浏览器篇
+### Web API
 
-* Web API
-* 浏览器
+* Web Component
 * axios源码
 * ueditor源码
 
@@ -65,6 +77,11 @@
 * vue3
 * react
 
+### 微前端篇
+
+* 微前端
+* single-spa
+
 ### 编程篇
 
 * JavaScript设计模式
@@ -83,3 +100,4 @@
 * [ES5标准](http://book.wchaochao.com/gitbook-ecmascript-standard/)
 * [ES6标准](https://www.ecma-international.org/ecma-262/10.0/index.html#sec-intro)
 * [acorn](https://github.com/acornjs/acorn)
+* [micro-frontends](https://martinfowler.com/articles/micro-frontends.html)

@@ -1,12 +1,10 @@
-# DOM标准
+# 节点
 
 标签（空格分隔）： 前端知识体系
 
 ---
 
-## 节点
-
-### DOM树
+## DOM树
 
 XML被解析器解析为DOM树
 
@@ -23,14 +21,14 @@ Document节点
         CDATA节点
 ```
 
-#### 关系
+### 关系
 
 * 父子关系
 * 祖先、后代关系
 * 兄弟关系
 * 先后关系
 
-#### 操作
+### 操作
 
 * 查询：查找某个节点下符合条件的后代节点
 * 遍历：遍历某个节点及其所有后代节点
@@ -39,7 +37,7 @@ Document节点
  * 深度优先：先处理子节点，再处理兄弟节点
  * 广度优先：先处理兄弟节点，再处理子节点
 
-### Shadow DOM
+## Shadow DOM
 
 * shadow host: shadow dom的宿主元素
 * shadow root: shadow dom的根元素
@@ -50,9 +48,9 @@ shadow host与shadow dom被影子边界分隔，shadow dom可以有自己的html
 * css: 通过伪元素影响host样式，host也可以通过伪元素影响shadow dom
 * js: shadow dom上的事件有些会被阻塞，有些会被重定向到host，content的事件会被重定向到host的后代元素
 
-### Node接口
+## Node接口
 
-#### 节点属性
+### 节点属性
 
 | 节点 | nodeType | nodeName | nodeValue | textContent |
 | -- | -- | -- | -- | -- |
@@ -64,7 +62,7 @@ shadow host与shadow dom被影子边界分隔，shadow dom可以有自己的html
 | DocumentType | 10 | name属性 | null | null |
 | DocumentFragment | 11 | `#document-fragment` | null | 所有后代文本 |
 
-#### 关系属性
+### 关系属性
 
 * parentNode: 父节点，只能是Element/Document/DocumentFragment
 * parentElement: 父元素节点
@@ -74,13 +72,19 @@ shadow host与shadow dom被影子边界分隔，shadow dom可以有自己的html
 * firstChild: 第一个子节点
 * lastChild: 最后一个子节点
 
-#### document相关节点
+遍历
+
+* childNodes
+* firstChild + nextSibling
+* lastChild + previousSibling
+
+### document相关节点
 
 * baseURI: document.URL
 * ownerDocument: document节点，document.ownerDocument为null
 * isConnected: 是否在DOM树上
 
-#### 关系方法
+### 关系方法
 
 * compareDocumentPosition(otherNode): otherNode相对于node的关系
  * 0 - 同一个节点
@@ -100,44 +104,56 @@ shadow host与shadow dom被影子边界分隔，shadow dom可以有自己的html
 * contains(otherNode): otherNode为node节点或node的后代节点
 * hasChildNodes(): 是否有后代节点
 
-#### 操作方法
+### 操作方法
 
 * normalize(): 删除空文本节点，合并相邻的文本节点
 * cloneNode(deep): 克隆节点（类型相同，特性属性相同）
 * insertBefore(newChild, referenceChild): 插入到指定子节点前
 * appendChild(newChild): 追加子节点
 * removeChild(child): 删除子节点
-* replaceNode(newChild, referenceChild): 删除子节点
+* replaceNode(newChild, referenceChild): 替换子节点
 * getRootNode(): 获取根节点
 
-### NodeList接口
+## NodeList接口
 
 类数组对象，实时集合
 
-#### 属性
+### 属性
 
-* <index>: 索引
+* `<index>`: 索引
 * length: 长度
 
-#### 方法
+### 方法
 
 * forEach(callback, thisArg): 遍历节点
 * keys(): key迭代器
 * values(): value迭代器
 * entries(): [key, value]迭代器
 
-#### 创建
+### 创建
 
 * childNodes
 * getElementsByName()
 * querySelector(): 静态集合
 
-#### HTMLCollection接口
+## HTMLCollection接口
 
-## 节点监控
+类数组对象，实时集合
 
-## 事件
+### 属性
 
-## 事件中断
+* `<index>`: 索引
+* `<id>`: id索引
+* `<name>`: name索引
+* length: 长度
 
-## 选区
+### 创建
+
+* children
+* document集合属性
+ * document.scripts
+ * document.images
+ * document.links
+ * document.forms
+* getElementsByTagName()
+* getElementsByClassName()
