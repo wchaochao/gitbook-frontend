@@ -14,7 +14,7 @@
 
 * 网页：HTML、SVG、MathML、化学ML
 * 订阅：RSS、ATOM、RDF
-* 描述XML：XSL（XSLT、Xpath、XSL-FO）、XLink
+* 描述XML：XSL（XSLT、XPath、XSL-FO）、XLink
 
 ### 标记
 
@@ -38,13 +38,24 @@
 ## 注释
 
 ```xml
-<!-- 注释 -->
+<!-- 注释 不能有两相连的连字符 -->
 ```
 
 ## CDATA
 
 ```xml
-<![CDATA[ 字符数据 ]]>
+<![CDATA[ 字符数据 不是结尾三字符 ]]>
+```
+
+实例
+
+```xml
+<![CDATA[
+    <?xml version="1.0"?>
+    <!-- 不是注释 -->
+    <greeting>hello xml</greeting>
+    <h1></h1>
+  ]]>
 ```
 
 ## 标记
@@ -59,16 +70,16 @@
 
 ### 标记名
 
-* 字母、数字、下划线组成
-* 数字不开头
+* 字母、数字、下划线、连字符组成
+* 字母、下划线开头
 * 大小写不同
 
 ### 属性
 
-由属性名和属性值组成
+等号分隔的属性名、属性值对
 
-* 属性名同标记名
-* 属性值同文本，可以有实体
+* 属性名同标记名，不能重复
+* 属性值同文本，引号包围，可以有实体
 
 ### 内容
 
@@ -96,14 +107,22 @@
 * 主文档
 * 附属文档：文本文件（如CSS文件）、二进制文件（如图片）
 
+### 完整性
+
+* 以xml声明开头，XML解析器会将开头的几个字符与<?xml的各类编码比较确认编码方式
+* 所有元素包含在根元素中
+* 元素正确结束、正确嵌套
+* 属性值引号包围
+* 实体分号结尾
+
 ```xml
-<?xml version="1.0"?>
+<?xml version="1.0"?> <!-- xml声明 在开头 -->
 <?xml-stylesheet type="text/css" href="./demo.css"?>
 <!-- 注释 -->
 <![CDATA[ 字符数据 ]]>
-<root attrName="attrValue">
+<root attrName="attrValue"> <!-- 根元素 -->
   文本&lt;
-  <tagName>嵌套标记</tagName>
+  <tagName prop="&lt;">嵌套标记</tagName>
   <!-- 注释 -->
   <![CDATA[ 字符数据 ]]>
 </root>

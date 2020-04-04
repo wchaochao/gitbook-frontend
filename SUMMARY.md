@@ -11,7 +11,7 @@
 
 ## htmlparser2篇
 
-* [Tokenizer](lib/xml/tokenzier.md)
+* [Tokenizer](lib/htmlparser2/tokenzier.md)
 * Parser
 * DOMHandler
 
@@ -26,7 +26,7 @@
 
 ## HTML篇
 
-* [HTML基础](lib/dom/base.md)
+* [HTML基础](lib/html/base.md)
 * HTML标准
 * EJS
 
