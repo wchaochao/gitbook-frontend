@@ -10,17 +10,60 @@
 
 ![结构](https://martinfowler.com/articles/micro-frontends/deployment.png)
 
-### 主服务
+### 主应用
 
 * 渲染公共部分
 * 解决认证和导航等跨应用问题
-* 加载并渲染从服务
+* 根据路由加载、渲染、移除子应用
 
-### 从服务
+### 子应用
 
 独立开发，提供加载资源
 
-## 方式
+## 机制
+
+![机制](https://pic2.zhimg.com/80/v2-d55549366b52cde19c93835cfa2a58c9_720w.jpg)
+
+### 加载
+
+加载子应用资源
+
+#### 资源
+
+* Config Entry
+* HTML Entry
+
+#### 方式
+
+* 按需加载
+* 预加载
+* 公共依赖加载: 使用webpack的externals或dll
+
+### 渲染
+
+根据各子应用的技术栈进行渲染
+
+#### 隔离
+
+* JS沙箱
+* CSS隔离
+ * BEM约定
+ * CSS预处理器
+ * CSS Modules
+ * CSS in JS
+ * Shadow DOM
+
+#### 通信
+
+* 路由
+* 事件总线
+* store
+
+### 移除
+
+清理工作
+
+## 实现
 
 ### 服务器端模板组合
 
@@ -126,6 +169,8 @@
 
 #### Web Component
 
+使用Web Component渲染
+
 ```html
 <html>
   <head>
@@ -161,32 +206,8 @@
 </html>
 ```
 
-## 特性
+## 问题
 
-* 入口：Config Entry、HTML Entry
-* 加载：按需加载、预加载、公共依赖加载
-* 隔离：JS沙箱、CSS隔离
-* 通信：主从通信、从从通信
-
-![特性](https://pic2.zhimg.com/80/v2-d55549366b52cde19c93835cfa2a58c9_720w.jpg)
-
-### 公共库
-
-* 组件库
-
-### CSS隔离
-
-CSS默认是全局、继承、层叠的，需要对各个模块的样式进行隔离
-
-* BEM约定
-* CSS预处理器
-* CSS Modules
-* CSS in JS
-* Shadow DOM
-
-### 通信
-
-* 尽量不通信
-* Custom event
-* pass callback and data
-* 事件总线
+* 子应用重复打包
+* 主子应用开发调试
+* 子应用代码管理、CI管理
