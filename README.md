@@ -26,46 +26,89 @@
 * 事件
 * 事件中断
 * 选区
+
+### DOM操作篇
+
 * jQuery源码
+* UEditor源码
+* ZTree源码
 
 ### HTML篇
 
 * HTML基础
 * HTML标准
+
+### 模板引擎篇
+
 * EJS
 
 ### CSS篇
 
 * CSS基础
 * CSS接口
+
+### CSSOM篇
+
 * cssom源码
-* CSS预处理器
+
+### CSS模块化篇
+
+* BEM
+* Less
+* Sass
+* PostCSS
+* CSS in JS
+* CSS Modules
 
 ### JavaScript篇
 
 * ES5标准
 * ES6标准
+
+### Acorn篇
+
 * acorn源码
+
+### JavaScript编译篇
+
+* Babel
 * TypeScript
-* Lodash源码
+* flows
 
-### Web API
+### JavaScript模块篇
 
-* Web Component
-* axios源码
-* ueditor源码
+* JavaScript模块
+* SystemJS
 
-### 工程篇
+### JavaScript打包篇
 
-* travis CI
-* git
-* npm
-* eslint
-* babel
-* webpack
+* Webpack
+* rollup
+
+### JavaScript测试篇
+
 * mocha
 * chai
 * karma
+
+### JavaScript工具篇
+
+* Eslint
+* Jsdoc
+* uglifyJS
+
+### JavaScript工具库篇
+
+* Lodash源码
+
+### Web API篇
+
+* Web Component
+
+### Web请求篇
+
+* axios源码
+* Rxjs
 
 ### 框架篇
 
@@ -74,19 +117,30 @@
 * vue-router源码
 * vuex源码
 * vue ssr源码
+* element-ui源码
 * vue3
 * react
 
-### 微前端篇
+### single-spa篇
 
 * 微前端
-* single-spa
+* single-spa使用
+* registerApplication
 
 ### 编程篇
 
 * JavaScript设计模式
 * HeadFirst设计模式
 * 编程语言实现模式
+
+### 工程篇
+
+* travis CI
+* git
+* npm
+* yml
+* monorepo
+* lerna
 
 ## 推荐资料
 
@@ -101,3 +155,4 @@
 * [ES6标准](https://www.ecma-international.org/ecma-262/10.0/index.html#sec-intro)
 * [acorn](https://github.com/acornjs/acorn)
 * [micro-frontends](https://martinfowler.com/articles/micro-frontends.html)
+* [single-spa](https://github.com/single-spa/single-spa)
