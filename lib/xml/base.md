@@ -25,14 +25,14 @@
 ### 指令
 
 ```xml
-<? 指令 ?>
+<?target data?>
 ```
 
 实例
 
 ```xml
 <?xml version="1.0" standalone="yes"?>
-<?xml-stylesheet type="text/css" href="./demo.css" ?>
+<?xml-stylesheet type="text/css" href="./demo.css"?>
 ```
 
 ## 注释

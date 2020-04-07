@@ -1,34 +1,90 @@
-# 节点
+# Node
 
 标签（空格分隔）： 前端知识体系
 
 ---
 
-## DOM树
+## Node Tree
 
-XML被解析器解析为DOM树
+XML被解析器解析为Node Tree
+
+### Document Tree
+
+* 根节点为Document节点
+* 可以有一个根元素节点DocumentElement
 
 ```
 Document节点
-    指令节点
+    指令、注释、CDATA节点
     文档类型节点
-    注释节点
-    CDATA节点
+    指令、注释、CDATA节点
     根元素节点 -- 属性节点
         文本节点
         子元素节点
-        注释节点
-        CDATA节点
+        指令、注释、CDATA节点
+    指令、注释、CDATA节点
 ```
 
-### 关系
+### DocumentFragment Tree
+
+* 根节点为DocumentFragement节点
+* 对子节点进行操作
+
+```
+DocumentFragment节点
+    文本节点
+    子元素节点
+    指令、注释、CDATA节点
+```
+
+### Shadow Tree
+
+* 根节点为Shadow Root
+* 通过host属性绑定到Light Tree上
+
+```
+Shadow Root节点    --host-->|<--shadowRoot--    Shadow host元素节点
+    slot节点 --assignedNodes-->|<--assignedSlot slottables节点
+```
+
+#### Slots
+
+插槽，引用Slottables
+
+* name: 插槽名，默认为空字符串
+ * 命名插槽：引用slot属性为name的Slottaables
+ * 默认插槽：引用slot属性为空字符串的Slottables
+* assignedNodes: 引用的Slottables
+
+#### Slottables
+
+宿主元素的子文本/元素节点
+
+* slot: 对应的插槽名
+* assignedSlot: 对应的插槽节点
+
+## 节点
+
+### 节点类型
+
+* Element: 元素节点
+* Attr: 属性节点
+* Text: 文本节点
+* CDATASection: CDATA节点
+* ProcessingInstruction: 指令节点
+* Comment：注释节点
+* Document: 文档节点
+* DocumentType: 文档类型节点
+* DocumentFragment: 文档片段节点
+
+### 节点关系
 
 * 父子关系
 * 祖先、后代关系
 * 兄弟关系
 * 先后关系
 
-### 操作
+### 节点操作
 
 * 查询：查找某个节点下符合条件的后代节点
 * 遍历：遍历某个节点及其所有后代节点
@@ -36,17 +92,6 @@ Document节点
  * 后序：先处理下一个节点再处理本节点
  * 深度优先：先处理子节点，再处理兄弟节点
  * 广度优先：先处理兄弟节点，再处理子节点
-
-## Shadow DOM
-
-* shadow host: shadow dom的宿主元素
-* shadow root: shadow dom的根元素
-
-shadow host与shadow dom被影子边界分隔，shadow dom可以有自己的html、css、js
-
-* html: 通过template和content引用host的后代元素
-* css: 通过伪元素影响host样式，host也可以通过伪元素影响shadow dom
-* js: shadow dom上的事件有些会被阻塞，有些会被重定向到host，content的事件会被重定向到host的后代元素
 
 ## Node接口
 
@@ -57,6 +102,8 @@ shadow host与shadow dom被影子边界分隔，shadow dom可以有自己的html
 | Element | 1 | tagName属性 | null | 所有后代文本 |
 | Attr | 2 | 属性名 | 属性值 | 属性值 |
 | Text | 3 | `#text` | data属性 | data属性 |
+| CDATASection | 4 | `#cdata-section` | data属性 | data属性 |
+| ProcessingInstruction | 7 | target属性 | data属性 | data属性 |
 | Comment | 8 | `#comment` | data属性 | data属性  |
 | Document | 9 | `#document` | null | null |
 | DocumentType | 10 | name属性 | null | null |

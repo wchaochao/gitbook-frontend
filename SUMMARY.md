@@ -14,8 +14,8 @@
 
 ## DOM标准篇
 
-* [节点](lib/dom/node.md)
-* [事件](lib/dom/event.md)
+* [Node](lib/dom/node.md)
+* [Event](lib/dom/event.md)
 
 ## HTML篇
 

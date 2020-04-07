@@ -21,11 +21,13 @@
 
 ### DOM标准篇
 
-* 节点
-* 节点监控
-* 事件
-* 事件中断
-* 选区
+* Node
+* Mutation Observer
+* Event
+* Abort
+* Range
+* Traversal
+* XPath
 
 ### DOM操作篇
 
