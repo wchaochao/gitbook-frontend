@@ -14,7 +14,9 @@
 
 ## DOM标准篇
 
-* [Node](lib/dom/node.md)
+* [节点](lib/dom/node.md)
+* [节点接口](lib/dom/node-interface.md)
+* [节点混合](lib/dom/node-mixin.md)
 * [Event](lib/dom/event.md)
 
 ## HTML篇
@@ -30,4 +32,3 @@
 * [微前端](lib/single-spa/micro-frontend.md)
 * [single-spa使用](lib/single-spa/use.md)
 * [registerApplication](lib/single-spa/registerApplication.md)
-

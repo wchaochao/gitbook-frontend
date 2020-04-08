@@ -1,4 +1,4 @@
-# Node
+# 节点
 
 标签（空格分隔）： 前端知识体系
 
@@ -63,144 +63,92 @@ Shadow Root节点    --host-->|<--shadowRoot--    Shadow host元素节点
 * slot: 对应的插槽名
 * assignedSlot: 对应的插槽节点
 
-## 节点
+#### 匹配
 
-### 节点类型
+* slottable匹配slot: 在Shadow Root的slots节点中根据插槽名匹配第一个slot
+* slot匹配slottables: 该slot第一次出现时，在Shadow host的slottables中根据插槽名匹配所有slottables，无匹配时为slot的子文本/元素节点
+* slot匹配flattened slottables: slot匹配的slottables中有slot节点的，继续递归匹配
 
-* Element: 元素节点
-* Attr: 属性节点
-* Text: 文本节点
-* CDATASection: CDATA节点
-* ProcessingInstruction: 指令节点
-* Comment：注释节点
+#### Slot change
+
+当slot引用的slottables发生变化时会触发slot change，生成一个mutation observer微任务
+
+* slottables发生变化时，对应的slot要变化
+* slot变化时，slot所在树对应的slottables要变化
+
+## 节点类型
+
 * Document: 文档节点
 * DocumentType: 文档类型节点
 * DocumentFragment: 文档片段节点
+* Element: 元素节点
+* Attr: 属性节点
+* CharacterData: 字符数据节点
+ * Text: 文本节点
+  * CDATASection: CDATA节点
+ * ProcessingInstruction: 指令节点
+ * Comment：注释节点
 
-### 节点关系
+## 节点限制
+
+* 父节点可以是Document、DocumentFragment、Element节点
+* 子节点可以是DocumentType、DocumentFragment、Element、CharaterData节点
+* 父节点为Document节点时
+ * 子节点不能为Text节点
+ * 只能有一个DocumentType节点和一个根元素节点，且DocumentType节点要在根元素节点前面
+* 父节点为DocumentFragment、Element节点时
+ * 子节点不能为DocumentType节点
+
+## 节点关系
 
 * 父子关系
 * 祖先、后代关系
 * 兄弟关系
 * 先后关系
+* 宿主元素、Shadow Tree关系
 
-### 节点操作
+## 节点操作
 
-* 查询：查找某个节点下符合条件的后代节点
-* 遍历：遍历某个节点及其所有后代节点
- * 先序：先处理节点再处理下一个节点
- * 后序：先处理下一个节点再处理本节点
- * 深度优先：先处理子节点，再处理兄弟节点
- * 广度优先：先处理兄弟节点，再处理子节点
+### 查找节点
 
-## Node接口
+查找某个节点下符合条件的后代节点
 
-### 节点属性
+### 遍历节点
 
-| 节点 | nodeType | nodeName | nodeValue | textContent |
-| -- | -- | -- | -- | -- |
-| Element | 1 | tagName属性 | null | 所有后代文本 |
-| Attr | 2 | 属性名 | 属性值 | 属性值 |
-| Text | 3 | `#text` | data属性 | data属性 |
-| CDATASection | 4 | `#cdata-section` | data属性 | data属性 |
-| ProcessingInstruction | 7 | target属性 | data属性 | data属性 |
-| Comment | 8 | `#comment` | data属性 | data属性  |
-| Document | 9 | `#document` | null | null |
-| DocumentType | 10 | name属性 | null | null |
-| DocumentFragment | 11 | `#document-fragment` | null | 所有后代文本 |
+遍历某个节点及其所有后代节点
 
-### 关系属性
+* 先序：先处理节点再处理下一个节点
+* 后序：先处理下一个节点再处理本节点
+* 深度优先：先处理子节点，再处理兄弟节点
+* 广度优先：先处理兄弟节点，再处理子节点
 
-* parentNode: 父节点，只能是Element/Document/DocumentFragment
-* parentElement: 父元素节点
-* previousSibling: 前一个兄弟节点
-* nextSibling: 后一个兄弟节点
-* childNodes: 所有子节点
-* firstChild: 第一个子节点
-* lastChild: 最后一个子节点
+### 插入节点
 
-遍历
+在parent节点的一个子节点child前插入节点node
 
-* childNodes
-* firstChild + nextSibling
-* lastChild + previousSibling
+#### 验证
 
-### document相关节点
+* child是parent的子节点或null
+* node不能是parent及parent的祖先节点
 
-* baseURI: document.URL
-* ownerDocument: document节点，document.ownerDocument为null
-* isConnected: 是否在DOM树上
+#### 插入
 
-### 关系方法
+* node为DocumentFragment节点时，插入node的子节点
+* 插入后相关的选区、slot、slottable发生相应的变化
+* 触发相应的mutation observer、customElement callback
 
-* compareDocumentPosition(otherNode): otherNode相对于node的关系
- * 0 - 同一个节点
- * 1 - 不在同一文档
- * 2 - otherNode在node之前
- * 4 - otherNode在node之后
- * 8 - otherNode包含node
- * 16 - otherNode被node包含
- * 32 - 待定
-* isEqual(otherNode): 两个节点是否类型相同，特定属性也相同
- * Element节点 - 标签、属性、子元素相同
- * Attr节点 - 属性名、属性值相同
- * Text节点 - data相同
- * Comment节点 - data相同
- * DocumentType节点 - name相同
- * DocumentFragment - 子元素相同
-* contains(otherNode): otherNode为node节点或node的后代节点
-* hasChildNodes(): 是否有后代节点
+### 追加节点
 
-### 操作方法
+在parent节点的最后一个节点后插入节点node
 
-* normalize(): 删除空文本节点，合并相邻的文本节点
-* cloneNode(deep): 克隆节点（类型相同，特性属性相同）
-* insertBefore(newChild, referenceChild): 插入到指定子节点前
-* appendChild(newChild): 追加子节点
-* removeChild(child): 删除子节点
-* replaceNode(newChild, referenceChild): 替换子节点
-* getRootNode(): 获取根节点
+### 删除节点
 
-## NodeList接口
+删除parent节点的一个子节点child
 
-类数组对象，实时集合
+* child是parent节点的子节点
+* 插入后相关的选区、slot、slottable、NodeIterator发生相应的变化
+* 触发相应的mutation observer、customElement callback
 
-### 属性
+### 替换节点
 
-* `<index>`: 索引
-* length: 长度
-
-### 方法
-
-* forEach(callback, thisArg): 遍历节点
-* keys(): key迭代器
-* values(): value迭代器
-* entries(): [key, value]迭代器
-
-### 创建
-
-* childNodes
-* getElementsByName()
-* querySelector(): 静态集合
-
-## HTMLCollection接口
-
-类数组对象，实时集合
-
-### 属性
-
-* `<index>`: 索引
-* `<id>`: id索引
-* `<name>`: name索引
-* length: 长度
-
-### 创建
-
-* children
-* document集合属性
- * document.scripts
- * document.images
- * document.links
- * document.forms
-* getElementsByTagName()
-* getElementsByClassName()
+在parent节点的子节点child前插入节点node，并删除子节点child

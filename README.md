@@ -21,7 +21,9 @@
 
 ### DOM标准篇
 
-* Node
+* 节点
+* 节点接口
+* 节点混合
 * Mutation Observer
 * Event
 * Abort
