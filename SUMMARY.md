@@ -23,6 +23,21 @@
 
 * [HTML基础](lib/html/base.md)
 
+### JavaScript基础篇
+
+* [词法](lib/javascript-base/lexical.md)
+* [数据类型](lib/javascript-base/data-type.md)
+* [规范类型](lib/javascript-base/specification.md)
+
+### JavaScript设计模式篇
+
+* [面向对象](lib/javascript-pattern/oop.md)
+
+### JavaScript模块化篇
+
+* [JavaScript模块](lib/javascript-module/index.md)
+* [AMD规范](lib/javascript-module/amd.md)
+
 ## Web API
 
 * [Web Component](lib/web-api/web-component.md)

@@ -12,6 +12,8 @@
 
 * XML基础
 * DTD
+* XSLT
+* XPath
 
 ### htmlparser2篇
 
@@ -24,18 +26,11 @@
 * 节点
 * 节点接口
 * 节点混合
-* Mutation Observer
-* Event
-* Abort
-* Range
-* Traversal
-* XPath
-
-### DOM操作篇
-
-* jQuery源码
-* UEditor源码
-* ZTree源码
+* 节点监控
+* 事件
+* 事件中断
+* 选区
+* 树遍历
 
 ### HTML篇
 
@@ -44,12 +39,14 @@
 
 ### 模板引擎篇
 
-* EJS
+* EJS使用
 
 ### CSS篇
 
 * CSS基础
 * CSS接口
+* CSS布局
+* CSS渲染
 
 ### CSSOM篇
 
@@ -64,50 +61,94 @@
 * CSS in JS
 * CSS Modules
 
-### JavaScript篇
+### JavaScript基础篇
 
-* ES5标准
-* ES6标准
+* 词法
+* 数据类型
+* 对象
+* 规范类型
+* 执行上下文
+* 表达式
+* 语句
+* 函数
+* 严格模式
+
+### ES5篇
+
+* Object对象
+* Array对象
+* Function对象
+* Number对象
+* String对象
+* Boolean对象
+* Date对象
+* RegExp对象
+* Error对象
+* global对象
+* Math对象
+* JSON对象
+
+### ES6篇
+
+* let和const
+* Symbol
 
 ### Acorn篇
 
 * acorn源码
 
-### JavaScript编译篇
-
-* Babel
-* TypeScript
-* flows
-
-### JavaScript模块篇
-
-* JavaScript模块
-* SystemJS
-
-### JavaScript打包篇
-
-* Webpack
-* rollup
-
-### JavaScript测试篇
-
-* mocha
-* chai
-* karma
-
-### JavaScript工具篇
-
-* Eslint
-* Jsdoc
-* uglifyJS
-
 ### JavaScript工具库篇
 
 * Lodash源码
 
+### JavaScript设计模式篇
+
+* 面向对象
+
+### JavaScript模块化篇
+
+* JavaScript模块
+* CommonJS规范
+* AMD规范
+* RequireJS使用
+* CMD规范
+* SeaJS使用
+* ES6 Module
+* SystemJS使用
+
+### JavaScript编译篇
+
+* Babel使用
+* TypeScript使用
+* flows使用
+
+### JavaScript打包篇
+
+* browserify使用
+* rollup使用
+* Webpack使用
+
+### JavaScript测试篇
+
+* mocha使用
+* chai使用
+* karma使用
+
+### JavaScript工具篇
+
+* Eslint使用
+* Jsdoc使用
+* uglifyJS使用
+
 ### Web API篇
 
 * Web Component
+
+### DOM操作篇
+
+* jQuery源码
+* UEditor源码
+* ZTree源码
 
 ### Web请求篇
 
@@ -133,7 +174,6 @@
 
 ### 编程篇
 
-* JavaScript设计模式
 * HeadFirst设计模式
 * 编程语言实现模式
 
@@ -158,5 +198,7 @@
 * [ES5标准](http://book.wchaochao.com/gitbook-ecmascript-standard/)
 * [ES6标准](https://www.ecma-international.org/ecma-262/10.0/index.html#sec-intro)
 * [acorn](https://github.com/acornjs/acorn)
+* [JavaScript模块化编程](http://www.ruanyifeng.com/blog/2012/10/javascript_module.html)
+* [JavaScript模块化 七日谈](https://huangxuan.me/js-module-7day/#/)
 * [micro-frontends](https://martinfowler.com/articles/micro-frontends.html)
 * [single-spa](https://github.com/single-spa/single-spa)
