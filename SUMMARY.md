@@ -4,24 +4,30 @@
 
 ## 目录
 
-## XML篇
+## XML系列
+
+### XML篇
 
 * [XML基础](lib/xml/base.md)
 
-## htmlparser2篇
+### htmlparser2篇
 
 * [Tokenizer](lib/htmlparser2/tokenzier.md)
 
-## DOM标准篇
+### DOM标准篇
 
 * [节点](lib/dom/node.md)
 * [节点接口](lib/dom/node-interface.md)
 * [节点混合](lib/dom/node-mixin.md)
 * [Event](lib/dom/event.md)
 
-## HTML篇
+## HTML系列
+
+### HTML篇
 
 * [HTML基础](lib/html/base.md)
+
+## JavaScript系列
 
 ### JavaScript基础篇
 
@@ -38,12 +44,22 @@
 * [JavaScript模块](lib/javascript-module/index.md)
 * [AMD规范](lib/javascript-module/amd.md)
 
-## Web API
+## 浏览器系列
+
+### Web API
 
 * [Web Component](lib/web-api/web-component.md)
+
+## 虚拟DOM系列
 
 ### single-spa篇
 
 * [微前端](lib/single-spa/micro-frontend.md)
 * [single-spa使用](lib/single-spa/use.md)
 * [registerApplication](lib/single-spa/registerApplication.md)
+
+## 计算机系列
+
+### 计算机基础
+
+* [字符编码](lib/computer-base/encode.md)

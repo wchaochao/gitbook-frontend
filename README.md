@@ -6,7 +6,7 @@
 
 前端知识归纳
 
-## 目录
+## XML系列
 
 ### XML篇
 
@@ -32,6 +32,10 @@
 * 选区
 * 树遍历
 
+### jQuery篇
+
+## HTML系列
+
 ### HTML篇
 
 * HTML基础
@@ -40,6 +44,8 @@
 ### 模板引擎篇
 
 * EJS使用
+
+## CSS系列
 
 ### CSS篇
 
@@ -60,6 +66,8 @@
 * PostCSS
 * CSS in JS
 * CSS Modules
+
+## JavaScript系列
 
 ### JavaScript基础篇
 
@@ -140,20 +148,23 @@
 * Jsdoc使用
 * uglifyJS使用
 
+## 浏览器系列
+
 ### Web API篇
 
 * Web Component
 
-### DOM操作篇
+### UI组件篇
 
-* jQuery源码
 * UEditor源码
 * ZTree源码
 
-### Web请求篇
+## Web请求篇
 
 * axios源码
 * Rxjs
+
+## 虚拟DOM系列
 
 ### 框架篇
 
@@ -171,6 +182,12 @@
 * 微前端
 * single-spa使用
 * registerApplication
+
+## 计算机系列
+
+### 计算机基础
+
+* 字符编码
 
 ### 编程篇
 
