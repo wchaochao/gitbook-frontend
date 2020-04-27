@@ -4,8 +4,6 @@
 
 ## 目录
 
-## XML系列
-
 ### XML篇
 
 * [XML基础](lib/xml/base.md)
@@ -21,13 +19,9 @@
 * [节点混合](lib/dom/node-mixin.md)
 * [Event](lib/dom/event.md)
 
-## HTML系列
-
 ### HTML篇
 
 * [HTML基础](lib/html/base.md)
-
-## JavaScript系列
 
 ### JavaScript基础篇
 
@@ -44,21 +38,15 @@
 * [JavaScript模块](lib/javascript-module/index.md)
 * [AMD规范](lib/javascript-module/amd.md)
 
-## 浏览器系列
-
 ### Web API
 
 * [Web Component](lib/web-api/web-component.md)
-
-## 虚拟DOM系列
 
 ### single-spa篇
 
 * [微前端](lib/single-spa/micro-frontend.md)
 * [single-spa使用](lib/single-spa/use.md)
 * [registerApplication](lib/single-spa/registerApplication.md)
-
-## 计算机系列
 
 ### 计算机基础
 

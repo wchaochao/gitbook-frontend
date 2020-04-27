@@ -31,7 +31,7 @@
 实例
 
 ```xml
-<?xml version="1.0" standalone="yes"?>
+<?xml version="1.0" standalone="yes" encoding="utf-8"?>
 <?xml-stylesheet type="text/css" href="./demo.css"?>
 ```
 
@@ -101,6 +101,13 @@
 | `&quot;` | " |
 | `&apos;` | ' |
 | `&amp;` | & |
+
+### Unicode字符引用
+
+```
+&#十进制数字;
+&#x十六进制数字;
+```
 
 ## 文档结构
 
