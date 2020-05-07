@@ -71,7 +71,7 @@ Shadow Root节点    --host-->|<--shadowRoot--    Shadow host元素节点
 
 #### Slot change
 
-当slot引用的slottables发生变化时会触发slot change，生成一个mutation observer微任务
+当slot引用的slottables发生变化时会生成一个mutation observer微任务，触发slot change
 
 * slottables发生变化时，对应的slot要变化
 * slot变化时，slot所在树对应的slottables要变化
@@ -109,19 +109,6 @@ Shadow Root节点    --host-->|<--shadowRoot--    Shadow host元素节点
 
 ## 节点操作
 
-### 查找节点
-
-查找某个节点下符合条件的后代节点
-
-### 遍历节点
-
-遍历某个节点及其所有后代节点
-
-* 先序：先处理节点再处理下一个节点
-* 后序：先处理下一个节点再处理本节点
-* 深度优先：先处理子节点，再处理兄弟节点
-* 广度优先：先处理兄弟节点，再处理子节点
-
 ### 插入节点
 
 在parent节点的一个子节点child前插入节点node
@@ -135,7 +122,7 @@ Shadow Root节点    --host-->|<--shadowRoot--    Shadow host元素节点
 
 * node为DocumentFragment节点时，插入node的子节点
 * 插入后相关的选区、slot、slottable发生相应的变化
-* 触发相应的mutation observer、customElement callback
+* 触发相应的slot change、customElement connected callback
 
 ### 追加节点
 
@@ -146,9 +133,22 @@ Shadow Root节点    --host-->|<--shadowRoot--    Shadow host元素节点
 删除parent节点的一个子节点child
 
 * child是parent节点的子节点
-* 插入后相关的选区、slot、slottable、NodeIterator发生相应的变化
-* 触发相应的mutation observer、customElement callback
+* 删除后相关的选区、slot、slottable、NodeIterator发生相应的变化
+* 触发相应的slot change、customElement disconnected callback
 
 ### 替换节点
 
 在parent节点的子节点child前插入节点node，并删除子节点child
+
+### 查找节点
+
+查找某个节点下符合条件的后代节点
+
+### 遍历节点
+
+遍历某个节点及其所有后代节点
+
+* 先序：先处理节点再处理下一个节点
+* 后序：先处理下一个节点再处理本节点
+* 深度优先：先处理子节点，再处理兄弟节点
+* 广度优先：先处理兄弟节点，再处理子节点

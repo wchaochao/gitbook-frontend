@@ -4,7 +4,10 @@
 
 ---
 
-实现特定功能的一组方法
+当代码越来越多时
+
+* 分而治之：将代码拆分成多个文件
+* 模块化：每个文件按照模块来组织
 
 ## 封装
 
@@ -101,31 +104,32 @@ var module1 = (function ($, YAHOO) {
 
 ## 规范
 
+解决依赖管理问题
+
 ### CommonJS规范
 
-服务器环境的模块化方案，同步加载模块
+NodeJS的模块化方案
 
-* module.exports定义模块：导出值的拷贝
-* require加载模块：运行时加载
+* module.exports导出值的拷贝
+* require在运行时同步加载模块
 
 ```javascript
-// 定义模块
-exports.add = function (a, b) {
-  return a + b
-}
-
 // 加载模块
 const math = require('math')
-console.log(math.add(1, 2))
+
+// 导出模块
+exports.add = function (a, b) {
+  return math.add(a, b)
+}
 ```
 
 ### AMD
 
-浏览器环境的模块化方案，异步加载模块
+浏览器的模块化方案
 
 * define定义模块
+* 回调导出模块：异步加载完依赖模块后再执行
 * require加载模块
-* 异步加载完依赖模块后，再执行回调
 
 ```javascript
 // main.js
@@ -141,9 +145,11 @@ define({
 
 ### CMD
 
-* SeaJS的模块定义
-* 浏览器环境的模块化方案
-* 提前加载，延迟执行
+浏览器的模块化方案
+
+* define定义模块
+* exports导出模块
+* require加载模块
 
 ```javascript
 define(function (require, exports) {
@@ -157,9 +163,10 @@ define(function (require, exports) {
 
 ### ES6 Module
 
-* ECMAScript定义的模块语法
-* 编译时加载
-* 导出值的引用
+ECMAScript的模块化方案
+
+* export导出值的引用
+* import编译时加载模块
 
 ```javascript
 // math.js
@@ -173,6 +180,8 @@ console.log(math.PI)
 ```
 
 ## 打包
+
+解决请求过多的问题
 
 * Concat: 合并
 * Minify: 压缩

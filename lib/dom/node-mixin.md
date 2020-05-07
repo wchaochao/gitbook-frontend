@@ -21,7 +21,7 @@ interface mixin ParentNode {
   void append((Node or DOMString)... nodes);
 
   Element? querySelector(DOMString selectors);
-  NodeList querySelectorsAll(DOMString selectors);
+  NodeList querySelectorAll(DOMString selectors);
 }
 ```
 
@@ -40,7 +40,7 @@ interface mixin ParentNode {
 #### 查找方法
 
 * querySelector(selectors): 根据选择器查找第一个匹配的元素节点
-* querySelectorsAll(selectors): 根据选择器查找匹配的元素节点集合，静态集合
+* querySelectorAll(selectors): 根据选择器查找匹配的元素节点集合，静态集合
 
 ### NonElementParentNode接口
 
@@ -156,7 +156,7 @@ interface NodeList {
 
 * childNodes
 * getElementsByName(name)
-* querySelector(selectors): 静态集合
+* querySelectorAll(selectors): 静态集合
 
 ### HTMLCollection接口
 
