@@ -148,6 +148,9 @@ function addForm (formInstance) {
 
 对对象进行信息隐藏
 
+* 通过取值器、赋值器实现对取值、赋值的完全控制
+* 隐藏内部细节、公开部分接口，方便修改内部的数据和算法
+
 ### 门户大开型
 
 所有属性和方法都是公开的，无法保护内部数据
@@ -265,3 +268,88 @@ Book.prototype = {
 ### 静态成员
 
 包括静态属性、静态方法、私有静态属性、私有静态方法
+
+```javascript
+const Book = (function () {
+  // 私有静态属性
+  let numOfBooks = 0
+
+  // 私有静态方法
+  function checkIsbn (isbn) {
+    // ...
+  }
+
+  return function Book (isbn, title, author) {
+    let _isbn, _title, _author
+
+    this.getIsbn = function () {
+      return _isbn
+    }
+    this.setIsbn = function (isbn) {
+      if (!_checkIsbn(isbn)) {
+        throw new Error('Book: invalid ISBN')
+      }
+      _isbn = isbn
+    }
+
+    this.getTitle = function () {
+      return _title
+    }
+    this.setTitle = function (title) {
+      _title = title || 'No title specified'
+    }
+
+    this.getAuthor = function () {
+      return _author
+    }
+    this.setAuthor = function (author) {
+      _author = author || 'No author specified'
+    }
+
+    numOfBooks++
+    if (numOfBooks > 50) {
+      throw new Error('Book: Only 50 instances of Book can be created')
+    }
+
+    this.setIsbn(isbn)
+    this.setTitle(title)
+    this.setAuthor(author)
+  }
+})()
+
+// 公共静态方法
+Book.convertToTitleCase = function (inputString) {
+  // ...
+}
+
+Book.prototype = {
+  display () {
+    // ...
+  }
+}
+```
+
+### 常量
+
+通过创建只有取值器没有赋值器的私有变量来模仿常量
+
+```javascript
+// 常量
+const Book = (function () {
+  let constants = {
+    UPPER_BOUND: 10,
+    LOWER_BOUND: -10
+  }
+
+  const Ctor = function (arg) {
+    // ...
+  }
+
+  // 特权静态方法
+  Ctor.getConstant = function (name) {
+    return constants[name]
+  }
+
+  return Ctor
+})()
+```
