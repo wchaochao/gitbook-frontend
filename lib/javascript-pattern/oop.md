@@ -353,3 +353,137 @@ const Book = (function () {
   return Ctor
 })()
 ```
+
+## 继承
+
+继承公有成员和特权成员，减少重复性代码
+
+### 类式继承
+
+一个类继承另一个类
+
+```javascript
+function Person (name) {
+  this.name = name
+}
+
+Person.prototype.getName = function () {
+  return this.name
+}
+
+function Author (name, books) {
+  Person.call(this, name)
+  this.books = books
+}
+
+Author.prototype = new Person()
+Author.prototype.constructor = Author
+Author.prototype.getBooks = function () {
+  return this.books
+}
+```
+
+#### extend函数
+
+使用extend函数完成类似继承
+
+```javascript
+function extend (subClass, superClass) {
+  const F = function () {}
+  F.prototype = superClass.prototype
+  subClass.prototype = new F()
+  subClass.prototype.constructor = subClass
+
+  subClass.super = superClass.prototype
+  if (superClass.prototype.constructor === Object.prototype.constructor) {
+    superClass.prototype.constructor = superClass
+  }
+}
+
+function Person (name) {
+  this.name = name
+}
+
+Person.prototype.getName = function () {
+  return this.name
+}
+
+function Author (name, books) {
+  Author.super.constructor.call(this, name)
+  this.books = books
+}
+
+extend(Author, Person)
+
+Author.prototype.getBooks = function () {
+  return this.books
+}
+Author.prototype.getName = function () {
+  const name = Author.super.getName.call(this)
+  return `${name}, Author of ${this.getBooks().join(, )}`
+}
+```
+
+### 原型式继承
+
+利用原型链实现继承
+
+**注意**：创建自己的引用类型副本，不要修改原型对象上的引用类型
+
+```javascript
+function inherit (object) {
+  function F () {}
+  F.prototype = object
+  return new F()
+}
+
+const Person = {
+  name: 'default name',
+  getName = function () {
+    return this.name
+  }
+}
+
+const Author = inherit(Person)
+Author.books = []
+Author.getBooks = function () {
+  return this.books
+}
+
+const author = inherit(Author)
+author.name = 'Jack'
+author.books = ['JavaScript Design Patterns']
+```
+
+### 多亲继承
+
+通过混合将一些通用方法扩充到类中
+
+```javascript
+function augment (receivingClass, givingClass, ...args) {
+  if (args.length) {
+    for (const methodName of args) {
+      receivingClass.prototype[methodName] = givingClass.prototype[methodName]
+    }
+  } else {
+    for (const methodName in givingClass.prototype) {
+      if (!receivingClass.prototype[methodName]) {
+        receivingClass.prototype[methodName] = givingClass.prototype[methodName]
+      }
+    }
+  }
+}
+
+function Mixin () {}
+Mixin.prototype = {
+  serialize () {
+    let output = []
+    for (const key in this) {
+      output.push(`${key}: ${this.key}`)
+    }
+    return output.join(', ')
+  }
+}
+
+augment(Author, Mixin, serialize)
+```

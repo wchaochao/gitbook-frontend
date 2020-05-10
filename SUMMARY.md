@@ -14,9 +14,11 @@
 
 ### DOM标准篇
 
-* [节点](lib/dom/node.md)
+* [节点树](lib/dom/node-tree.md)
+* [节点基础](lib/dom/node.md)
 * [节点接口](lib/dom/node-interface.md)
 * [节点混合](lib/dom/node-mixin.md)
+* [节点监控](lib/dom/node-observer.md)
 * [Event](lib/dom/event.md)
 
 ### HTML篇
