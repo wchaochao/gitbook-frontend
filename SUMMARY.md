@@ -52,6 +52,7 @@
 
 ### 计算机基础篇
 
+* [URI](lib/computer-base/uri.md)
 * [字符编码](lib/computer-base/encode.md)
 
 ### Web安全篇
@@ -59,3 +60,7 @@
 * [Web应用程序](lib/web-security/app.md)
 * [Web构建技术](lib/web-security/technology.md)
 * [Web防御机制](lib/web-security/defend.md)
+
+### HTTP协议篇
+
+* [HTTP基础](lib/http/base.md)
