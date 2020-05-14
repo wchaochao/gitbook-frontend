@@ -35,6 +35,16 @@
 * 先后关系
 * 宿主元素、Shadow Tree关系
 
+### 术语
+
+* root: 根节点，从当前节点往上查找，直至parentNode为null的节点
+* inclusive ancestor: 节点及其所有祖先节点
+* inclusive descendant: 节点及其所有后代节点
+* inclusive sibling: 节点及其所有兄弟
+* shadow-including root: 根节点为ShadowRoot时，继续查找ShadowHost的根节点
+* shadow-including ancestor: ShadowHost及其祖先节点也是ShadowTree的祖先节点
+* shadow-including descendant: ShadowTree也是ShadowHost及其祖先节点的后代节点
+
 ## 节点操作
 
 ### 插入节点
@@ -50,7 +60,7 @@
 
 * node为DocumentFragment节点时，插入node的子节点
 * 插入后相关的选区、slot、slottable发生相应的变化
-* 触发相应的slot change、customElement connected callback
+* 触发相应的slot change、customElement connected callback、mutation observer
 
 ### 追加节点
 
@@ -62,11 +72,15 @@
 
 * child是parent节点的子节点
 * 删除后相关的选区、slot、slottable、NodeIterator发生相应的变化
-* 触发相应的slot change、customElement disconnected callback
+* 触发相应的slot change、customElement disconnected callback、mutation observer
 
 ### 替换节点
 
 在parent节点的子节点child前插入节点node，并删除子节点child
+
+### 替换所有
+
+删除parent节点下所有子节点，并追加新的节点node
 
 ### 查找节点
 
