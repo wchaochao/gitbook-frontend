@@ -27,7 +27,7 @@ name=ueno&age=37
 
 ### HTTP响应
 
-* 状态行：由HTTP版本、状态码，状态短语组成
+* 响应行：由HTTP版本、状态码，状态短语组成
 * 响应头：每行一个头信息
 * 空行
 * 响应体：服务器返回的内容
@@ -39,30 +39,6 @@ Content-Length: 362
 
 <html>
 ...
-```
-
-## 状态管理
-
-HTTP是无状态协议，不保存请求和响应之间的通信状态
-
-* 通过Cookie、Token实现保存状态的功能
-
-### Cookie
-
-响应设置cookie，请求自动带上cookie
-
-```
-// 请求
-GET /render/ HTTP/1.1
-Host: hackr.jp
-// 响应
-HTTP/1.1 200 OK
-Set-Cookie: sid=100236
-
-// 下一个请求自动带上cookie
-GET /image/ HTTP/1.1
-Host: hackr.jp
-Cookie: sid=100236
 ```
 
 ## 资源定位
@@ -113,7 +89,6 @@ Host: hackr.jp
 Content-Type: application/json;charset=UTF-8
 Content-Length: 51
 
-
 {"title":"bbb","tag":"aaa","markdown":"","html":""}
 // 响应
 返回程序处理后的结果
@@ -129,7 +104,6 @@ PUT /api/content/456 HTTP/1.1
 Host: hackr.jp
 Content-Type: application/json;charset=UTF-8
 Content-Length: 51
-
 
 {"title":"bbb","tag":"aaa","markdown":"","html":""}
 // 响应
@@ -215,3 +189,27 @@ HTTP/1.1 200 OK （之后进入网络隧道）
 不用等待响应返回亦可直接发送下一个请求
 
 * 并行发送多个请求
+
+## 状态管理
+
+HTTP是无状态协议，不保存请求和响应之间的通信状态
+
+* 通过Cookie、Token实现保存状态的功能
+
+### Cookie
+
+响应设置cookie，请求自动带上cookie
+
+```
+// 请求
+GET /render/ HTTP/1.1
+Host: hackr.jp
+// 响应
+HTTP/1.1 200 OK
+Set-Cookie: sid=100236
+
+// 下一个请求自动带上cookie
+GET /image/ HTTP/1.1
+Host: hackr.jp
+Cookie: sid=100236
+```

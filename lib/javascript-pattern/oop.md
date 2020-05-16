@@ -485,5 +485,5 @@ Mixin.prototype = {
   }
 }
 
-augment(Author, Mixin, serialize)
+augment(Author, Mixin, 'serialize')
 ```

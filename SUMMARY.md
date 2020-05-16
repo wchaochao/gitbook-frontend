@@ -34,6 +34,7 @@
 ### JavaScript设计模式篇
 
 * [面向对象](lib/javascript-pattern/oop.md)
+* [设计模式](lib/javascript-pattern/pattern.md)
 
 ### JavaScript模块化篇
 
@@ -64,3 +65,4 @@
 ### HTTP协议篇
 
 * [HTTP基础](lib/http/base.md)
+* [HTTP报文](lib/http/message.md)
