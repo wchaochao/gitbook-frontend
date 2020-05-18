@@ -64,5 +64,7 @@
 
 ### HTTP协议篇
 
-* [HTTP基础](lib/http/base.md)
 * [HTTP报文](lib/http/message.md)
+* [HTTP请求](lib/http/request.md)
+* [HTTP响应](lib/http/response.md)
+* [HTTP首部](lib/http/header.md)

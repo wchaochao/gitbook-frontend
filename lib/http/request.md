@@ -1,14 +1,10 @@
-# HTTP基础
+# HTTP请求
 
 标签（空格分隔）： 前端知识体系
 
 ---
 
-## 消息模型
-
-客户端发出请求，服务器返回响应
-
-### HTTP请求
+## 结构
 
 * 请求行：由请求方法、请求URI、HTTP版本组成
 * 请求头：每行一个头信息
@@ -25,39 +21,7 @@ Content-Length: 16
 name=ueno&age=37
 ```
 
-### HTTP响应
-
-* 响应行：由HTTP版本、状态码，状态短语组成
-* 响应头：每行一个头信息
-* 空行
-* 响应体：服务器返回的内容
-
-```
-HTTP/1.1 200 OK
-Date: Tue, 10 Jul 2012 06:50:15 GMT
-Content-Length: 362
-
-<html>
-...
-```
-
-## 资源定位
-
-HTTP使用URI定位资源
-
-```
-// 完整URI
-GET http://hackr.jp/index.html HTTP/1.1
-
-// 绝对URI
-GET /index.html HTTP/1.1
-Host: hackr.jp
-
-// 访问服务器本身
-OPTIONS * HTTP/1.1
-```
-
-## 资源方法
+## 请求方法
 
 ### GET
 
@@ -176,6 +140,22 @@ CONNECT proxy.hackr.jp HTTP/1.1
 Host: proxy.hackr.jp
 // 响应
 HTTP/1.1 200 OK （之后进入网络隧道）
+```
+
+## 请求URI
+
+HTTP使用URI定位资源
+
+```
+// 完整URI
+GET http://hackr.jp/index.html HTTP/1.1
+
+// 绝对URI
+GET /index.html HTTP/1.1
+Host: hackr.jp
+
+// 访问服务器本身
+OPTIONS * HTTP/1.1
 ```
 
 ## 持久连接

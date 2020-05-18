@@ -216,8 +216,13 @@
 
 ### HTTP协议篇
 
-* HTTP基础
 * HTTP报文
+* HTTP请求
+* HTTP响应
+* HTTP首部
+* HTTP转发
+* HTTP缓存
+* HTTP认证
 
 ## 推荐资料
 
