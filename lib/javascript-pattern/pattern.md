@@ -111,3 +111,111 @@ MyNamespace.singleton = (function () {
   return someCondition ? objectA : objectB
 })()
 ```
+
+## 链式调用
+
+### 赋值器
+
+* 返回this以调用下一个对象方法
+
+```javascript
+function _$(els) {
+  this.elements = []
+  for (let elm of els) {
+    if (typeof elm === 'string') {
+      elm = document.getElementById(elm)
+    }
+    this.elements.push(elm)
+  }
+}
+
+_$.prototype = {
+  each (fn) {
+    for(const elm of this.elements) {
+      fn.call(this, elm)
+    }
+    return this
+  },
+  setStyle (prop, val) {
+    this.each(el => el.style[prop] = val)
+    return this
+  },
+  show () {
+    this.each(el => this.setStyle('display', 'block'))
+    return this
+  },
+  addEvent (type, fn) {
+    const add = el => {
+      if (window.addEventListener) {
+        el.addEventListener(type, fn, false)
+      } else if (window.attachEvent) {
+        el.attachEvent(`on${type}`, fn)
+      }
+    }
+    this.each(el => add(el))
+    return this
+  }
+}
+
+window.$ = function () {
+  return new _$(arguments)
+}
+```
+
+辅助方法
+
+```javascript
+Function.prototype.method = function (name, fn) {
+  this.prototype[name] = fn
+  return this
+}
+
+// 安装器，避免命名冲突
+window.installHelper = function (scope, interface) {
+  scope[interface] = function () {
+    return new _$(arguments)
+  }
+}
+```
+
+### 取值器
+
+* 返回数据中断链式调用
+* 返回this，数据通过回调返回
+
+```javascript
+// 返回数据
+function API () {
+  let name = 'Hello world'
+
+  this.setName = function (newName) {
+    name = newName
+    return this
+  }
+
+  this.getName = function () {
+    return name
+  }
+}
+
+// 通过回调返回数据
+function API2 () {
+  let name = 'Hello world'
+
+  this.setName = function (newName) {
+    name = newName
+    return this
+  }
+
+  this.getName = function (callback) {
+    callback.call(this, name)
+    return this
+  }
+}
+```
+
+## 工厂模式
+
+### 简单工厂
+
+### 复杂工厂
