@@ -54,6 +54,7 @@
 ### 计算机基础篇
 
 * [URI](lib/computer-base/uri.md)
+* [MIME](lib/computer-base/mime.md)
 * [字符编码](lib/computer-base/encode.md)
 
 ### Web安全篇

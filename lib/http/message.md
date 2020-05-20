@@ -23,10 +23,20 @@ HTTP协议交互的信息，由多行数据构成的字符串文本，包括请�
 
 对实体进行压缩编码，由接收的客户端负责解码
 
-* gzip：GNU zip
-* compress：UNIX系统的标准压缩
-* deflate：zlib
+* gzip：文件压缩程序GNU zip生成的编码格式
+* compress：UNIX文件压缩程序compress生成的编码格式
+* deflate：由deflate压缩算法生成的编码格式
 * identity：不进行编码
+
+```
+// 请求
+GET /style.css HTTP/1.1
+Accept-Encoding: gzip, deflate
+
+// 响应
+HTTP/1.1 200 OK
+Content-Encoding: gzip
+```
 
 ### 分块传输编码
 
@@ -36,9 +46,15 @@ HTTP协议交互的信息，由多行数据构成的字符串文本，包括请�
 * 最后一块大小为0，用`0(CR+LF)`标记
 
 ```
+// 请求
+GET /big.html HTTP/1.1
+TE: chunked
+
+// 响应
 HTTP/1.1 200 OK
 Content-Type: text/html
 Transfer-Encoding: chunked
+Trailer: Expires
 
 cf0 // 十六进制
 
@@ -49,6 +65,7 @@ cf0 // 十六进制
 ...914字节分块数据...
 
 0
+Expires: Tue, 28 Sep 2004 23:59:59 GMT
 ```
 
 ## 范围请求
@@ -71,14 +88,17 @@ Range: bytes=-3000, 5000-7000
 ```
 // 请求
 GET /tip.jpg HTTP/1.1
-Host: www.usagidesign.jp
 Range: bytes=5001-10000
+If-Range: "123456"
 
 // 响应
 HTTP/1.1 206 Partial Content
+Accept-Ranges: bytes
 Content-Type: image/jpeg
 Content-Length: 5000
 Content-Range: bytes 5001-10000/10000
+
+...（指定范围的数据）...
 ```
 
 ## 多部分对象集合
@@ -137,4 +157,11 @@ Content-Range: bytes 300-400/1270
 * Accept-Charset
 * Accept-Encoding
 * Accept-Language
-* Content-Language
+
+```
+GET /index.json HTTP/1.1
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Charset: utf-8
+Accept-Encoding: gzip, deflate
+Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,en-US;q=0.7
+```

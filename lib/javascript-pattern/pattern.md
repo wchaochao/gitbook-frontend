@@ -218,4 +218,85 @@ function API2 () {
 
 ### 简单工厂
 
+将成员对象的创建转交给一个外部对象
+
+* 单体对象
+* 静态方法
+
+```javascript
+const BicycleFactory = {
+  createBicycle (model) {
+    let bicycle
+
+    switch (model) {
+      case 'The Speedster':
+        bicycle = new Speedster()
+        break
+      case 'The Lowrider':
+        bicycle = new Lowrider()
+        break
+      case 'The Comfort Cruiser':
+      default:
+        bicycle = new ComfortCruiser()
+    }
+
+    Interface.ensureImplements(bicycle, Bicycle)
+    return bicycle
+  }
+}
+
+function BicycleShop () {}
+BicycleShop.prototype.sellBicycle = function (model) {
+  const bicycle = BicycleFactory.createBicycle(model)
+
+  bicycle.assemble()
+  bicycle.wash()
+
+  return bicycle
+}
+```
+
 ### 复杂工厂
+
+将成员对象的实例化推迟到子类
+
+* 一般性代码集中在父类
+* 个性化代码封装在子类
+
+```javascript
+function BicycleShop () {}
+BicycleShop.prototype = {
+  sellBicyclev(model) {
+    const bicycle = this.createBicycle(model)
+
+    bicycle.assemble()
+    bicycle.wash()
+
+    return bicycle
+  },
+  createBicycle (model) {
+    throw new Error('Unsupported operation on an abtract class.')
+  }
+}
+
+function AcmeBicycleShop () {}
+extend(AcmeBicycleShop, BicycleShop)
+AcmeBicycleShop.prototype.createBicycle = function (model) {
+  let bicycle
+
+  switch (model) {
+    case 'The Speedster':
+      bicycle = new AcmeSpeedster()
+      break
+    case 'The Lowrider':
+      bicycle = new AcmeLowrider()
+      break
+    case 'The Comfort Cruiser':
+    default:
+      bicycle = new AcmeComfortCruiser()
+  }
+
+  Interface.ensureImplements(bicycle, Bicycle)
+  return bicycle
+}
+```
