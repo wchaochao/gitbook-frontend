@@ -120,6 +120,17 @@ Trailer: Expires
 Expires: Tue, 28 Sep 2004 23:59:59 GMT
 ```
 
+### Via
+
+追踪客户端和服务器之间的传输路径
+
+* 报文经过代理或网关时，在Via字段中附加该服务器的信息
+
+```
+GET / HTTP/1.1
+Via: 1.0 gw.hackr.jp(Squid/3.1), 1.1 a1.example.com(Squid/2.7)
+```
+
 ### Upgrade
 
 是否可使用更高的版本进行通信
@@ -132,17 +143,6 @@ Connection: Upgrade
 HTTP/1.1 101 Switching Protocols
 Upgrade: TLS/1.0, HTTP/1.1
 Connection: Upgrade
-```
-
-### Via
-
-追踪客户端和服务器之间的传输路径
-
-* 报文经过代理或网关时，在Via字段中附加该服务器的信息
-
-```
-GET / HTTP/1.1
-Via: 1.0 gw.hackr.jp(Squid/3.1), 1.1 a1.example.com(Squid/2.7)
 ```
 
 ### Warning
@@ -225,20 +225,20 @@ Accept-Encoding: gzip, compress;q=0.9
 Accept-Encoding: zh-cn, zh;q=0.7, en-us, en;q=0.3
 ```
 
-### TE
-
-客户端可接受的传输编码方式及优先级
-
-```
-TE: chunked
-```
-
 ### Range
 
 请求的资源范围
 
 ```
 Range: bytes=5001-10000
+```
+
+### TE
+
+客户端可接受的传输编码方式及优先级
+
+```
+TE: chunked
 ```
 
 ### If-Match
@@ -337,6 +337,25 @@ Expect: 100-continue
 
 响应报文使用的首部
 
+### Server
+
+HTTP服务器应用程序信息
+
+```
+Server: Apache/2.2.6 (Unix) PHP/5.2.5
+```
+
+### Age
+
+响应创建后经过的时间（单位：秒）
+
+* 源服务器多久前创建了响应
+* 缓存代理多久前确认了响应
+
+```
+Age: 600
+```
+
 ### Accept-Ranges
 
 是否接受范围请求
@@ -367,9 +386,17 @@ ETag: "usagi-1234"
 ETag: W/"5ec30f8d-19bb9"
 ```
 
+### Vary
+
+按指定字段对代理缓存进行区分
+
+```
+Vary: Accept-Language
+```
+
 ### Location
 
-重定向地址，浏览器会强制性地尝试对Location的资源进行访问
+重定向地址，浏览器会强制性地尝试对Location的资源进行访问，配合3xx使用
 
 ```
 // 请求
@@ -380,48 +407,163 @@ HTTP/1.1 302 Found
 Location: http://www.usagidesign.jp/sample.html
 ```
 
-### Proxy
+### Retry-After
 
-### Age
-
-响应创建后经过的时间（单位：秒）
-
-* 源服务器多久前创建了响应
-* 缓存代理多久前确认了响应
+多久之后再次发送请求，配合503或3xx使用
 
 ```
-Age: 600
+// 秒数
+Retry-After: 120
+
+// 具体的时间
+Retry-After: Web, 04 Jul 2012 06:34:24 GMT
 ```
 
+### WWW-Authenticate
 
+源服务器要求客户端提供认证信息，配合401使用
 
-* Accept-Ranges: 是否接受字节范围请求
-* Age: 推算资源创建经过的时间
-* ETag: 资源的匹配信息
-* Location: 令客户端重定向至指定URI
-* Proxy-Authenticate: 代理服务器队客户端的认证信息
-* WWW-Authenticate: 服务器对客户端的认证信息
-* Retry-After: 对再次发起请求的时机要求
-* Server: HTTP服务器的安装信息
-* Vary: 代理服务器缓存的管理信息
+```
+WWW-Authenticate: Basic realm="Usagidesign Auth"
+```
+
+### Proxy-Authenticate
+
+代理服务器要求客户端提供认证信息，配合401使用
+
+```
+Proxy-Authenticate: Basic realm="Usagidesign Auth"
+```
 
 ## 实体首部字段
 
 针对实体使用的首部
 
-* Allow: 资源可支持的HTTP方法
-* Content-Encoding: 实体的编码方式
-* Content-Language: 实体的语言
-* Content-Length: 实体的大小（单位：字节）
-* Content-Location: 替代对应资源的URI
-* Content-MD5: 实体的报文摘要
-* Content-Range: 实体的范围
-* Content-Type: 实体的媒体类型
-* Expires: 实体的过期时间
-* Last-Modified: 资源的最后修改时间
+### Content-Type
 
-## 其他首部字段
+实体类型和字符集
+
+```
+Content-Type: text/html; charset-UTF-8
+```
+
+### Content-Encoding
+
+实体的内容编码方式
+
+```
+Content-Encoding: gzip
+```
+
+### Content-Language
+
+实体的自然语言集
+
+```
+Content-Language: zh-CN
+```
+
+### Content-Range
+
+返回的实体范围
+
+```
+HTTP/1.1 206 partial Content
+Content-Type: image/jpeg
+Content-Range: bytes 5001-10000/10000
+Content-Length: 5000
+```
+
+### Content-Length
+
+实体的大小（单位：字节）
+
+* 进行内容编码时，不使用Content-Length
+
+```
+Content-Length: 15000
+```
+
+### Content-Location
+
+实体的URI
+
+```
+// 请求
+GET / HTTP/1.1
+host: http://www.hackr.jp
+Accept-Language: ja
+
+// 响应
+HTTP/1.1 200 OK
+Content-Location: http://www.hackr.jp/index-ja.html
+```
+
+### Content-MD5
+
+实体经过MD5算法后用base64表示的值，用于检测实体是否完整
+
+* 客户端会对实体再执行一次相同的MD5算法，再用base64编码，将得到的值与Content-MD5比较
+
+```
+Content-MD5: OGFKZDUwNGVhNGY3N2MxMDIwZmQ4NTBmY2IyTY==
+```
+
+### Expires
+
+缓存过期时间
+
+```
+Expires: Web, 04 Jul 2012 08:26:05 GMT
+```
+
+### Last-Modified
+
+实体的最后修改时间
+
+```
+Last-Modified: Web, 23 May 2012 09:59:55 GMT
+```
+
+### Allow
+
+实体允许的请求方法
+
+* 当服务器接收到不支持的请求方法时，返回405
+
+```
+Allow: GET, HEAD
+```
+
+## Cookie首部字段
+
+### Set-Cookie
+
+服务器往客户端写入Cookie信息
+
+* NAME=VALUE: Cookie的名称和值
+* expires=DATE: Cookie的有效期，默认为当前会话
+* domain=DOMAIN: Cookie所属的域名，默认为服务器域名
+* path=PATH: Cookie所属的路径，默认为文档所在的文件目录
+* Secure: 仅在HTTPS协议下发送Cookie
+* HttpOnly: 只能使用在请求中，JavaScript不能通过document.cookie访问该Cookie
+
+```
+Set-Cookie: status=enable; expires=Tue, 05 Jul 2011 07:26:31 GMT; path=/; domain=.hackr.jp; secure; HttpOnly
+```
+
+### Cookie
+
+客户端发送Cookie信息给服务器
+
+```
+Cookie: status=enable; name=abc;
+```
 
 * Cookie
 * Set-Cookie
 * Content-Disposition
+
+## 其他首部字段
+
+非标准首部字段

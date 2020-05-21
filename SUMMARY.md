@@ -56,6 +56,7 @@
 * [URI](lib/computer-base/uri.md)
 * [MIME](lib/computer-base/mime.md)
 * [字符编码](lib/computer-base/encode.md)
+* [编程基础](lib/computer-base/program.md)
 
 ### Web安全篇
 

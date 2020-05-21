@@ -192,6 +192,7 @@
 * URI
 * MIME
 * 字符编码
+* 编程基础
 
 ### 编程篇
 
@@ -229,6 +230,7 @@
 
 * 《XML实用大全》
 * [htmlparser2](https://github.com/fb55/htmlparser2)
+* [Infra标准](https://infra.spec.whatwg.org/)
 * [DOM标准](https://dom.spec.whatwg.org/)
 * [HTML](https://wchaochao.gitbooks.io/frontend-dev/content/markup/html/)
 * [HTML标准](https://html.spec.whatwg.org/multipage/)
