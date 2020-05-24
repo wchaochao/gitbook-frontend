@@ -4,7 +4,7 @@
 
 ---
 
-提供额外重要信息
+提供额外的重要信息
 
 ## 结构
 
@@ -65,9 +65,9 @@ Cache-Control: public, no-cache, max-age=86400
  * 客户端：向源服务器请求，不接收缓存
  * 服务器端：使用缓存前必须向源服务器确认其有效性
 * no-store: 不缓存
-* max-age: 缓存的有效时间（单位：秒），默认为(Date - LastModified) / 10
+* max-age: 缓存的有效时间（单位：秒）
  * 客户端：缓存时间比指定时间小时接收缓存
- * 服务器端：在缓存的有效时间内直接使用缓存
+ * 服务器端：在缓存的有效时间内直接使用缓存，，默认为(Date - LastModified) / 10
 * s-maxage: 公共缓存的有效时间（单位：秒）
 * min-fresh: 指定时间内缓存仍有效时接收缓存（单位：秒）
 * max-stale: 在过期时间内仍接收缓存
@@ -78,7 +78,7 @@ Cache-Control: public, no-cache, max-age=86400
 
 ### Pragma
 
-HTTP/1.0的通用首部，用于兼容HTTP/1.0的缓存控制，只用在客户端请求中
+HTTP/1.0的缓存控制，只用在客户端请求中
 
 ```
 Cache-Control: no-cache
@@ -87,7 +87,7 @@ Pragma: no-cache // 在HTTP/1.0中相当于Cache-Control: no-cache
 
 ### Transfer-Encoding
 
-传输报文主体是采用的编码方式，HTTP/1.1仅对分块传输编码有效
+实体的传输编码方式，HTTP/1.1仅支持分块传输编码
 
 ```
 HTTP/1.1 200 OK
@@ -107,7 +107,7 @@ cf0 // 十六进制
 
 ### Trailer
 
-报文主体后附加的首部字段，用在分块传输编码中
+报文主体后附加的首部字段，用于分块传输编码中
 
 ```
 HTTP/1.1 200 OK
@@ -122,7 +122,7 @@ Expires: Tue, 28 Sep 2004 23:59:59 GMT
 
 ### Via
 
-追踪客户端和服务器之间的传输路径
+客户端和服务器之间的经过的代理
 
 * 报文经过代理或网关时，在Via字段中附加该服务器的信息
 
@@ -159,7 +159,7 @@ Warning: [警告码] [警告的主机:端口号] "[警告内容]" ([日期时间
 
 ### Host
 
-请求的资源所处的主机名和端口号
+资源所在的host
 
 * 必须存在，用于处理同一个IP下部署多个域名的情况
 
@@ -227,7 +227,7 @@ Accept-Encoding: zh-cn, zh;q=0.7, en-us, en;q=0.3
 
 ### Range
 
-请求的资源范围
+请求范围
 
 ```
 Range: bytes=5001-10000
@@ -276,7 +276,7 @@ If-Modified-Since: Thu, 15 Apr 2004 00:00:00 GMT
 
 ### If-Unmodified-Since
 
-通过Last-Modified确认缓存的有效性
+以Last-Modified为条件
 
 * Last-Modified之后资源未更新，执行请求
 * Last-Modified之后资源已更新，返回412 Precondition Failed
@@ -559,10 +559,6 @@ Set-Cookie: status=enable; expires=Tue, 05 Jul 2011 07:26:31 GMT; path=/; domain
 ```
 Cookie: status=enable; name=abc;
 ```
-
-* Cookie
-* Set-Cookie
-* Content-Disposition
 
 ## 其他首部字段
 

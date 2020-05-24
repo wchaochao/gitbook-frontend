@@ -6,7 +6,7 @@
 
 ## 单体模式
 
-将代码组织成一个逻辑单元，只能实例化一次
+将代码组织成一个逻辑单元，最多实例化一次
 
 ### 基本结构
 
@@ -36,10 +36,7 @@ const Singleton = {
 
 ### 私有成员
 
-划分好公有成员和私有成员，重构私有成员时不必担心会殃及其他代码
-
-* 使用下划线表示
-* 使用闭包创建
+划分好公共成员和私有成员，面向接口编程
 
 ```javascript
 MyNamespace.singleton = (function () {
@@ -69,7 +66,7 @@ MyNamespace.singleton = (function () {
 
 ### 惰性加载
 
-将实例化推迟到需要使用的时候，常用于必须加载大量数据的单体
+需要时才实例化
 
 ```javascript
 MyNamespace.singleton = (function () {
@@ -92,7 +89,7 @@ MyNamespace.singleton = (function () {
 
 ### 分支
 
-屏蔽选择细节，提供统一接口
+根据分支返回拥有相同接口的单体
 
 ```javascript
 MyNamespace.singleton = (function () {
@@ -220,9 +217,6 @@ function API2 () {
 
 将成员对象的创建转交给一个外部对象
 
-* 单体对象
-* 静态方法
-
 ```javascript
 const BicycleFactory = {
   createBicycle (model) {
@@ -258,10 +252,7 @@ BicycleShop.prototype.sellBicycle = function (model) {
 
 ### 复杂工厂
 
-将成员对象的实例化推迟到子类
-
-* 一般性代码集中在父类
-* 个性化代码封装在子类
+将成员对象的创建推迟到子类
 
 ```javascript
 function BicycleShop () {}

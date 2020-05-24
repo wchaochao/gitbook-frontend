@@ -4,11 +4,13 @@
 
 ---
 
-## Algorithms
+## Algorithm
+
+算法
 
 * step: 表示算法的一个步骤
 
-### Variables
+### Variable
 
 变量
 
@@ -129,4 +131,32 @@ Let elementSeen be false
 
 * byte-lowercase: 转换为小写
 * byte-uppercase: 转换为大写
-* a starts with b:
+* starts with: 以指定字节序列开头
+* byte less than: 按字节比较小于指定字节序列
+
+### Code Point
+
+Unicode码点，使用U+0000 ~ U+10FFFF表示
+
+```
+The code point rendered as 🤔 is represented as U+1F914.
+```
+
+#### 属性
+
+* ASCII whitespace: ASCII空白字符，U+0009 TAB, U+000A LF, U+000C FF, U+000D CR, or U+0020 SPACE
+* ASCII digit: ASCII数字，U+0030 (0) ~ U+0039 (9)
+* ASCII upper hex digit: ASCII大写十六进制，ASCII digit加上U+0041 (A) ~ U+0046 (F)
+* ASCII lower hex digit: ASCII小写十六进制，ASCII digit加上U+0061 (a) ~ U+0066 (f)
+* ASCII hex digit: ASCII十六进制，ASCII upper hex digit加上ASCII lower hex digit
+* ASCII upper alpha: ASCII大写字母，U+0041 (A) ~ U+005A (Z)
+* ASCII lower alpha: ASCII小写字母，U+0061 (a) ~ U+007A (z)
+* ASCII alpha: ASCII字母，ASCII upper alpha加上ASCII lower alpha
+* ASCII alphanumeric: ASCII字母加数字
+* ASCII code point: ASCII字符，U+0000 ~ U+007F
+* surrogate: U+D800 ~ U+DFFF, UTF-16的代理区
+* scalar value: 非代理区
+
+#### 操作
+
+* Code point与Byte sequence通过编码方式进行转换
