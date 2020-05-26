@@ -4,20 +4,22 @@
 
 ---
 
-* 作为页面的文本标记语言HTML
-* 作为文档传递协议的HTTP
-* 指定文档所在地址的URL
+## HTML
+
+HyperText Markup Language, 超文本标记语言，网页的描述语言
+
+* CSS：Cascading Style Sheets, 层叠样式表，网页的样式单
+* JavaScript：通过调用浏览器提供的API实现网页交互
+* DOM：Document Object Model，文档对象模型，操作HTML文档的API
+* Web API：浏览器操作API，如网络请求
 
 ## HTTP协议
 
 HyperText Transfer Protocol，超文本传输协议，Web的核心通信协议
 
-### 发展
-
-* HTTP/0.9: 刚问世，还没有作为标准被建立
-* HTTP/1.0: 初期标准
-* HTTP/1.1: 主流版本
-* HTTP/2.0: 普及中
+* URI: Uniform Resource Identifier，统一资源标识符，用于标志网络资源
+* 请求：客户端发送请求
+* 响应：服务器返回响应
 
 ## TCP/IP协议蔟
 
@@ -60,6 +62,14 @@ HyperText Transfer Protocol，超文本传输协议，Web的核心通信协议
 * 通过域名查找IP地址
 * 通过IP地址反查域名
 
-## URI
+## Web应用
 
-Uniform Resource Identifier，统一资源标识符，用于唯一的标志资源
+* 静态站点：纯静态页面，所有用户提供相同的页面
+* 应用程序：动态页面，根据用户提供相应的页面
+ * 后端动态生成页面
+ * 前端通过请求局部刷新页面
+
+## 数据交换格式
+
+* JSON: Javascript Object Notation, Javascript对象表示法
+* XML: Extensible Markup Language, 可扩展标记语言

@@ -156,6 +156,12 @@
 
 * Web Component
 
+### Web安全篇
+
+* Web构建技术
+* Web防御机制
+* Web攻击
+
 ### UI组件篇
 
 * UEditor源码
@@ -210,12 +216,6 @@
 
 ## 网络系列
 
-### Web安全篇
-
-* Web应用程序
-* Web构建技术
-* Web防御机制
-
 ### HTTP协议篇
 
 * HTTP报文
@@ -225,6 +225,8 @@
 * HTTP转发
 * HTTP缓存
 * HTTP认证
+* HTTP安全
+* HTTP增强
 
 ## 推荐资料
 

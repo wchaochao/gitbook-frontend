@@ -45,6 +45,12 @@
 
 * [Web Component](lib/web-api/web-component.md)
 
+### Web安全篇
+
+* [Web构建技术](lib/web-security/technology.md)
+* [Web防御机制](lib/web-security/defend.md)
+* [Web攻击](lib/web-security/attack.md)
+
 ### single-spa篇
 
 * [微前端](lib/single-spa/micro-frontend.md)
@@ -58,15 +64,14 @@
 * [字符编码](lib/computer-base/encode.md)
 * [编程基础](lib/computer-base/program.md)
 
-### Web安全篇
-
-* [Web应用程序](lib/web-security/app.md)
-* [Web构建技术](lib/web-security/technology.md)
-* [Web防御机制](lib/web-security/defend.md)
-
 ### HTTP协议篇
 
 * [HTTP报文](lib/http/message.md)
 * [HTTP请求](lib/http/request.md)
 * [HTTP响应](lib/http/response.md)
 * [HTTP首部](lib/http/header.md)
+* [HTTP转发](lib/http/forward.md)
+* [HTTP缓存](lib/http/cache.md)
+* [HTTP认证](lib/http/auth.md)
+* [HTTP安全](lib/http/security.md)
+* [HTTP增强](lib/http/augement.md)

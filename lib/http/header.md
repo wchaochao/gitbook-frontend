@@ -26,7 +26,9 @@
 ### Connection
 
 * 控制不再转发的首部字段
-* 管理持久连接
+* 管理持久连接：对于同一个源，大多数浏览器允许同时建立6个持久连接
+ * keep-alive: 持久连接
+ * close: 关闭连接
 
 ```
 // 控制不再转发的首部字段
@@ -562,4 +564,37 @@ Cookie: status=enable; name=abc;
 
 ## 其他首部字段
 
-非标准首部字段
+扩展的非标准首部字段
+
+### X-Frame-Options
+
+响应首部，是否可以被iframe嵌入，用于防止点击劫持
+
+* DENY: 拒绝
+* SAMEORIGIN: 同源可嵌入
+
+```
+X-Frame-Options: DENY
+```
+
+### X-XSS-Protection
+
+响应首部，XSS防护机制的开关
+
+* 0: 关
+* 1: 开
+
+```
+X-XSS-Protection: 1
+```
+
+### DNT
+
+请求首部，Do Not Track, 拒绝追踪
+
+* 0: 同意被追踪
+* 1: 拒绝被追踪
+
+```
+DNT: 1
+```
