@@ -329,7 +329,7 @@ Max-Forwards: 10
 
 ### Expect
 
-期望的服务器行为，HTTP/1.1F仅定义了100-continue
+期望的服务器行为，HTTP/1.1仅定义了100-continue
 
 ```
 Expect: 100-continue
