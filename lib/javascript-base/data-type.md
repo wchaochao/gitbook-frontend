@@ -4,11 +4,12 @@
 
 ---
 
-## 原始值类型
+## 分类
 
-存储值
+* 原始值类型：存储值，包括Undefined、Null、Boolean、Number、String、BigInt、Symbol类型
+* 引用类型：存储引用，包括Object类型
 
-### Undefined类型
+## Undefined类型
 
 值未定义
 
@@ -17,13 +18,19 @@
 * 未传入实参的形参
 * 没有return的返回值
 
-### Null类型
+## Null类型
 
 值为空
 
 * 空对象
 
-### Number类型
+## Boolean类型
+
+布尔值
+
+* 条件判断
+
+## Number类型
 
 数字
 
@@ -50,41 +57,39 @@ E = 2047
   NaN：M不全为0
 ```
 
-### String类型
+## String类型
 
-字符串，使用UTF-16编码，每两个字节算一个字符
+字符串，使用UTF-16编码，每两个字节一个索引
 
 * 单字节字符：两个字节表示
-* 多字节字符：高位两个字节、低位两个字节，会影响length和index属性
+* 多字节字符：高位两个字节、低位两个字节，会影响length和index值
 
-### Boolean类型
+## BigInt
 
-布尔值
+任意精度的整数值
 
-* 条件判断
+## Symbol
 
-## 引用类型
+唯一的非字符串的属性名
 
-存储引用
-
-### Object类型
+## Object类型
 
 各类对象
 
 * 内置对象
 * 原生对象
-* 宿主对象：浏览器环境API、NodeJS环境API
+* 宿主对象
 
-#### Object对象
+### Object对象
 
 键值对
 
-#### Array对象
+### Array对象
 
 * 按顺序排列的一组元素
 * 长度和元素动态关联
 
-#### 类数组对象
+### 类数组对象
 
 有length属性的对象，可以调用数组的一些方法
 
@@ -92,36 +97,36 @@ E = 2047
 * Arguments对象
 * DOM元素集合
 
-#### Function对象
+### Function对象
 
 函数也是一个对象
 
-#### Arguments对象
+### Arguments对象
 
 传入的实参对象，与形参一一对应
 
-#### 基本包装对象
+### 基本包装对象
 
 Number、String、Boolean类型的包装对象
 
 * Number, String, Boolean类型当作对象使用时，会临时创建对应的包装对象，执行完后再销毁
 
-#### Date对象
+### Date对象
 
 用距1970年1月1日00:00:00(UTC时间)的毫秒数表示时间
 
 * 本地时间 = 毫秒数 + 时区
 * UTC时间的时区为0
 
-#### RegExp对象
+### RegExp对象
 
 用于正则匹配
 
-#### Error对象
+### Error对象
 
 用于错误处理
 
-#### 单体内置对象
+### 单体内置对象
 
 * Global对象：提供全局属性和全局方法
 * Math对象：用于数学运算
@@ -149,15 +154,23 @@ function isNull (value) {
 }
 ```
 
+### isBoolean()
+
+```javascript
+function isBoolean (value) {
+  return typeof value === 'boolean' || (isObjectLike(value) && getTag(value) === '[object Boolean]')
+}
+
+function getTag (value) {
+  return Object.prototype.toString.call(value)
+}
+```
+
 ### isNumber()
 
 ```javascript
 function isNumber (value) {
   return typeof value === 'number' || (isObjectLike(value) && getTag(value) == = '[object Number]')
-}
-
-function getTag (value) {
-  return Object.prototype.toString.call(value)
 }
 ```
 
@@ -166,14 +179,6 @@ function getTag (value) {
 ```javascript
 function isString (value) {
   return typeof value === 'string' || (isObjectLike(value) && getTag(value) === '[object String]')
-}
-```
-
-### isBoolean()
-
-```javascript
-function isBoolean (value) {
-  return typeof value === 'boolean' || (isObjectLike(value) && getTag(value) === '[object Boolean]')
 }
 ```
 

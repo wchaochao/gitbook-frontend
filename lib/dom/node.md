@@ -42,8 +42,8 @@
 * inclusive descendant: 节点及其所有后代节点
 * inclusive sibling: 节点及其所有兄弟
 * shadow-including root: 根节点为ShadowRoot时，继续查找ShadowHost的根节点
-* shadow-including ancestor: ShadowHost及其祖先节点也是ShadowTree的祖先节点
-* shadow-including descendant: ShadowTree也是ShadowHost及其祖先节点的后代节点
+* shadow-including ancestor: ShadowRoot为祖先节点时，继续查找ShadowHost及其祖先节点
+* shadow-including descendant: ShadowHost为后代节点时，继续查找ShadowRoot及其后代节点
 
 ## 节点操作
 

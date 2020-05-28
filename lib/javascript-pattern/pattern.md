@@ -291,3 +291,233 @@ AcmeBicycleShop.prototype.createBicycle = function (model) {
   return bicycle
 }
 ```
+
+### 适合场所
+
+* 在运行区间动态选择所用的类
+* 多个小对象组合成的大对象
+* 成员对象间存在设置耦合
+
+xhr工厂
+
+```javascript
+onst Ajaxhandler = new Interface('AjaxHandler', ['createXhrObject', 'request'])
+
+function SimpleHandler () {}
+SimpleHandler.prototype = {
+  createXhrObject () {
+    let fn
+    if (typeof XMLHttpRequest === 'function') {
+      fn = function () {
+        return new XMLHttpRequest()
+      }
+    } else if (typeof ActiveXObject === 'function') {
+      fn = function () {
+        return new ActiveXObject('MicroSoft.XMLHttp')
+      }
+    }
+
+    this.createXhrObject = fn
+    return fn()
+  },
+  request (method, url, callback, data) {
+    const xhr = this.createXhrObject()
+    xhr.onreadystatechange = function () {
+      if (xhr.readystate !== 4) {
+        return
+      }
+
+      if (xhr.status === 200) {
+        callback.success(xhr.responseText, xhr.responseXML)
+      } else {
+        callbace.failure(xhr.status)
+      }
+    }
+
+    xhr.open(method, url, true)
+    xhr.send(method === 'POST' ? data : null)
+  }
+}
+
+function QueuedHandler () {
+  this.queue = []
+  this.requestInProgress = false
+  this.retryDelay = 5000
+}
+extend(QueueHandler, SimpleHandler)
+Queued.prototype.request = function (method, url, callback, data, override) {
+  if (this.requestInProgress && !override) {
+    this.queue.push({
+      method,
+      url,
+      callback,
+      data
+    })
+  } else {
+    this.requestInProgress = true
+    const xhr = this.createXhrObject()
+    xhr.onreadystatechange = function () {
+      if (xhr.readystate !== 4) {
+        return
+      }
+
+      if (xhr.status === 200) {
+        callback.success(xhr.responseText, xhr.responseXML)
+        this.advanceQueue()
+      } else {
+        callback.failure(xhr.status)
+        setTimeout(() => {
+          this.request(method, url, callback, data, true)
+        }, this.retryDelay)
+      }
+    }
+  }
+}
+Queued.prototype.advanceQueue = function () {
+  if (this.queue.length === 0) {
+    this.requestInProgress = false
+    return
+  }
+
+  const req = this.queue.shift()
+  this.request(req.method, req.url, req.callback, req.data, true)
+}
+
+function offlineHandler () {
+  this.storedRequest = []
+}
+extend(offlineHandler, SimpleHandler)
+OfflineHandler.prototype.request = function (method, url, callback, data) {
+  if (XhrManager.isOffline()) {
+    this.storedRequest.push({
+      method,
+      url,
+      callback,
+      data
+    })
+  } else {
+    this.flushStoredRequest()
+    OfflineHandler.super.request(method, url, callback, data)
+  }
+}
+OfflineHandler.prototype.flushStoredRequest = function () {
+  for (const req of this.storedRequest) {
+    OfflineHandler.super.request(req.method, req.url, req.callback, req.data)
+  }
+}
+
+const XhrManager = {
+  createXhrHandler () {
+    let xhr
+    if (this.isOffline()) {
+      xhr = new OfflineHandler()
+    } else if (this.isHighLatency()) {
+      xhr = new QueuedHandler()
+    } else {
+      xhr = new SimpleHandler()
+    }
+
+    Interface.ensureImplements(xhr, Ajaxhandler)
+    return xhr
+  },
+  isOffline () {
+    // ...
+  },
+  isHighLatency () {
+    // ...
+  }
+}
+```
+
+RSS阅读器
+
+```javascript
+const DisplayModule = new Interface('DisplayModule', ['append', 'remove', 'clear'])
+
+function ListDiaplay (id, parent) {
+  this.list = document.createElement('ul')
+  this.list.id = id
+  parent.appendChild(this.list)
+}
+
+ListDisplay.prototype = {
+  append (text) {
+    const li = document.createElement('li')
+    li.innerHTML = text
+    this.list.appendChild(li)
+    return li
+  },
+  remove (el) {
+    this.list.removeChild(el)
+  },
+  clear (el) {
+    this.list.innerHTML = ''
+  }
+}
+
+const displayManager = {
+  createDisplayModule (id, parent) {
+    const displayModule = new ListDiaplay(id, parent)
+    Interface.ensureImplements(displayModule, DisplayModule)
+
+    return displayModule
+  }
+}
+
+const conf = {
+  id: 'cnn-top-stories',
+  parent: $('feed-readers'),
+  feedUrl: 'http://rss.cnn.com/rss/cnn_topstories.rss',
+  updateInterval: 60000
+}
+
+function FeedReader (display, xhrHander, conf) {
+  this.display = display
+  this.xhrHander = xhrHander
+  this.conf = conf
+
+  this.startUpdates()
+}
+
+FeedReader.prototype = {
+  fetchFeed () {
+    this.xhrHander.request('GET', `feedProxy.php?feed=${this.conf.feedUrl}`, {
+      success: (text, xml) => this.parseFeed(text, xml),
+      failure: status => this.showError(status)
+    })
+  },
+  parseFeed (responseText, responseXML) {
+    this.display.clear()
+    const items = responseXML.querySelectorAll('item')
+    for (let i = 0, len = items.length; i < len; i++) {
+      const title = items[i].querySelector('title')
+      const link = items[i].qeurySelector('link')
+      this.display.append(`<a href="${link.textContent}">${title.textContent}</a>`)
+    }
+  },
+  showError (status) {
+    this.display.clear()
+    this.display.append('Error fetching feed.')
+  },
+  startUpdates () {
+    this.fetchFeed()
+    this.interval = setInterval(() => this.fetchFeed(), this.conf.updateInterval)
+  },
+  stopUpdates () {
+    clearInterval(this.interval)
+  }
+}
+
+const FeedManger = {
+  createFeedReader = function (conf) {
+    const displayModule = displayManager.createDisplayModule(`${conf.id}-display`, conf.parent)
+    const xhrHander = xhrManger.createXhrHandler()
+
+    return new FeedReader(displayModule, xhrHander, conf)
+  }
+}
+```
+
+## 桥接模式
+
+将抽象与实现相分离，以便二者独立变化

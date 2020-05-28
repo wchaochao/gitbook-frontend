@@ -141,7 +141,7 @@ interface NodeList {
 
 #### 属性
 
-* `<index>`: 索引对应的节点
+* `[index]`: 索引对应的节点
 * length: 节点集合长度
 
 #### 方法
@@ -172,9 +172,9 @@ interface HTMLCollection {
 
 #### 属性
 
-* `<index>`: 索引对应的HTML元素节点
-* `<id>`: id对应的HTML元素节点
-* `<name>`: name对应的HTML元素节点
+* `[index]`: 索引对应的HTML元素节点
+* `[id]`: id对应的HTML元素节点
+* `[name]`: name对应的HTML元素节点
 * length: 节点集合长度
 
 #### 方法

@@ -33,6 +33,7 @@ interface Node: EventTarget {
   readonly attribute NodeList childNodes;
   readonly attribute Node? firstChild;
   readonly attribute Node? lastChild;
+  boolean hasChildNodes();
 
   Node insertBefore(Node node, Node? child);
   Node appendChild(Node node);

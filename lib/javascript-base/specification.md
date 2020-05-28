@@ -15,12 +15,6 @@ interface lexical Environment {
   attribute Environment Record record;
   attribute Lexical Enviroment outer;
 }
-
-interface Lexical Environment Operator {
-  Lexical Environment NewDeclartiveEnvironment(Lexical Environment E)
-  Lexical Environment NewObjectEnvironment(Object O, Lexical Environment E)
-  Reference GetIdentifierReference(Lexical Environment lex, String name, Boolean strict)
-}
 ```
 
 ### 属性
@@ -28,22 +22,51 @@ interface Lexical Environment Operator {
 * record: 词法环境的环境记录项
 * outer: 外部词法环境，形成作用域链
 
-### 操作
+## Lexical Environment操作
 
-* NewDeclartiveEnvironment(E): 创建声明式词法环境，环境记录项为声明式环境记录项，外部词法环境为E
-* NewObjectEnvironment(O, E): 创建对象式词法环境，环境记录项为对象式环境记录项，绑定对象为O，外部词法环境为E
-* GetIdentifierReference(lex, name, strict): 获取词法环境中的标识符引用
- * 标识符在词法环境里，返回引用
- * 标识符不在词法环境里，沿着作用链查找，返回相应的引用
+```
+interface Lexical Environment Operator {
+  Lexical Environment NewDeclartiveEnvironment(Lexical Environment E)
+  Lexical Environment NewObjectEnvironment(Object O, Lexical Environment E)
+  Reference GetIdentifierReference(Lexical Environment lex, String name, Boolean strict)
+}
+```
+
+### NewDeclartiveEnvironment(E)
+
+创建声明式词法环境
+
+1. 创建词法环境对象
+2. 环境记录项为声明式环境记录项
+3. 外部词法环境为E
+
+### NewObjectEnvironment(O, E)
+
+创建对象式词法环境
+
+1. 创建词法环境对象
+2. 环境记录项为对象式环境记录项，绑定对象为O
+3. 外部词法环境为E
+
+### GetIdentifierReference(lex, name, strict)
+
+获取词法环境中的标识符引用
+
+1. 标识符在词法环境里，返回引用
+2. 标识符不在词法环境里，沿着作用链查找，返回相应的引用
 
 ## Environment Record类型
 
 环境记录类型，记录标识符及其绑定的值
 
+### 分类
+
 * 声明式环境记录项：将标识符与值绑定，如函数上下文、catch语句
 * 对象式环境记录项：将标识符与对象属性绑定，如全局上下文，with语句
 
 ### Declarative Environment Record
+
+声明式环境记录项
 
 ```javascript
 interface Environment Record {
@@ -64,6 +87,8 @@ interface Binding {
 }
 ```
 
+#### 方法
+
 * CreateMutableBinding(N, D): 创建可变绑定，D指定是否可删除
 * CreateImmutableBinding(N): 创建不可变绑定，不可删除
 * DeleteBinding(N): 删除可删除的绑定
@@ -75,9 +100,11 @@ interface Binding {
 
 ### Object Environment Record
 
+对象式环境记录项
+
 ```javascript
 interface Object Environment Record {
-  void CreateImmutableBinding(String N)
+  void CreateMutableBinding(String N, Boolean D)
   Boolean DeleteBinding(String N)
   void SetMutableBinding(String N, Any V, Boolean S)
   Boolean HasBinding(String N)
@@ -85,6 +112,8 @@ interface Object Environment Record {
   Undefined or Object ImplicitThisValue()
 }
 ```
+
+#### 方法
 
 * CreateMutableBinding(N, D): 绑定对象添加属性，D指定属性是否可配置
 * DeleteBinding(N): 绑定对象删除属性
@@ -99,13 +128,29 @@ interface Object Environment Record {
 
 ```javascript
 interface Reference {
-  readonly attribute Undefined or Number or String or Boolean or Object or Environment Record base;
+  readonly attribute Undefined or Boolean or Number or String or Object or Environment Record base;
   readonly attribute String name;
   readonly attribute Boolean strict;
 }
+```
 
+### 分类
+
+* Unresolvable引用：base为Undefined类型，表示未声明的变量
+* Property引用：base为Boolean、Number、String、Object类型，表示对象属性
+* Environment引用：base为Environment Record类型，表示环境记录项中绑定的标识符
+
+### 属性
+
+* base: 基值
+* name: 引用名
+* strict: 是否为严格模式
+
+## Reference操作
+
+```javascript
 interface Reference Operator {
-  Undefined or Number or String or Boolean or Object or Environment Record GetBase(Reference V);
+  Undefined or Boolean or Number or String or Object or Environment Record GetBase(Reference V);
   String GetReferenceName(Reference V);
   Boolean IsStrictReference(Reference V);
 
@@ -118,21 +163,7 @@ interface Reference Operator {
 }
 ```
 
-### 属性
-
-* base: 基值
-* name: 引用名
-* strict: 是否为严格模式
-
-### 分类
-
-* Unresolvable引用：base为Undefined类型，表示未声明的变量
-* Property引用：base为Number、String、Boolean、Object类型，表示对象属性
-* Environment引用：base为Environment Record类型，表示环境记录项中绑定的标识符
-
-### 操作
-
-#### GetValue(V)
+### GetValue(V)
 
 获取引用的值
 
@@ -186,9 +217,9 @@ interface Property Descriptor {
 
 ### 分类
 
-* 数据属性描述符：有[[Value]]、[[Writable]]、[[Enumerable]]、[[Configurable]]属性的描述符
-* 访问器属性描述符：有[[Get]]、[[Set]]、[[Enumerable]]、[[Configurable]]属性的描述符
-* 通用属性描述符：只有[[Enumerable]]或[[Configurable]]属性的描述符
+* 数据属性描述符：由[[Value]]、[[Writable]]、[[Enumerable]]、[[Configurable]]组成的描述符
+* 访问器属性描述符：由[[Get]]、[[Set]]、[[Enumerable]]、[[Configurable]]组成的描述符
+* 通用属性描述符：只由[[Enumerable]]或[[Configurable]]组成的描述符
 
 ### 描述符属性
 
@@ -198,6 +229,8 @@ interface Property Descriptor {
 * [[Set]]: 属性设置器
 * [[Enumerable]]: 属性是否可枚举
 * [[Configurable]]: 属性是否可配置
+
+## Property Descriptor操作
 
 ### 属性描述符判断
 
