@@ -19,7 +19,7 @@
 * [节点接口](lib/dom/node-interface.md)
 * [节点混合](lib/dom/node-mixin.md)
 * [节点监控](lib/dom/node-observer.md)
-* [Event](lib/dom/event.md)
+* [事件](lib/dom/event.md)
 
 ### HTML篇
 

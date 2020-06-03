@@ -14,12 +14,10 @@ XML被解析器解析为Node Tree
 Document节点
     指令、注释、CDATA节点
     文档类型节点
-    指令、注释、CDATA节点
     根元素节点 -- 属性节点
         文本节点
         子元素节点
         指令、注释、CDATA节点
-    指令、注释、CDATA节点
 ```
 
 ## DocumentFragment Tree
@@ -65,7 +63,7 @@ Shadow Tree的插槽，引用Slottables
 
 ### Slottables
 
-宿主元素的子文本/元素节点
+宿主元素的子文本、元素节点
 
 * slot: 对应的插槽名
 * assignedSlot: 对应的插槽节点

@@ -9,6 +9,7 @@
 * Document: 文档节点
 * DocumentType: 文档类型节点
 * DocumentFragment: 文档片段节点
+ * ShadowRoot: ShadowTree根节点
 * Element: 元素节点
 * Attr: 属性节点
 * CharacterData: 字符数据节点
@@ -47,32 +48,37 @@
 
 ## 节点操作
 
-### 插入节点
-
-在parent节点的一个子节点child前插入节点node
-
-#### 验证
+### 插入前校验
 
 * child是parent的子节点或null
 * node不能是parent及parent的祖先节点
 
-#### 插入
+### 插入节点
+
+在parent节点的一个子节点child前插入节点node
 
 * node为DocumentFragment节点时，插入node的子节点
-* 插入后相关的选区、slot、slottable发生相应的变化
-* 触发相应的slot change、customElement connected callback、mutation observer
+* live range在child后时执行相应调整
+* slot、slottable发生变化时触发slot change
+* 自定义元素插入时触发connectedCallback
+* 插入节点后触发subList mutation
 
 ### 追加节点
 
 在parent节点的最后一个节点后插入节点node
 
+### 删除前校验
+
+* child是parent节点的子节点
+
 ### 删除节点
 
 删除parent节点的一个子节点child
 
-* child是parent节点的子节点
-* 删除后相关的选区、slot、slottable、NodeIterator发生相应的变化
-* 触发相应的slot change、customElement disconnected callback、mutation observer
+* live range在child里或后时执行相应调整
+* slot、slottable发生变化时触发slot change
+* 自定义元素移除时触发disconnectedCallback
+* 移除节点后触发subList mutation
 
 ### 替换节点
 
