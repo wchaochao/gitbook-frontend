@@ -475,7 +475,7 @@ interface ShadowRoot: DocumentFragment {
 
 enum ShadowRootNode {
   "open",
-  "close"
+  "closed"
 }
 ```
 
