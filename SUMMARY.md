@@ -20,6 +20,7 @@
 * [节点混合](lib/dom/node-mixin.md)
 * [节点监控](lib/dom/node-observer.md)
 * [事件](lib/dom/event.md)
+* [中断](lib/dom/abort.md)
 
 ### HTML篇
 

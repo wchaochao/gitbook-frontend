@@ -29,7 +29,7 @@
 * 节点混合
 * 节点监控
 * 事件
-* 事件中断
+* 中断
 * 选区
 * 树遍历
 
@@ -74,8 +74,8 @@
 
 * 词法
 * 数据类型
-* 对象
 * 规范类型
+* 对象
 * 执行上下文
 * 表达式
 * 语句
@@ -87,9 +87,9 @@
 * Object对象
 * Array对象
 * Function对象
+* Boolean对象
 * Number对象
 * String对象
-* Boolean对象
 * Date对象
 * RegExp对象
 * Error对象
@@ -198,7 +198,7 @@
 * URI
 * MIME
 * 字符编码
-* 编程基础
+* 符号约定
 
 ### 编程篇
 
@@ -228,6 +228,10 @@
 * HTTP安全
 * HTTP增强
 
+### TCP/IP协议篇
+
+### 网络硬件篇
+
 ## 推荐资料
 
 * 《XML实用大全》
@@ -239,7 +243,7 @@
 * [CSSOM](https://github.com/NV/CSSOM)
 * [javascript.info](https://javascript.info/)
 * [ES5标准](http://book.wchaochao.com/gitbook-ecmascript-standard/)
-* [ES6标准](https://www.ecma-international.org/ecma-262/10.0/index.html#sec-intro)
+* [ES6标准](https://tc39.es/ecma262/)
 * [acorn](https://github.com/acornjs/acorn)
 * [JavaScript模块化编程](http://www.ruanyifeng.com/blog/2012/10/javascript_module.html)
 * [JavaScript模块化 七日谈](https://huangxuan.me/js-module-7day/#/)
