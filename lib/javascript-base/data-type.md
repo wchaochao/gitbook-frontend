@@ -6,7 +6,7 @@
 
 ## 分类
 
-* 原始值类型：存储值，包括Undefined、Null、Boolean、Number、String、BigInt、Symbol类型
+* 原始值类型：存储值，包括Undefined、Null、Boolean、Number、BigInt、String、Symbol类型
 * 引用类型：存储引用，包括Object类型
 
 ## Undefined类型
@@ -28,49 +28,137 @@
 
 布尔值
 
-* 条件判断
+* 逻辑判断
 
 ## Number类型
 
 数字
 
-* 64位双精度浮点数存储
-* 计算会存在误差
+### 存储
 
-```
+64位双精度浮点数存储
+
+1. 选择64位双精度浮点数离散值中最接近的一个值
+2. 同样接近时选择位数M为偶数的
+
+### 组成
+
 1位数符S + 11位阶码E（偏移量1023） + 52位尾数M
 
-E > 0 && E < 2047，表示值 (-1)^S * 2^(E-1023) * 1.M
-  Number.MAX_VALUE：S为0，E为2046，M全为1
-  Number.MAX_SAFE_INTEGER：S为0，E为1023 + 52，M全为1
-  Number.MIN_SAFE_INTEGER：S为-1，E为1023 + 52，M全为1
-  Number.EPSILON：S为0，E为1023，M为1
+```
+E > 0 && E < 2047，表示值 (-1)^S * 2^(E-1023) * 1.M，可用s * m * 2^e表示，s为+1或-1，2^52 <= m < 2^53，-1074 <= e <= 971
+  Number.MAX_VALUE：最大正数，1 * (2^53 - 1) * 971
+  Number.MAX_SAFE_INTEGER：最大安全整数，1 * (2^53 - 1)
+  Number.MIN_SAFE_INTEGER：最小安全整数，-1 * (2^53 - 1)
+  Number.EPSILON：1与大于1的最小浮点数的差值，2^-52
 
-E = 0，表示值 (-1)^S * 2^(-1023) * 0.M
-  +0：S为0，M全为0
-  -0：S为1，M全为0
-  Number.MIN_VALUE：S为0，M为1
+E = 0，表示值 (-1)^S * 2^(-1022) * 0.M，可用s * m * 2^e表示，s为+1或-1，m < 2^52，e为-1074
+  +0：1 * 0 * 2^-1074
+  -0：-1 * 0 * 2^-1074
+  Number.MIN_VALUE：最小正数，1 * 1 * 2^-1074
 
-E = 2047
+E = 2047，表示无限数
   Infinity：S为0，M全为0
   -Infinity：S为1，M全为0
   NaN：M不全为0
 ```
 
-## String类型
+### 分类
 
-字符串，使用UTF-16编码，每两个字节一个索引
+可以表示 2^64 - 2^53 + 3 个数
 
-* 单字节字符：两个字节表示
-* 多字节字符：高位两个字节、低位两个字节，会影响length和index值
+* 有限数：2^64 - 2^53个
+ * 规格数：2^64 - 2^54个
+ * 非规格数：2^53个，包括+0、-0
+* 无限数：3个
+ * 无穷大：正无穷大、父无穷大
+ * 非数字：2^53 - 2个表示方式
 
-## BigInt
+## BigInt类型
 
 任意精度的整数值
 
-## Symbol
+## String类型
 
-唯一的非字符串的属性名
+字符串
+
+### 存储
+
+UTF-16编码的Code Point
+
+1. 字符串转换为对应的Code Point
+2. Code Point使用UTF-16编码
+ a. 基本平面字符使用两个字节表示
+ b. 辅助平面字符使用代理对表示，高位两字节、低位两字节
+
+### 组成
+
+一系列的16位无符号整数
+
+* index: 索引，每两个字节一个索引
+* length: 长度，最大的索引加1
+
+## Symbol类型
+
+唯一的标识符，可以被用作属性名
+
+### 创建
+
+使用Symbol()创建
+
+```javascript
+let id1 = Symbol('id')
+let id2 = Symbol('id')
+
+id1 === id2 // false
+```
+
+### API
+
+* description: symbol的描述
+* toString(): 转换为字符串，symbol不会自动转换为字符串
+
+```javascript
+let id = Symbol('id')
+console.log(id) // TypeError: Cannot convert a Symbol value to a string
+
+console.log(id.description) // id
+console.log(id.toString()) // Symbol(id)
+```
+
+### 全局Symbol
+
+* Symbol.for(key): key不在全局symbol空间中，创建，在,返回
+* Symbol.keyFor(symbol): 返回全局symbol对应的key
+
+```javascript
+let id = Symbol.for('id')
+let idAgain = Symbol.for('id')
+
+id === idAgain // true
+
+let localSymbol = Symbol('name')
+Symbol.keyFor(id) // id
+Symbol.keyFor(localSymbol) // undefined
+```
+
+### 内置Symbol
+
+| Symbol | 描述 |
+| --- | --- |
+| Symbol.toPrimitive | 转换为原始值类型的方法，用在ToPrimitive操作中 |
+| Symbol.toStringTag | 获取对象字符串描述的方法，用在Object.prototype.toString中 |
+| Symbol.hasInstance | 判断是否是实例的方法，用在instanceof中 |
+| Symbol.isConcatSpreadable | 在数组拼接时是否要展开，用在Array.prototype.concat中 |
+| Symbol.iterator | 获取对象默认迭代器的方法，用在for-of中 |
+| Symbol.asyncIterator | 获取对象默认异步迭代器的方法，用在for-await-of中 |
+| Symbol.species | 用于创建衍生对象的构造器 |
+| Symbol.match | 字符串匹配方法，用在String.prototype.match中 |
+| Symbol.matchAll | 字符串匹配所有方法，用在String.prototype.matchAll中 |
+| Symbol.replace | 字符串替换方法，用在String.prototype.matchAll中 |
+| Symbol.search | 字符串查询方法，用在String.prototype.search中 |
+| Symbol.split | 字符串分隔方法，用在String.prototype.split中 |
+| Symbol.unscopables | 不会被with对象访问的属性配置 |
 
 ## Object类型
 

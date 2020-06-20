@@ -21,6 +21,8 @@
 * [节点监控](lib/dom/node-observer.md)
 * [事件](lib/dom/event.md)
 * [中断](lib/dom/abort.md)
+* [选区](lib/dom/range.md)
+* [树遍历](lib/dom/traversal.md)
 
 ### HTML篇
 
@@ -30,6 +32,7 @@
 
 * [词法](lib/javascript-base/lexical.md)
 * [数据类型](lib/javascript-base/data-type.md)
+* [数字操作](lib/javascript-base/number-operation.md)
 * [规范类型](lib/javascript-base/specification.md)
 
 ### JavaScript设计模式篇

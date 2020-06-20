@@ -383,12 +383,24 @@ dictionary ElementCreationOptions {
 2. 外部节点从它的树中移除，并设置移动节点及其后代节点的node document为document
 3. 节点或后代节点为自定义元素时触发adoptedCallback事件
 
+### 创建遍历器
+
+#### createNodeIterator(root, whatToShow, filter)
+
+1. 创建NodeIterator对象
+2. 初始化root、whatToShow、filter
+3. 设置referenceNode为root，pointerBeforeReferenceNode为true
+
+#### createTreeWalker(root, whatToShow, filter)
+
+1. 创建TreeWalker对象
+2. 初始化root、whatToShow、filter
+3. 设置current为root
+
 ### 创建其他
 
 * createEvent(interface): 创建指定类型的事件对象，使用Event构造函数替代
 * createRange(): 创建Range对象，使用Range构造函数替代
-* createNodeIterator(root, whatToShow, filter): 创建NodeIterator对象
-* createTreeWalker(root, whatToShow, filter): 创建TreeWalker对象
 
 ## DOMImplementation接口
 
@@ -749,6 +761,67 @@ interface NamedNodeMap {
 * setNamedItemNS(attr): 同element的setAttributeNodeNS(attr)
 * removeNamedItem(qualifiedName): 同element的removeAttribute(qualifiedName)
 * removeNamedItemNS(namespace, localName): 同element的removeAttributeNS(namespace, localName)
+
+## DOMTokenList接口
+
+```javascript
+interface DOMTokenList {
+  getter DOMString? item(unsigned long index);
+  readonly attribute unsigned long length;
+  stringifier attribute DOMString value;
+
+  boolean supports(DOMString token);
+  boolean contains(DOMString token);
+
+  void add(DOMString... tokens);
+  void remove(DOMString... tokens);
+  boolean toggle(DOMString token, optional boolean force);
+  boolean replace(DOMString token, DOMString newToken);
+
+  iterable<DOMString>;
+}
+```
+
+### 内部属性
+
+* token set: token组
+* element: 关联的element节点
+* local name: 关联的attribute节点的local name
+* supported tokens: local name支持的tokens
+
+### 创建
+
+1. 获取element的local name属性
+2. 将属性值转换为token set
+
+### 校验token
+
+* token为空字符串，抛出错误
+* token含有ASCII空白符，抛出错误
+
+### 特征属性
+
+* [index]: 索引对应的token
+* item(index): 同[index]
+* length: token set的size
+* value: 获取/设置element的local name属性
+
+### token判断
+
+* supports(token): 是否在supported tokens中，没有supported tokens时抛出错误
+* contains(token): 是否包含token
+
+### token操作
+
+操作前先校验token，操作后更新local name属性
+
+* add(tokens...): 添加tokens
+* remove(tokens...): 移除tokens
+* toggle(token[, force]): 切换token
+ * force未提供时，token存在时移除，不存在时添加
+ * force为true时，添加token
+ * force为false时，移除token
+* replace(token, newToken): 替换token
 
 ## Attr接口
 

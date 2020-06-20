@@ -153,26 +153,6 @@ _$.prototype = {
     return this
   }
 }
-
-window.$ = function () {
-  return new _$(arguments)
-}
-```
-
-辅助方法
-
-```javascript
-Function.prototype.method = function (name, fn) {
-  this.prototype[name] = fn
-  return this
-}
-
-// 安装器，避免命名冲突
-window.installHelper = function (scope, interface) {
-  scope[interface] = function () {
-    return new _$(arguments)
-  }
-}
 ```
 
 ### 取值器
@@ -212,6 +192,12 @@ function API2 () {
 ```
 
 ## 工厂模式
+
+通过工厂创建单体
+
+* 在运行时动态选择所用的类
+* 多个小对象组合成大对象
+* 成员对象间存在设置耦合
 
 ### 简单工厂
 
@@ -292,232 +278,263 @@ AcmeBicycleShop.prototype.createBicycle = function (model) {
 }
 ```
 
-### 适合场所
-
-* 在运行区间动态选择所用的类
-* 多个小对象组合成的大对象
-* 成员对象间存在设置耦合
-
-xhr工厂
-
-```javascript
-onst Ajaxhandler = new Interface('AjaxHandler', ['createXhrObject', 'request'])
-
-function SimpleHandler () {}
-SimpleHandler.prototype = {
-  createXhrObject () {
-    let fn
-    if (typeof XMLHttpRequest === 'function') {
-      fn = function () {
-        return new XMLHttpRequest()
-      }
-    } else if (typeof ActiveXObject === 'function') {
-      fn = function () {
-        return new ActiveXObject('MicroSoft.XMLHttp')
-      }
-    }
-
-    this.createXhrObject = fn
-    return fn()
-  },
-  request (method, url, callback, data) {
-    const xhr = this.createXhrObject()
-    xhr.onreadystatechange = function () {
-      if (xhr.readystate !== 4) {
-        return
-      }
-
-      if (xhr.status === 200) {
-        callback.success(xhr.responseText, xhr.responseXML)
-      } else {
-        callbace.failure(xhr.status)
-      }
-    }
-
-    xhr.open(method, url, true)
-    xhr.send(method === 'POST' ? data : null)
-  }
-}
-
-function QueuedHandler () {
-  this.queue = []
-  this.requestInProgress = false
-  this.retryDelay = 5000
-}
-extend(QueueHandler, SimpleHandler)
-Queued.prototype.request = function (method, url, callback, data, override) {
-  if (this.requestInProgress && !override) {
-    this.queue.push({
-      method,
-      url,
-      callback,
-      data
-    })
-  } else {
-    this.requestInProgress = true
-    const xhr = this.createXhrObject()
-    xhr.onreadystatechange = function () {
-      if (xhr.readystate !== 4) {
-        return
-      }
-
-      if (xhr.status === 200) {
-        callback.success(xhr.responseText, xhr.responseXML)
-        this.advanceQueue()
-      } else {
-        callback.failure(xhr.status)
-        setTimeout(() => {
-          this.request(method, url, callback, data, true)
-        }, this.retryDelay)
-      }
-    }
-  }
-}
-Queued.prototype.advanceQueue = function () {
-  if (this.queue.length === 0) {
-    this.requestInProgress = false
-    return
-  }
-
-  const req = this.queue.shift()
-  this.request(req.method, req.url, req.callback, req.data, true)
-}
-
-function offlineHandler () {
-  this.storedRequest = []
-}
-extend(offlineHandler, SimpleHandler)
-OfflineHandler.prototype.request = function (method, url, callback, data) {
-  if (XhrManager.isOffline()) {
-    this.storedRequest.push({
-      method,
-      url,
-      callback,
-      data
-    })
-  } else {
-    this.flushStoredRequest()
-    OfflineHandler.super.request(method, url, callback, data)
-  }
-}
-OfflineHandler.prototype.flushStoredRequest = function () {
-  for (const req of this.storedRequest) {
-    OfflineHandler.super.request(req.method, req.url, req.callback, req.data)
-  }
-}
-
-const XhrManager = {
-  createXhrHandler () {
-    let xhr
-    if (this.isOffline()) {
-      xhr = new OfflineHandler()
-    } else if (this.isHighLatency()) {
-      xhr = new QueuedHandler()
-    } else {
-      xhr = new SimpleHandler()
-    }
-
-    Interface.ensureImplements(xhr, Ajaxhandler)
-    return xhr
-  },
-  isOffline () {
-    // ...
-  },
-  isHighLatency () {
-    // ...
-  }
-}
-```
-
-RSS阅读器
-
-```javascript
-const DisplayModule = new Interface('DisplayModule', ['append', 'remove', 'clear'])
-
-function ListDiaplay (id, parent) {
-  this.list = document.createElement('ul')
-  this.list.id = id
-  parent.appendChild(this.list)
-}
-
-ListDisplay.prototype = {
-  append (text) {
-    const li = document.createElement('li')
-    li.innerHTML = text
-    this.list.appendChild(li)
-    return li
-  },
-  remove (el) {
-    this.list.removeChild(el)
-  },
-  clear (el) {
-    this.list.innerHTML = ''
-  }
-}
-
-const displayManager = {
-  createDisplayModule (id, parent) {
-    const displayModule = new ListDiaplay(id, parent)
-    Interface.ensureImplements(displayModule, DisplayModule)
-
-    return displayModule
-  }
-}
-
-const conf = {
-  id: 'cnn-top-stories',
-  parent: $('feed-readers'),
-  feedUrl: 'http://rss.cnn.com/rss/cnn_topstories.rss',
-  updateInterval: 60000
-}
-
-function FeedReader (display, xhrHander, conf) {
-  this.display = display
-  this.xhrHander = xhrHander
-  this.conf = conf
-
-  this.startUpdates()
-}
-
-FeedReader.prototype = {
-  fetchFeed () {
-    this.xhrHander.request('GET', `feedProxy.php?feed=${this.conf.feedUrl}`, {
-      success: (text, xml) => this.parseFeed(text, xml),
-      failure: status => this.showError(status)
-    })
-  },
-  parseFeed (responseText, responseXML) {
-    this.display.clear()
-    const items = responseXML.querySelectorAll('item')
-    for (let i = 0, len = items.length; i < len; i++) {
-      const title = items[i].querySelector('title')
-      const link = items[i].qeurySelector('link')
-      this.display.append(`<a href="${link.textContent}">${title.textContent}</a>`)
-    }
-  },
-  showError (status) {
-    this.display.clear()
-    this.display.append('Error fetching feed.')
-  },
-  startUpdates () {
-    this.fetchFeed()
-    this.interval = setInterval(() => this.fetchFeed(), this.conf.updateInterval)
-  },
-  stopUpdates () {
-    clearInterval(this.interval)
-  }
-}
-
-const FeedManger = {
-  createFeedReader = function (conf) {
-    const displayModule = displayManager.createDisplayModule(`${conf.id}-display`, conf.parent)
-    const xhrHander = xhrManger.createXhrHandler()
-
-    return new FeedReader(displayModule, xhrHander, conf)
-  }
-}
-```
-
 ## 桥接模式
 
 将抽象与实现相分离，以便二者独立变化
+
+### 抽象处理
+
+* 封装相同部分，再桥接具体实现
+* 解除对特定变量的耦合，便于单元测试
+
+```javascript
+addEvent(element, 'click', getBeerByIdBridge)
+
+function getBeerByIdBridge (e) {
+  getBeerById(this.id, beer => {
+    console.log('Requested Beer: ', beer)
+  })
+}
+
+function getBeerById (id, callback) {
+  asyncRequest('GET', `beer.url?id=${id}`, res => {
+    callback(res.responseText)
+  })
+}
+```
+
+### 多维变化
+
+封装每个变化，再进行桥接组合
+
+```javascript
+// 运动单元
+function Speed (x, y) {
+  this.x = x
+  this.y = y
+}
+Speed.prototype.run = function () {
+  console.log('run')
+}
+
+// 着色单元
+function Color (color) {
+  this.color = color
+}
+Color.prototype.draw = function () {
+  console.log('draw')
+}
+
+// 球类
+function Ball (x, y, c) {
+  this.speed = new Speed(x, y)
+  this.color = new Color(c)
+}
+Ball.prototype.init = function () {
+  this.speed.run()
+  this.color.draw()
+}
+```
+
+## 组合模式
+
+将大批子对象按照组合对象、叶对象组织成树结构
+
+* 每个节点实现相同的接口
+ * 组合对象执行接口时往下传递
+ * 叶对象执行接口时执行具体操作
+* 适用于动态用户界面
+
+### 动态表单
+
+```javascript
+const Composite = new Interface('Composite', ['add', 'remove', 'getChild'])
+const FormItem = new Interface('FormItem', ['save', 'restore'])
+
+class CompositeForm {
+  constructor (id, method = 'POST', action = '#') {
+    this.formComponents = []
+
+    this.element = document.createElement('form')
+    this.element.id = id
+    this.element.method = method
+    this.element.action = action
+  }
+
+  has (child) {
+    const index = this.formComponents.indexOf(child)
+    return index !== -1
+  }
+
+  add (child) {
+    if (this.has(child)) {
+      return
+    }
+    Interface.ensureImplements(child, Composite, FormItem)
+    this.formComponents.push(child)
+    this.element.appendChild(child.getElement())
+  }
+
+  remove (child) {
+    const index = this.formComponents.indexOf(child)
+    if (index !== -1) {
+      this.formComponents.splice(index, 1)
+      this.element.removeChild(child)
+    }
+  }
+
+  getChild (i) {
+    return this.formComponents[i]
+  }
+
+  forEach (callback) {
+    this.formComponents.forEach(item => {
+      callback.call(this, item)
+    })
+  }
+
+  save () {
+    this.forEach(item => item.save())
+  }
+
+  restore () {
+    this.forEach(item => item.restore())
+  }
+}
+
+class Field {
+  constructor (id) {
+    this.id = id
+    this.element = document.createElement('div')
+    this.element.className = 'input-field'
+  }
+
+  add () {}
+  remove () {}
+  getChild () {}
+
+  save () {
+    setCookie(this.id, this.getValue)
+  }
+
+  getValue () {
+    throw new Error('Unsupported operation on the class Field')
+  }
+
+  restore () {
+    this.element.value = getCookie(this.id)
+  }
+
+  getElement () {
+    return this.element
+  }
+}
+
+class InputField extends Field {
+  constructor (id, label) {
+    super(id)
+
+    this.input = document.createElement('input')
+    this.input.id = id
+
+    this.label = document.createElement('label')
+    const labelTextNode = document.createTextNode(label)
+    this.label.appendChild(labelTextNode)
+
+    this.element.appendChild(this.label)
+    this.element.appendChild(this.input)
+  }
+
+  getValue () {
+    return this.input.value
+  }
+}
+
+class TextareaField extends Field {
+  constructor (id, label) {
+    super(id)
+
+    this.textarea = document.createElement('textarea')
+    this.textarea.id = id
+
+    this.label = document.createElement('label')
+    const labelTextNode = document.createTextNode(label)
+    this.label.appendChild(labelTextNode)
+
+    this.element.appendChild(this.label)
+    this.element.appendChild(this.textarea)
+  }
+
+  getValue () {
+    return this.textarea.value
+  }
+}
+
+class SelectField extends Field {
+  constructor (id, label) {
+    super(id)
+
+    this.select = document.createElement('select')
+    this.select.id = id
+
+    this.label = document.createElement('label')
+    const labelTextNode = document.createTextNode(label)
+    this.label.appendChild(labelTextNode)
+
+    this.element.appendChild(this.label)
+    this.element.appendChild(this.select)
+  }
+
+  getValue () {
+    return this.select.options[this.select.selectedIndex].value
+  }
+}
+```
+
+## 门面模式
+
+简化接口
+
+* 处理浏览器兼容性
+* 简化常见的重复性任务
+* 组合函数
+
+### 便利方法
+
+```javascript
+DED.util.Event = {
+  addEvent (el, type, fn) {
+    if (window.addEventListener) {
+      el.addEventListener(type, fn, false)
+    } else if (window.attachEvent) {
+      el.attachEvent(`on${type}`, fn)
+    } else {
+      el[`on${type}`] = fn
+    }
+  },
+  getEvent (e) {
+    return e || window.event
+  },
+  getTarget (e) {
+    return e.target || e.srcElement
+  },
+  stopPropagation (e) {
+    if (e.stopPropagation) {
+      e.stopPropagation()
+    } else {
+      e.cancelBubble = true
+    }
+  },
+  preventDefault (e) {
+    if (e.preventDefault) {
+      e.preventDefault()
+    } else {
+      e.returnValue = false
+    }
+  },
+  stopEvent (e) {
+    this.stopPropagation(e)
+    this.preventDefault(e)
+  }
+}
+```
