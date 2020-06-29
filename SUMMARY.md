@@ -47,6 +47,8 @@
 
 ### Web API
 
+* [Infra](lib/web-api/infra.md)
+* [Encoding](lib/web-api/encoding.md)
 * [Web Component](lib/web-api/web-component.md)
 
 ### Web安全篇
@@ -66,7 +68,6 @@
 * [URI](lib/computer-base/uri.md)
 * [MIME](lib/computer-base/mime.md)
 * [字符编码](lib/computer-base/encode.md)
-* [编程基础](lib/computer-base/program.md)
 
 ### HTTP协议篇
 

@@ -40,7 +40,6 @@
 ### HTML篇
 
 * HTML基础
-* HTML标准
 
 ### 模板引擎篇
 
@@ -83,7 +82,7 @@
 * 函数
 * 严格模式
 
-### ES5篇
+### JavaScript API篇
 
 * Object对象
 * Array对象
@@ -97,11 +96,6 @@
 * global对象
 * Math对象
 * JSON对象
-
-### ES6篇
-
-* let和const
-* Symbol
 
 ### Acorn篇
 
@@ -155,6 +149,15 @@
 
 ### Web API篇
 
+* Infra
+* Encoding
+* MIME
+* URL
+* XMLHttpRequest
+* Fetch
+* Storage
+* Console
+* Streams
 * Web Component
 
 ### Web安全篇
@@ -199,7 +202,6 @@
 * URI
 * MIME
 * 字符编码
-* 符号约定
 
 ### 编程篇
 
@@ -231,22 +233,28 @@
 
 ### TCP/IP协议篇
 
+* 网络基础
+* 数据链路层
+* 网络层
+* 传输层
+* 应用层
+
 ### 网络硬件篇
 
 ## 推荐资料
 
-* 《XML实用大全》
-* [htmlparser2](https://github.com/fb55/htmlparser2)
 * [Infra标准](https://infra.spec.whatwg.org/)
 * [DOM标准](https://dom.spec.whatwg.org/)
 * [HTML](https://wchaochao.gitbooks.io/frontend-dev/content/markup/html/)
 * [HTML标准](https://html.spec.whatwg.org/multipage/)
-* [CSSOM](https://github.com/NV/CSSOM)
-* [javascript.info](https://javascript.info/)
 * [ES5标准](http://book.wchaochao.com/gitbook-ecmascript-standard/)
-* [ES6标准](https://tc39.es/ecma262/)
-* [acorn](https://github.com/acornjs/acorn)
+* [ECMAScript标准](https://tc39.es/ecma262/)
+* [javascript.info](https://javascript.info/)
 * [JavaScript模块化编程](http://www.ruanyifeng.com/blog/2012/10/javascript_module.html)
 * [JavaScript模块化 七日谈](https://huangxuan.me/js-module-7day/#/)
+* [UNIX Tutorial for Beginners](http://www.ee.surrey.ac.uk/Teaching/Unix/index.html)
+* [htmlparser2](https://github.com/fb55/htmlparser2)
+* [CSSOM](https://github.com/NV/CSSOM)
+* [acorn](https://github.com/acornjs/acorn)
 * [micro-frontends](https://martinfowler.com/articles/micro-frontends.html)
 * [single-spa](https://github.com/single-spa/single-spa)

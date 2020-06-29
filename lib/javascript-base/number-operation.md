@@ -138,7 +138,7 @@
 4. y为正无穷，返回true
 5. y为负无穷，返回false
 6. x为负无穷，返回true
-7. x大于y，返回true
+7. x小于y，返回true
 8. 其他情况返回false
 
 ### Number::equal(x, y)
@@ -198,9 +198,145 @@
 
 ### Number::toString(x)
 
+字符串表示
+
 1. x为NaN，返回'NaN'
 2. x为+0或-0，返回'0'
 3. x小于0，返回'-'拼接Number::toString(-x)
 4. x为正无穷，返回'Infinity'
 5. x小数点前的数字超过21位或小数点后紧跟的0超过5位，返回科学计数法字符串
 6. 其他情况，返回数字字符串
+
+## BigInt操作
+
+### BigInt::unaryMinus(x)
+
+整数取负
+
+1. x为0n，返回0n
+2. 其他情况返回-x
+
+### BigInt::bitwiseNOT(x)
+
+整数取反
+
+2. 按位取反，返回-x-1
+
+### BigInt::exponentiate(base, exponent)
+
+整数指数
+
+1. exponent小于0n, 抛出RangeError
+2. base为0n且exponent为0n，返回1n
+3. 其他情况进行指数运算
+
+### BigInt::multiply(x, y)
+
+整数乘法
+
+1. 进行乘法运算
+
+### BigInt::divide(x, y)
+
+整数除法
+
+1. y为0n，返回NaN
+2. 其他情况进行除法运算，向0近似
+
+### BigInt::remainder(n, d)
+
+整数求余
+
+1. d为0n，返回NaN
+2. n为0n，返回0n
+3. 其他情况进行绝对值求余运算，符号为被除数符号
+
+### BigInt::add(x, y)
+
+整数加法
+
+1. 进行加法运算
+
+### BigInt::subtract(x, y)
+
+整数减法
+
+1. 进行减法运算
+
+### BigInt::leftShift(x, y)
+
+整数左移
+
+1. y小于0n, 返回x / 2^y, 向最近整数近似
+2. 其他情况返回x * 2^y
+
+### BigInt::signedRightShift(x, y)
+
+整数有符号右移
+
+1. 相当于BigInt::leftShift(x, -y)
+
+### BigInt::unsignedRightShift(x, y)
+
+整数无符号右移
+
+1. 抛出TypeError
+
+### BigInt::lessThan(x, y)
+
+整数小于
+
+1. x小于y，返回true
+8. 其他情况返回false
+
+### BigInt::equal(x, y)
+
+整数相等
+
+1. x、y为相同的数，返回true
+2. 其他情况返回false
+
+### BigInt::sameValue(x, y)
+
+整数同一个数
+
+1. 相当于BigInt::equal(x, y)
+
+### BigInt::sameValueZero(x, y)
+
+整数同一个数，包括0
+
+1. 相当于BigInt::equal(x, y)
+
+### BigIntBitwiseOp(op, x, y)
+
+整数位操作
+
+1. op为&时，x、y进行按位与操作
+2. op为|时，x、y进行按位或操作
+3. op为^时，x、y进行按位异或操作
+
+### BigInt::bitwiseAND(x, y)
+
+整数按位与
+
+1. 相当于BigIntBitwiseOp(&, x, y)
+
+### BigInt::bitwiseOR(x, y)
+
+整数按位或
+
+1. 相当于BigIntBitwiseOp(|, x, y)
+
+### BigInt::bitwiseXOR(x, y)
+
+整数按位异或
+
+1. 相当于BigIntBitwiseOp(^, x, y)
+
+### BigInt::toString(x)
+
+整数字符串表示
+
+1. x小于0，返回'-'拼接BigInt::toString(-x)
+2. 其他情况，返回BigInt字符串

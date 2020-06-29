@@ -4,9 +4,9 @@
 
 ---
 
-## 单体模式
+## 模块模式
 
-将代码组织成一个逻辑单元，最多实例化一次
+将代码组织成一个逻辑单元
 
 ### 基本结构
 
@@ -16,7 +16,7 @@
 * 划分命名空间，避免命名冲突
 
 ```javascript
-const Singleton = {
+const module1 = {
   attribute1: true,
   attribute2: 10,
 
@@ -34,12 +34,12 @@ const Singleton = {
 }
 ```
 
-### 私有成员
+### 成员
 
 划分好公共成员和私有成员，面向接口编程
 
 ```javascript
-MyNamespace.singleton = (function () {
+const module2 = (function () {
   let privateAttribute1 = false
   let privateAttribute2 = [1, 2, 3]
 
@@ -64,104 +64,11 @@ MyNamespace.singleton = (function () {
 })()
 ```
 
-### 惰性加载
-
-需要时才实例化
-
-```javascript
-MyNamespace.singleton = (function () {
-  let uniqueInstance
-
-  function constructor () {
-    // ...
-  }
-
-  return {
-    getInstance () {
-      if (!uniqueInstance) {
-        uniqueInstance = constructor()
-      }
-      return uniqueInstance
-    }
-  }
-})()
-```
-
-### 分支
-
-根据分支返回拥有相同接口的单体
-
-```javascript
-MyNamespace.singleton = (function () {
-  let objectA = {
-    method1 () {
-      // ...
-    }
-  }
-
-  let objectB = {
-    method1 () {
-      // ...
-    }
-  }
-
-  return someCondition ? objectA : objectB
-})()
-```
-
 ## 链式调用
 
-### 赋值器
-
-* 返回this以调用下一个对象方法
+返回this以调用下一个对象方法
 
 ```javascript
-function _$(els) {
-  this.elements = []
-  for (let elm of els) {
-    if (typeof elm === 'string') {
-      elm = document.getElementById(elm)
-    }
-    this.elements.push(elm)
-  }
-}
-
-_$.prototype = {
-  each (fn) {
-    for(const elm of this.elements) {
-      fn.call(this, elm)
-    }
-    return this
-  },
-  setStyle (prop, val) {
-    this.each(el => el.style[prop] = val)
-    return this
-  },
-  show () {
-    this.each(el => this.setStyle('display', 'block'))
-    return this
-  },
-  addEvent (type, fn) {
-    const add = el => {
-      if (window.addEventListener) {
-        el.addEventListener(type, fn, false)
-      } else if (window.attachEvent) {
-        el.attachEvent(`on${type}`, fn)
-      }
-    }
-    this.each(el => add(el))
-    return this
-  }
-}
-```
-
-### 取值器
-
-* 返回数据中断链式调用
-* 返回this，数据通过回调返回
-
-```javascript
-// 返回数据
 function API () {
   let name = 'Hello world'
 
@@ -175,7 +82,6 @@ function API () {
   }
 }
 
-// 通过回调返回数据
 function API2 () {
   let name = 'Hello world'
 
@@ -184,6 +90,7 @@ function API2 () {
     return this
   }
 
+  // 通过回调返回数据
   this.getName = function (callback) {
     callback.call(this, name)
     return this
@@ -191,13 +98,32 @@ function API2 () {
 }
 ```
 
+## 单体模式
+
+共享一个模块，实现懒加载
+
+```javascript
+const Singleton = (function () {
+  let uniqueInstance
+
+  function createInstance () {
+    // ...
+  }
+
+  return {
+    getInstance () {
+      if (!uniqueInstance) {
+        uniqueInstance = createInstance()
+      }
+      return uniqueInstance
+    }
+  }
+})()
+```
+
 ## 工厂模式
 
-通过工厂创建单体
-
-* 在运行时动态选择所用的类
-* 多个小对象组合成大对象
-* 成员对象间存在设置耦合
+通过工厂创建模块
 
 ### 简单工厂
 
@@ -225,14 +151,15 @@ const BicycleFactory = {
   }
 }
 
-function BicycleShop () {}
-BicycleShop.prototype.sellBicycle = function (model) {
-  const bicycle = BicycleFactory.createBicycle(model)
+class BicycleShop {
+  sellBicycle (model) {
+    const bicycle = BicycleFactory.createBicycle(model)
 
-  bicycle.assemble()
-  bicycle.wash()
+    bicycle.assemble()
+    bicycle.wash()
 
-  return bicycle
+    return bicycle
+  }
 }
 ```
 
@@ -241,111 +168,114 @@ BicycleShop.prototype.sellBicycle = function (model) {
 将成员对象的创建推迟到子类
 
 ```javascript
-function BicycleShop () {}
-BicycleShop.prototype = {
-  sellBicyclev(model) {
-    const bicycle = this.createBicycle(model)
+class BicycleShop {
+  sellBicycle (model) {
+    const bicycle = BicycleFactory.createBicycle(model)
 
     bicycle.assemble()
     bicycle.wash()
 
     return bicycle
-  },
+  }
+
   createBicycle (model) {
     throw new Error('Unsupported operation on an abtract class.')
   }
 }
 
-function AcmeBicycleShop () {}
-extend(AcmeBicycleShop, BicycleShop)
-AcmeBicycleShop.prototype.createBicycle = function (model) {
-  let bicycle
+class AcmeBicycleShop extends BicycleShop {
+  createBicycle (model) {
+    let bicycle
 
-  switch (model) {
-    case 'The Speedster':
-      bicycle = new AcmeSpeedster()
-      break
-    case 'The Lowrider':
-      bicycle = new AcmeLowrider()
-      break
-    case 'The Comfort Cruiser':
-    default:
-      bicycle = new AcmeComfortCruiser()
+    switch (model) {
+      case 'The Speedster':
+        bicycle = new AcmeSpeedster()
+        break
+      case 'The Lowrider':
+        bicycle = new AcmeLowrider()
+        break
+      case 'The Comfort Cruiser':
+      default:
+        bicycle = new AcmeComfortCruiser()
+    }
+
+    Interface.ensureImplements(bicycle, Bicycle)
+    return bicycle
+  }
+}
+```
+
+## 装饰者模式
+
+装饰接口
+
+### 类装饰者
+
+* 使用装饰对象包装组件，装饰对象与组件形成线性结构
+* 装饰对象与组件实现相同的接口
+ * 装饰对象执行接口时执行自定义操作，可以使用或不使用组件的接口
+
+```javascript
+const Bicycle = new Interface('Bicycle', ['assemble', 'repair', 'getPrice'])
+
+class BicycleDecorator {
+  constructor (bicycle) {
+    Interface.ensureImplements(bicycle, Bicycle)
+    this.bicycle = bicycle
   }
 
-  Interface.ensureImplements(bicycle, Bicycle)
-  return bicycle
+  // 方法前添加行为
+  assemble () {
+    return 'Attach decorator. ' + this.bicycle.assemble()
+  }
+
+  // 方法后添加行为
+  getPrice () {
+    return this.bicycle.getPrice() + 9.00
+  }
+
+  // 替换方法
+  repair () {
+    return 'repair'
+  }
+
+  // 添加新方法
+  ring () {
+    return 'Bell rung.'
+  }
 }
 ```
 
-## 桥接模式
+### 函数装饰者
 
-将抽象与实现相分离，以便二者独立变化
-
-### 抽象处理
-
-* 封装相同部分，再桥接具体实现
-* 解除对特定变量的耦合，便于单元测试
+给原函数添加功能
 
 ```javascript
-addEvent(element, 'click', getBeerByIdBridge)
-
-function getBeerByIdBridge (e) {
-  getBeerById(this.id, beer => {
-    console.log('Requested Beer: ', beer)
-  })
+function before (fn, beforeFn) {
+  return function () {
+    let flag = beforeFn.apply(this, arguments)
+    if (flag === false) {
+      return
+    }
+    return fn.apply(this, arguments)
+  }
 }
 
-function getBeerById (id, callback) {
-  asyncRequest('GET', `beer.url?id=${id}`, res => {
-    callback(res.responseText)
-  })
-}
-```
-
-### 多维变化
-
-封装每个变化，再进行桥接组合
-
-```javascript
-// 运动单元
-function Speed (x, y) {
-  this.x = x
-  this.y = y
-}
-Speed.prototype.run = function () {
-  console.log('run')
-}
-
-// 着色单元
-function Color (color) {
-  this.color = color
-}
-Color.prototype.draw = function () {
-  console.log('draw')
-}
-
-// 球类
-function Ball (x, y, c) {
-  this.speed = new Speed(x, y)
-  this.color = new Color(c)
-}
-Ball.prototype.init = function () {
-  this.speed.run()
-  this.color.draw()
+function after (fn, afterFn) {
+  return function () {
+    let result = fn.apply(this, arguments)
+    afterFn.apply(this, arguments)
+    return result
+  }
 }
 ```
 
 ## 组合模式
 
-将大批子对象按照组合对象、叶对象组织成树结构
-
-* 每个节点实现相同的接口
+* 使用组合对象包装子对象，组合对象与子对象形成树结构
+* 组合对象与子对象实现相同的接口
  * 组合对象执行接口时往下传递
  * 叶对象执行接口时执行具体操作
-* 适用于动态用户界面
-
-### 动态表单
 
 ```javascript
 const Composite = new Interface('Composite', ['add', 'remove', 'getChild'])
@@ -418,7 +348,7 @@ class Field {
   }
 
   getValue () {
-    throw new Error('Unsupported operation on the class Field')
+    return this.element.value
   }
 
   restore () {
@@ -429,65 +359,25 @@ class Field {
     return this.element
   }
 }
+```
 
-class InputField extends Field {
-  constructor (id, label) {
-    super(id)
+## 桥接模式
 
-    this.input = document.createElement('input')
-    this.input.id = id
+将抽象与实现相分离，以便二者独立变化
 
-    this.label = document.createElement('label')
-    const labelTextNode = document.createTextNode(label)
-    this.label.appendChild(labelTextNode)
+```javascript
+addEvent(element, 'click', getBeerByIdBridge)
 
-    this.element.appendChild(this.label)
-    this.element.appendChild(this.input)
-  }
-
-  getValue () {
-    return this.input.value
-  }
+function getBeerByIdBridge (e) {
+  getBeerById(this.id, beer => {
+    console.log('Requested Beer: ', beer)
+  })
 }
 
-class TextareaField extends Field {
-  constructor (id, label) {
-    super(id)
-
-    this.textarea = document.createElement('textarea')
-    this.textarea.id = id
-
-    this.label = document.createElement('label')
-    const labelTextNode = document.createTextNode(label)
-    this.label.appendChild(labelTextNode)
-
-    this.element.appendChild(this.label)
-    this.element.appendChild(this.textarea)
-  }
-
-  getValue () {
-    return this.textarea.value
-  }
-}
-
-class SelectField extends Field {
-  constructor (id, label) {
-    super(id)
-
-    this.select = document.createElement('select')
-    this.select.id = id
-
-    this.label = document.createElement('label')
-    const labelTextNode = document.createTextNode(label)
-    this.label.appendChild(labelTextNode)
-
-    this.element.appendChild(this.label)
-    this.element.appendChild(this.select)
-  }
-
-  getValue () {
-    return this.select.options[this.select.selectedIndex].value
-  }
+function getBeerById (id, callback) {
+  asyncRequest('GET', `beer.url?id=${id}`, res => {
+    callback(res.responseText)
+  })
 }
 ```
 
@@ -496,10 +386,7 @@ class SelectField extends Field {
 简化接口
 
 * 处理浏览器兼容性
-* 简化常见的重复性任务
 * 组合函数
-
-### 便利方法
 
 ```javascript
 DED.util.Event = {
@@ -536,5 +423,25 @@ DED.util.Event = {
     this.stopPropagation(e)
     this.preventDefault(e)
   }
+}
+```
+
+## 适配器模式
+
+适配接口
+
+```javascript
+const clientObject = {
+  string1: 'foo',
+  string2: 'bar',
+  string3: 'baz'
+}
+
+function interfaceMethod(str1, str2, str3) {
+  // ...
+}
+
+function clientToInterfaceAdapter (o) {
+  return interfaceMethod(o.string1, o.string2, o.string3)
 }
 ```

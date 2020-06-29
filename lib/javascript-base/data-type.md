@@ -76,7 +76,17 @@ E = 2047，表示无限数
 
 ## BigInt类型
 
-任意精度的整数值
+任意长度的整数值
+
+### 创建
+
+```javascript
+const bigint = 1234567890123456789012345678901234567890n
+
+const sameBigint = BigInt('1234567890123456789012345678901234567890')
+
+const bigintFromNumber = BigInt(10)
+```
 
 ## String类型
 
@@ -162,11 +172,67 @@ Symbol.keyFor(localSymbol) // undefined
 
 ## Object类型
 
-各类对象
+属性的集合
 
-* 内置对象
-* 原生对象
-* 宿主对象
+### 属性
+
+* 属性名：String类型或Symbol类型
+ * String类型：标识符名、String字面量、整数索引
+ * Symbol类型：Symbol值
+* 属性值：任意类型，为函数时称为方法
+
+### 属性描述符
+
+属性描述对象
+
+#### 数据属性
+
+属性值由`[[value]]`决定
+
+| 属性描述 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| [[Value]] | any | undefined | 属性值 |
+| [[Writable]] | Boolean | false | 属性值是否可设置，为false时不可设置属性值 |
+| [[Enumerable]] | Boolean | false | 属性是否可枚举，为true时可在`for/in, Object.keys, JSON.stringify`中遍历 |
+| [[Configurable]] | Boolean | false | 属性是否可配置，为false时属性不可删除、不可改为访问器属性、属性描述不可修改（[[Writable]]为true时，[[Writable]]和[[Value]]可修改） |
+
+#### 访问器属性
+
+属性值由`get/set`函数决定
+
+| 属性描述 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| [[Get]] | Function &#x7c; Undefined | undefined | 获取属性时执行的函数，参数为空，返回值为属性值 |
+| [[Set]] | Function &#x7c; Undefined | undefined | 设置属性时执行的函数，参数为设置的值 |
+| [[Enumerable]] | Boolean | false | 属性是否可枚举，为true时可在`for/in, Object.keys, JSON.stringify`中遍历 |
+| [[Configurable]] | Boolean | false | 属性是否可配置，为false时属性不可删除、不可改为数据属性、属性描述不可修改 |
+
+### 内部方法
+
+通用方法
+
+| 内部方法 | 类型 | 描述 |
+| --- | --- | --- |
+| [[GetPrototypeOf]] | () -> Object &#x7c; Null | 获取对象原型 |
+| [[SetPrototypeOf]] | (Object &#x7c; Null) -> Boolean | 设置对象原型 |
+| [[IsExtensible]] | () -> Boolean | 对象是否可扩展，不可扩展时不能添加属性，不能设置原型 |
+| [[PreventExtensions]] | () -> Boolean | 阻止对象扩展 |
+| [[GetOwnProperty]] | (propertyKey) -> Undefined &#x7c; Property Descriptor | 获取对象自身属性的属性描述符 |
+| [[DefineOwnProperty]] | (propertyKey, Property Descriptor) -> Boolean | 设置对象自身属性的属性描述符，不存在时创建 |
+| [[HasProperty]] | (propertyKey) -> Boolean | 是否是对象自身或继承的属性 |
+| [[Get]] | (propertyKey, Receiver) -> any | 获取对象自身或继承属性的属性值 |
+| [[Set]] | (propertyKey, value, Receiver) -> Boolean | 设置属性值 |
+| [[Delete]] | (propertyKey) -> Boolean | 设置对象自身属性 |
+| [[OwnPropertyKeys]] | () -> List of PropertyKey | 获取对象自身属性的属性名List |
+
+函数专用方法
+
+| 内部方法 | 类型 | 描述 |
+| --- | --- | --- |
+| [[Call]] | (any, a List of any) -> any | 执行函数 |
+| [[Construct]] | (a List of any, Object) -> Object | 创建实例对象 |
+
+## 内置对象
 
 ### Object对象
 
