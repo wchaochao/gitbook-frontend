@@ -6,46 +6,11 @@
 
 前端知识归纳
 
-## XML系列
-
-### XML篇
-
-* XML基础
-* DTD
-* XSLT
-* XPath
-
-### htmlparser2篇
-
-* Tokenizer
-* Parser
-* DOMHandler
-
-### DOM标准篇
-
-* 节点树
-* 节点基础
-* 节点接口
-* 节点混合
-* 节点监控
-* 事件
-* 中断
-* 选区
-* 树遍历
-
-### jQuery篇
-
-## HTML系列
+## 前端基础系列
 
 ### HTML篇
 
 * HTML基础
-
-### 模板引擎篇
-
-* EJS使用
-
-## CSS系列
 
 ### CSS篇
 
@@ -53,21 +18,6 @@
 * CSS接口
 * CSS布局
 * CSS渲染
-
-### CSSOM篇
-
-* cssom源码
-
-### CSS模块化篇
-
-* BEM
-* Less
-* Sass
-* PostCSS
-* CSS in JS
-* CSS Modules
-
-## JavaScript系列
 
 ### JavaScript基础篇
 
@@ -96,6 +46,95 @@
 * global对象
 * Math对象
 * JSON对象
+
+### DOM标准篇
+
+* 节点树
+* 节点基础
+* 节点接口
+* 节点混合
+* 节点监控
+* 事件
+* 中断
+* 选区
+* 树遍历
+
+### Web API篇
+
+* Infra
+* Encoding
+* MIME
+* URL
+* XMLHttpRequest
+* Fetch
+* Storage
+* Console
+* Streams
+* Web Component
+
+### 计算机基础篇
+
+* URI
+* MIME
+* 字符编码
+
+### HTTP协议篇
+
+* HTTP报文
+* HTTP请求
+* HTTP响应
+* HTTP首部
+* HTTP转发
+* HTTP缓存
+* HTTP认证
+* HTTP安全
+* HTTP增强
+
+### TCP/IP协议篇
+
+* 网络基础
+* 数据链路层
+* 网络层
+* 传输层
+* 应用层
+
+### 网络硬件篇
+
+## HTML扩展系列
+
+### XML篇
+
+* XML基础
+* DTD
+* XSLT
+* XPath
+
+### htmlparser2篇
+
+* Tokenizer
+* Parser
+* DOMHandler
+
+### 模板引擎篇
+
+* EJS使用
+
+## CSS扩展系列
+
+### CSSOM篇
+
+* cssom源码
+
+### CSS模块化篇
+
+* BEM
+* Less
+* Sass
+* PostCSS
+* CSS in JS
+* CSS Modules
+
+## JavaScript扩展系列
 
 ### Acorn篇
 
@@ -145,33 +184,17 @@
 * Jsdoc使用
 * uglifyJS使用
 
-## 浏览器系列
+## DOM扩展系列
 
-### Web API篇
+### DOM库
 
-* Infra
-* Encoding
-* MIME
-* URL
-* XMLHttpRequest
-* Fetch
-* Storage
-* Console
-* Streams
-* Web Component
-
-### Web安全篇
-
-* Web构建技术
-* Web防御机制
-* Web攻击
-
-### UI组件篇
-
+* jQuery源码
 * UEditor源码
 * ZTree源码
 
-## Web请求篇
+## Web API扩展系列
+
+### Web请求篇
 
 * axios源码
 * Rxjs
@@ -195,13 +218,7 @@
 * single-spa使用
 * registerApplication
 
-## 计算机系列
-
-### 计算机基础篇
-
-* URI
-* MIME
-* 字符编码
+## 计算机扩展系列
 
 ### 编程篇
 
@@ -217,29 +234,13 @@
 * monorepo
 * lerna
 
-## 网络系列
+## 网络扩展系列
 
-### HTTP协议篇
+### Web安全篇
 
-* HTTP报文
-* HTTP请求
-* HTTP响应
-* HTTP首部
-* HTTP转发
-* HTTP缓存
-* HTTP认证
-* HTTP安全
-* HTTP增强
-
-### TCP/IP协议篇
-
-* 网络基础
-* 数据链路层
-* 网络层
-* 传输层
-* 应用层
-
-### 网络硬件篇
+* Web构建技术
+* Web防御机制
+* Web攻击
 
 ## 推荐资料
 

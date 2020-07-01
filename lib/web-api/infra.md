@@ -144,18 +144,18 @@ The code point rendered as 🤔 is represented as U+1F914.
 
 #### 概念
 
-* ASCII whitespace: ASCII空白字符，U+000D CR, U+000A LF, U+0009 TAB, U+000C FF, or U+0020 SPACE
-* ASCII digit: ASCII数字，U+0030 (0) ~ U+0039 (9)
-* ASCII upper hex digit: ASCII大写十六进制，ASCII digit加上U+0041 (A) ~ U+0046 (F)
-* ASCII lower hex digit: ASCII小写十六进制，ASCII digit加上U+0061 (a) ~ U+0066 (f)
-* ASCII hex digit: ASCII十六进制，ASCII upper hex digit加上ASCII lower hex digit
-* ASCII upper alpha: ASCII大写字母，U+0041 (A) ~ U+005A (Z)
-* ASCII lower alpha: ASCII小写字母，U+0061 (a) ~ U+007A (z)
-* ASCII alpha: ASCII字母，ASCII upper alpha加上ASCII lower alpha
+* ASCII whitespace: ASCII空白字符码点，U+000D CR, U+000A LF, U+0009 TAB, U+000C FF, or U+0020 SPACE
+* ASCII digit: ASCII数字码点，U+0030 (0) ~ U+0039 (9)
+* ASCII upper hex digit: ASCII大写十六进制码点，ASCII digit加上U+0041 (A) ~ U+0046 (F)
+* ASCII lower hex digit: ASCII小写十六进制码点，ASCII digit加上U+0061 (a) ~ U+0066 (f)
+* ASCII hex digit: ASCII十六进制码点，ASCII upper hex digit加上ASCII lower hex digit
+* ASCII upper alpha: ASCII大写字母码点，U+0041 (A) ~ U+005A (Z)
+* ASCII lower alpha: ASCII小写字母码点，U+0061 (a) ~ U+007A (z)
+* ASCII alpha: ASCII字母码点，ASCII upper alpha加上ASCII lower alpha
 * ASCII alphanumeric: ASCII字母加数字
-* ASCII code point: ASCII字符，U+0000 ~ U+007F
-* surrogate: U+D800 ~ U+DFFF, UTF-16的代理区
-* scalar value: 非代理区
+* ASCII code point: ASCII字符码点，U+0000 ~ U+007F
+* surrogate: 代理区码点，U+D800 ~ U+DFFF
+* scalar value: 非代理区码点
 
 #### 操作
 
