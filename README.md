@@ -62,6 +62,7 @@
 ### Web API篇
 
 * Infra
+* Streams
 * Encoding
 * MIME
 * URL
@@ -69,7 +70,6 @@
 * Fetch
 * Storage
 * Console
-* Streams
 * Web Component
 
 ### 计算机基础篇
@@ -92,11 +92,15 @@
 
 ### TCP/IP协议篇
 
-* 网络基础
+* 计算机网络
+* 物理层
 * 数据链路层
 * 网络层
 * 传输层
 * 应用层
+* 网络安全
+* 音视频
+* 无线网络
 
 ### 网络硬件篇
 

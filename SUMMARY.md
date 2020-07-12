@@ -30,6 +30,7 @@
 ### Web API
 
 * [Infra](lib/web-api/infra.md)
+* [Streams](lib/web-api/stream.md)
 * [Encoding](lib/web-api/encoding.md)
 * [Web Component](lib/web-api/web-component.md)
 
@@ -53,7 +54,8 @@
 
 ### TCP/IP协议篇
 
-* [网络基础](lib/tcp-ip/base.md)
+* [计算机网络](lib/tcp-ip/base.md)
+* [物理层](lib/tcp-ip/physical.md)
 * [数据链路层](lib/tcp-ip/data-link.md)
 
 ### XML篇
