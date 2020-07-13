@@ -24,7 +24,7 @@
 
 * producer: 生产者，生产chunk
 * writer: 写入器，将生产的chunk写入queue中
-* internal queue: 内部队列，存储写入的queue
+* internal queue: 内部队列，存储写入的chunk
 * undlying sink: 数据槽，queue中的chunk传送到sink中
 * abort: 中断写入，丢弃queue中还存在的chunk
 
@@ -57,3 +57,95 @@
 
 * 可读流/可写流最多只能有一个读取器/写入器
 * 绑定读取器/写入器后，流处于锁定状态，只有解锁后才能接受下一个读取器/写入器
+
+## UnderlyingSource接口
+
+```javascript
+dictionary UnderlyingSource {
+  ReadableStreamType type;
+  unsigned long long autoAllocateChunkSize;
+
+  UnderlyingSourceStartCallback start;
+  UnderlyingSourcePullCallback pull;
+  UnderlyingSourceCancelCallback cancel;
+}
+
+enum ReadableStreamType {
+  "bytes"
+}
+
+callback UnderlyingSourceStartCallback = any (ReadableStreamController controller)
+callback UnderlyingSourcePullCallback = Promise<void> (ReadableStreamController controller)
+callback UnderlyingSourceCancelCallback = Promise<void> (optional any reason)
+
+typedef (ReadableStreamDefaultController or ReadableByteStreamController) ReadableStreamController
+```
+
+### 特征属性
+
+* type：source类型
+ * undefined：普通source
+ * bytes：字节source
+* autoAllocateChunkSize：chunk大小
+
+### 回调方法
+
+* start(controller)：开始回调，可读流创建时触发
+* pull(controller): 传送chunk回调，可读流desired size大于0时触发
+* cancel(controller): 取消回调，可读流取消时触发
+
+## ReadableStream接口
+
+```javascript
+interface ReadableStream {
+  constructor(optional object underlyingSource, optional QueuingStrategy strategy = {});
+
+  readonly attribute boolean locked;
+
+  ReadableStreamReader getReader(optional ReadableStreamGetReaderOptions options = {});
+
+  Promise<void> pipeTo(WritableStream destination, optional StreamPipeOptions options = {})
+  ReadableStream pipeThrough(ReadableWritablePair transform, optional StreamPipeOptions options = {})
+
+  Promise<void> cancel(optional any reason);
+  sequence<ReadableStream> tee();
+
+  async iterable<any>(optional ReadableStreamIteratorOptions options = {})；
+}
+
+dictionary ReadableStreamGetReaderOptions {
+  ReadableStreamReaderMode mode;
+}
+
+enum ReadableStreamReaderMode { "byob" }
+
+typedef (ReadableStreamDefaultReader or ReadableStreamBYOBReader) ReadableStreamReader
+
+directionary StreamPipeOptions {
+  boolean preventAbort = false;
+  boolean preventCancel = false;
+  boolean preventClose = false;
+
+  AbortSignal signal;
+}
+
+dictionary ReadableWritablePair {
+  required ReadableStream readable;
+  required WritableStream writable;
+}
+```
+
+### 内部属性
+
+* [[state]]：可读流状态
+ * readable：可读
+ * closed：已关闭
+ * errored：发生错误
+* [[disturbed]]：可读流是否被读取或被取消
+* [[readableStreamController]]：可读流控制器
+* [[reader]]：可读流读取器
+* [[storedError]]：可读流错误
+
+### new ReadableStream(underlyingSource, strategy)
+
+创建可读流
