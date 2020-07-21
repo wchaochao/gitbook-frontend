@@ -98,8 +98,8 @@ UTF-16编码的Code Point
 
 1. 字符串转换为对应的Code Point
 2. Code Point使用UTF-16编码
- a. 基本平面字符使用两个字节表示
- b. 辅助平面字符使用代理对表示，高位两字节、低位两字节
+ * 基本平面字符使用两个字节表示
+ * 辅助平面字符使用代理对表示，高位两字节、低位两字节
 
 ### 组成
 
@@ -165,7 +165,7 @@ Symbol.keyFor(localSymbol) // undefined
 | Symbol.species | 用于创建衍生对象的构造器 |
 | Symbol.match | 字符串匹配方法，用在String.prototype.match中 |
 | Symbol.matchAll | 字符串匹配所有方法，用在String.prototype.matchAll中 |
-| Symbol.replace | 字符串替换方法，用在String.prototype.matchAll中 |
+| Symbol.replace | 字符串替换方法，用在String.prototype.replace中 |
 | Symbol.search | 字符串查询方法，用在String.prototype.search中 |
 | Symbol.split | 字符串分隔方法，用在String.prototype.split中 |
 | Symbol.unscopables | 不会被with对象访问的属性配置 |
@@ -181,11 +181,7 @@ Symbol.keyFor(localSymbol) // undefined
  * Symbol类型：Symbol值
 * 属性值：任意类型，为函数时称为方法
 
-### 属性描述符
-
-属性描述对象
-
-#### 数据属性
+### 数据属性
 
 属性值由`[[value]]`决定
 
@@ -196,7 +192,7 @@ Symbol.keyFor(localSymbol) // undefined
 | [[Enumerable]] | Boolean | false | 属性是否可枚举，为true时可在`for/in, Object.keys, JSON.stringify`中遍历 |
 | [[Configurable]] | Boolean | false | 属性是否可配置，为false时属性不可删除、不可改为访问器属性、属性描述不可修改（[[Writable]]为true时，[[Writable]]和[[Value]]可修改） |
 
-#### 访问器属性
+### 访问器属性
 
 属性值由`get/set`函数决定
 

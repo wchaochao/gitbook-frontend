@@ -152,7 +152,8 @@
 ### JavaScript设计模式篇
 
 * 面向对象
-* 设计模式
+* 对象式模式
+* 函数式模式
 
 ### JavaScript模块化篇
 
@@ -191,10 +192,20 @@
 
 ## DOM扩展系列
 
+### UEditor源码
+
+* UEditor源码结构
+* UEditor核心接口
+* UEditor辅助接口
+* UEditor HTML操作
+* UEditor DOM操作
+* UEditor插件
+* UEditor UI层
+* UEditor适配层
+
 ### DOM库
 
 * jQuery源码
-* UEditor源码
 * ZTree源码
 
 ## Web API扩展系列

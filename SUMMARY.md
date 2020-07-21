@@ -69,7 +69,8 @@
 ### JavaScript设计模式篇
 
 * [面向对象](lib/javascript-pattern/oop.md)
-* [设计模式](lib/javascript-pattern/pattern.md)
+* [对象式模式](lib/javascript-pattern/object-pattern.md)
+* [函数式模式](lib/javascript-pattern/function-pattern.md)
 
 ### JavaScript模块化篇
 

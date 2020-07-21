@@ -1,4 +1,4 @@
-# 设计模式
+# 对象式模式
 
 标签（空格分隔）： 前端知识体系
 
@@ -17,16 +17,11 @@
 
 ```javascript
 const module1 = {
-  attribute1: true,
-  attribute2: 10,
+  attribute1: true
 
   method1 () {
     // ...
-  },
-
-  method2 () {
-    // ...
-  },
+  }
 
   init () {
     // ...
@@ -41,23 +36,15 @@ const module1 = {
 ```javascript
 const module2 = (function () {
   let privateAttribute1 = false
-  let privateAttribute2 = [1, 2, 3]
 
   function privateMethod1 () {
     // ...
   }
-  function privateMethod2 () {
-    // ...
-  }
 
   return {
-    publicAttribute1: true,
-    publicAttribute2: 10,
+    publicAttribute1: true
 
     publicMethod1 () {
-      // ...
-    },
-    publicMethod2 () {
       // ...
     }
   }
@@ -100,7 +87,7 @@ function API2 () {
 
 ## 单体模式
 
-共享一个模块，实现懒加载
+共享模块
 
 ```javascript
 const Singleton = (function () {
@@ -170,7 +157,7 @@ class BicycleShop {
 ```javascript
 class BicycleShop {
   sellBicycle (model) {
-    const bicycle = BicycleFactory.createBicycle(model)
+    const bicycle = this.createBicycle(model)
 
     bicycle.assemble()
     bicycle.wash()
@@ -207,7 +194,7 @@ class AcmeBicycleShop extends BicycleShop {
 
 ## 装饰者模式
 
-装饰接口
+封装一个对象
 
 ### 类装饰者
 
@@ -271,6 +258,8 @@ function after (fn, afterFn) {
 ```
 
 ## 组合模式
+
+封装一组对象
 
 * 使用组合对象包装子对象，组合对象与子对象形成树结构
 * 组合对象与子对象实现相同的接口
@@ -361,87 +350,152 @@ class Field {
 }
 ```
 
-## 桥接模式
+## 享元模式
 
-将抽象与实现相分离，以便二者独立变化
+将大量类似对象转换为少量共享对象
 
-```javascript
-addEvent(element, 'click', getBeerByIdBridge)
+* 将对象的内部状态划分为内在数据和外在数据
+* 内在数据组成享元对象
+* 使用工厂控制享元对象的实例化，通过单体模式、缓存、对象池将实例的数目限制在刚好够用的范围
+* 使用管理器对象保存外在数据并将其提供给享元实例的方法
 
-function getBeerByIdBridge (e) {
-  getBeerById(this.id, beer => {
-    console.log('Requested Beer: ', beer)
-  })
-}
-
-function getBeerById (id, callback) {
-  asyncRequest('GET', `beer.url?id=${id}`, res => {
-    callback(res.responseText)
-  })
-}
-```
-
-## 门面模式
-
-简化接口
-
-* 处理浏览器兼容性
-* 组合函数
+### 单体控制
 
 ```javascript
-DED.util.Event = {
-  addEvent (el, type, fn) {
-    if (window.addEventListener) {
-      el.addEventListener(type, fn, false)
-    } else if (window.attachEvent) {
-      el.attachEvent(`on${type}`, fn)
-    } else {
-      el[`on${type}`] = fn
+class Tooltip {
+  constructor () {
+    this.timer = null
+    this.delay = 1500
+
+    this.element = document.createElement('div')
+    this.element.className = 'tooltip'
+    this.element.style.position = 'absolute'
+    this.element.style.display = 'none'
+    document.body.appendChild(this.element)
+  }
+
+  startDelay (e, text) {
+    if (!this.timer) {
+      this.timer = setTimeout(() => {
+        this.show(e.clientX, e.clientY, text)
+      }, this.delay)
     }
-  },
-  getEvent (e) {
-    return e || window.event
-  },
-  getTarget (e) {
-    return e.target || e.srcElement
-  },
-  stopPropagation (e) {
-    if (e.stopPropagation) {
-      e.stopPropagation()
-    } else {
-      e.cancelBubble = true
-    }
-  },
-  preventDefault (e) {
-    if (e.preventDefault) {
-      e.preventDefault()
-    } else {
-      e.returnValue = false
-    }
-  },
-  stopEvent (e) {
-    this.stopPropagation(e)
-    this.preventDefault(e)
+  }
+
+  show (x, y, text) {
+    clearTimeout(this.timer)
+    this.timer = null
+    this.element.innerHTML = text
+    this.element.style.left = x + 'px'
+    this.element.style.top = y + 20 + 'px'
+    this.element.style.display = 'block'
+  }
+
+  hide () {
+    clearTimeout(this.timer)
+    this.timer = null
+    this.element.style.display = 'none'
   }
 }
+
+const TooltipManager = (function () {
+  const instance = null
+
+  return {
+    getTooltip () {
+      if (!instance) {
+        instance = new Tooltip()
+      }
+      return instance
+    },
+    addTooltip (target, text) {
+      const tooltip = this.getTooltip()
+
+      target.addEventListener('mouseover', e => tooltip.startDelay(e, text))
+      target.addEventListener('mouseout', e => tooltip.hide())
+    }
+  }
+})()
 ```
 
-## 适配器模式
-
-适配接口
+### 缓存控制
 
 ```javascript
-const clientObject = {
-  string1: 'foo',
-  string2: 'bar',
-  string3: 'baz'
+class Car {
+  constructor (make, model, year) {
+    this.make = make
+    this.model = model
+    this.year = year
+  }
 }
 
-function interfaceMethod(str1, str2, str3) {
-  // ...
+const CarFactory = (function() {
+  const createdCars = {}
+
+  return {
+    createCar (make, model, year) {
+      const key = `${make}-${model}-${year}`
+      if (!createdCars[key]) {
+        const car = new Car(make, model, year)
+        createdCars[key] = car
+      }
+      return createdCars[key]
+    }
+  }
+})()
+
+const CarRecordManager = (function () {
+  const carRecordDataBase = {}
+
+  return {
+    addCarRecord (make, model, year, owner, tag, renewDate) {
+      const car = CarFactory.createCar(make, model, year)
+      carRecordDataBase[tag] = {
+        owner,
+        renewDate,
+        car
+      }
+    }
+  }
+})()
+```
+
+### 对象池控制
+
+```javascript
+class DialogBox {
+  show (header, body, footer) {
+    // ...
+  }
+
+  hide () {
+    // ...
+  }
+
+  state () {
+    // ...
+  }
 }
 
-function clientToInterfaceAdapter (o) {
-  return interfaceMethod(o.string1, o.string2, o.string3)
-}
+const DialogBoxManager = (function () {
+  const created = []
+
+  return {
+    getDialogBox () {
+      for (const box of created) {
+        if (box.state() === 'hidden') {
+          return box
+        }
+      }
+
+      const dialogBox = new DialogBox()
+      created.push(dialogBox)
+      return dialogBox
+    },
+    displayDialogBox (header, body, footer) {
+      const dialogBox = getDialogBox()
+      dialogBox.show(header, body, footer)
+    }
+  }
+})()
 ```
