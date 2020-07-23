@@ -199,9 +199,9 @@
 * UEditor辅助接口
 * UEditor HTML操作
 * UEditor DOM操作
-* UEditor插件
 * UEditor UI层
 * UEditor适配层
+* UEditor插件
 
 ### DOM库
 
