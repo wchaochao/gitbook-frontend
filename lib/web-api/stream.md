@@ -86,7 +86,7 @@ typedef (ReadableStreamDefaultController or ReadableByteStreamController) Readab
 * type：source类型
  * undefined：普通source
  * bytes：字节source
-* autoAllocateChunkSize：自动分配的chunk大小
+* autoAllocateChunkSize：字节source自动分配的chunk大小
 
 ### 回调方法
 
@@ -110,11 +110,11 @@ interface ReadableStreamDefaultController {
 
 | 内部属性 | 类型 | 描述 |
 | --- | --- | --- |
-| [[controlledReadableStream]] | ReadableStream | 控制器对应的可读流 |
+| [[controlledReadableStream]] | ReadableStream | 所属的可读流 |
 | [[queue]] | list<(value, size)> | 内部队列 |
+| [[strategySizeAlgorithm]] | (chunk) -> Number | 计算chunk的尺寸 |
 | [[queueTotalSize]] | Number | 内部队列中所有chunk的尺寸 |
 | [[strategyHWM]] | Number | high water mark |
-| [[strategySizeAlgorithm]] | (chunk) -> Number | 计算chunk的尺寸 |
 | [[started]] | Boolean | source是否已执行完start回调 |
 | [[pullAlgorithm]] | () -> Promise | 从source中读取chunk |
 | [[pulling]] | Boolean | 是否正在读取chunk |
@@ -122,110 +122,52 @@ interface ReadableStreamDefaultController {
 | [[cancelAlgorithm]] | (reason) => Promise | 取消读取 |
 | [[closeRequested]] | Boolean | 是否已结束读取 |
 
+### 内部方法
+
+#### [[pullSteps]] (readRequest)
+
+default reader读取chunk时default controller的操作
+
+```
+1. controller.[[queue]]为空时
+  a. read request存储到reader.[[readRequests]]中
+  b. controller从source中读取下一个chunk
+2. controller.[[queue]]不为空时，从队列中取出chunk交给read request的chunks step处理
+  a. controller.[[closeRequested]]为true且[[queue]]为空时，重置controller，关闭stream
+  b. 其他情况从source中读取下一个chunk
+```
+
+#### [[CancelSteps]] (reason)
+
+流取消时的default controller操作
+
+```
+1. 重置controller
+3. 执行controller的[[cancelAlgorithm]]
+```
+
 ### 抽象操作
-
-#### ReadableStreamDefaultControllerEnqueue(controller, chunk)
-
-chunk进入队列
-
-```
-1. stream有ReadRequest，将chunk交给ReadRequest处理
-2. stream没有ReadRequest，使用controller的[[strategySizeAlgorithm]]计算chunk尺寸，更新controller的[[queue]]和[[queueTotalSize]]
-3. 从source中读取下一个chunk
-```
 
 #### ReadableStreamDefaultControllerShouldCallPull(controller)
 
-是否可以从source中读取chunk
+default controller是否可以从source中读取chunk
 
 ```
-1. controller的[[closeRequested]]为false，stream的[[state]]为readable
-2. controller的[[started]]为true
-3. stream有ReadRequest或controller的desiredSize大于0
+1. controller.[[closeRequested]]为false，controller.[[started]]为true
+2. stream.[[state]]为readable
+3. stream有read request或controller的desiredSize大于0
 ```
 
 #### ReadableStreamDefaultControllerCallPullIfNeeded(controller)
 
-从source中读取chunk
+default controller从source中读取chunk
 
 ```
 1. 不可以从source中读取chunk时，直接返回
-2. controller的[[pulling]]为false时，设置[[pulling]]为true，执行controller的[[pullAlgorithm]]
-  a. 成功时，重置controller的[[pulling]]为false，controller的[[pullAgain]]为true时，重置[[pullAgain]]为false并读取下一个chunk
-  b. 失败时，控制器抛出错误
-3. controller的[[pulling]]为true时，设置controller的[[pullAgain]]为true
-```
-
-#### ReadableStreamDefaultControllerError(controller, e)
-
-controller抛出错误
-
-```
-1. 重置内部队列，controller的[[queue]]重置为空list，[[queueTotalSize]]重置为0
-2. 清除controller算法，controller的[[strategySizeAlgorithm]]、[[pullAlgorithm]]、[[strategySizeAlgorithm]]重置为undefined
-3. stream抛出错误
-```
-
-#### ReadableStreamError(stream, e)
-
-stream抛出错误
-
-```
-1. stream的[[state]]设置为errored，[[storedError]]设置为e
-2. reader有ReadRequest时，执行ReadRequest的error step，ReadRequest队列置空
-3. reader的[[closedPromise]] reject e
-```
-
-#### ReadableStreamDefaultControllerClose(controller)
-
-controller关闭
-
-```
-1. controller的[[closeRequested]]设置为true
-2. controller的[[queue]]为空时，清除controller算法，执行stream关闭
-```
-
-#### ReadableStreamClose(stream)
-
-stream关闭
-
-```
-1. stream的[[state]]设置为closed
-2. reader有ReadRequest时，执行ReadRequest的close step，ReadRequest队列置空
-3. reader的[[closedPromise]] resolve undefined
-```
-
-#### ReadableStreamCancel(stream, reason)
-
-stream取消
-
-```
-1. stream的[[disturbed]]设置为true
-2. 执行stream关闭
-3. 执行controller的[[CancelSteps]]
-```
-
-### 内部方法
-
-#### [[pullSteps]](readRequest)
-
-reader读取chunk时的controller操作
-
-```
-1. controller的[[queue]]为空时，将readRequest存储到reader的队列中，cotnroller从source中读取chunk
-2. controller的[[queue]]不为空时，从队列中取出chunk交给readRequest处理
-  a. controller的[[closeRequested]]为true且[[queue]]为空时，清除controller算法，执行stream关闭
-  b. 其他情况从source中读取下一个chunk
-```
-
-#### [[CancelSteps]](reason)
-
-流取消时的controller操作
-
-```
-1. 重置内部队列
-2. 清除controller算法
-3. 执行controller的[[cancelAlgorithm]]操作
+2. controller.[[pulling]]为false时，设置[[pulling]]为true，执行controller的[[pullAlgorithm]]
+  a. 成功时，重置controller.[[pulling]]为false，controller.[[pullAgain]]为true时，重置[[pullAgain]]为false并读取下一个chunk
+  b. 失败时，controller抛出错误
+3. controller.[[pulling]]为true时，设置controller.[[pullAgain]]为true
 ```
 
 ### 特征属性
@@ -234,9 +176,328 @@ reader读取chunk时的controller操作
 
 ### 特征方法
 
-* enqueue(chunk): chunk进入队列
-* error(e): controller抛出错误
-* close(): controller关闭
+#### enqueue(chunk)
+
+chunk进入default controller队列
+
+```
+1. stream有read request，将chunk交给read request处理
+2. stream没有read request，使用controller的[[strategySizeAlgorithm]]计算chunk尺寸，更新controller的[[queue]]和[[queueTotalSize]]
+3. 从source中读取下一个chunk
+```
+
+#### error(e)
+
+default controller抛出错误
+
+```
+1. 重置controller
+  a. 重置内部队列，controller的[[queue]]重置为空list，[[queueTotalSize]]重置为0
+  b. 清除controller算法，controller的[[strategySizeAlgorithm]]、[[pullAlgorithm]]、[[cancelAlgorithm]]重置为undefined
+2. stream抛出错误
+```
+
+#### close()
+
+default controller关闭
+
+```
+1. controller.[[closeRequested]]设置为true
+2. controller.[[queue]]为空时，重置controller，执行stream关闭
+```
+
+## ReadableStreamDefaultReader接口
+
+```javascript
+interface ReadableStreamDefaultReader {
+  constructor(ReadableStream stream);
+
+  readonly attribute Promise<void> closed;
+
+  Promise<ReadableStreamDefaultReadResult> read();
+  Promise<void> cancel(optional any reason);
+  void realseLock();
+}
+
+dirtionary ReadableStreamDefaultReadResult {
+  any value;
+  boolean done;
+}
+```
+
+### 内部属性
+
+| 内部属性 | 类型 | 描述 |
+| --- | --- | --- |
+| [[ownerReadableStream]] | ReadableStream | 所属的可读流 |
+| [[closedPromise]] | Promise | 可读流closed的promise |
+| [[readRequests]] | `list<ReadRequest>` | 读取请求列表 |
+
+read request结构
+
+* chunk steps：可读流读取chunk的回调
+* close steps：可读流关闭时的回调
+* error steps：可读流错误时的回调
+
+### new ReadableStreamDefaultReader(stream)
+
+创建可读流的默认读取器
+
+```
+1. stream锁定（已有读取器）时，抛出TypeError
+2. 创建reader对象，初始化属性
+  a. reader.[[ownerReadableStream]]为stream，stream.[[reader]]为reader
+  b. reader.[[closedPromse]]根据stream.[[state]]设置
+  c. reader.[[readRequests]]为空list
+```
+
+### 特征属性
+
+* closed：reader的[[closedPromise]]
+
+### 特征方法
+
+#### read()
+
+读取chunk
+
+```
+1. 创建promise和read request
+  a. chunk steps为(chunk) => resolve({value: chunk, done: false})
+  b. close steps为() => resolve({value: undefined, done: true})
+  c. error steps为(e) => reject(e)
+2. stream.[[disturbed]]设为true
+3. stream.[[state]]为readable时，执行controller的[[PullSteps]]方法
+4. stream.[[state]]为closed时，执行read request的close steps
+5. stream.[[state]]为errored时，执行read request的error steps
+```
+
+#### cancel(reason)
+
+取消读取
+
+```
+1. 执行stream取消
+```
+
+#### releaseLock()
+
+取消锁定
+
+```
+1. reader.[[readRequests]]不为空时，抛出TypeError
+2. reader.[[closedPromise]] reject TypeError
+3. reader.[[ownerReadableStream]]设为undefined，stream.[[reader]]设为undefined
+```
+
+## ReadableByteStreamController接口
+
+```javascript
+interface ReadableByteStreamController {
+  readonly attribute unrestricted double? desiredSize;
+  readonly attribute ReadableStreamBYOBRequest? byobRequest;
+
+  void enqueue(ArrayBufferView chunk);
+  void error(optional any e);
+  void close();
+}
+```
+
+### 内部属性
+
+| 内部属性 | 类型 | 描述 |
+| --- | --- | --- |
+| [[controlledReadableStream]] | ReadableStream | 所属的可读流 |
+| [[queue]] | a list of readable byte stream queue entries | 内部队列 |
+| [[autoAllocateChunkSize]] | Number | chunk的尺寸 |
+| [[queueTotalSize]] | Number | 内部队列中所有chunk的尺寸 |
+| [[strategyHWM]] | Number | high water mark |
+| [[started]] | Boolean | source是否已执行完start回调 |
+| [[pullAlgorithm]] | () -> Promise | 从source中读取chunk |
+| [[pulling]] | Boolean | 是否正在读取chunk |
+| [[pullAgain]] | Boolean | 是否继续读取下一个chunk |
+| [[pendingPullIntos]] | a list of pull-into descriptors | pull into 描述列表 |
+| [[byobRequest]] | ReadablsStreamBYOBRequest | 第一个pull into 描述对应的byob request |
+| [[cancelAlgorithm]] | (reason) => Promise | 取消读取 |
+| [[closeRequested]] | Boolean | 是否已结束读取 |
+
+queue entry结构
+
+* buffer：view的buffer
+* byte offset：view的offset
+* byte length：view的length
+
+pull-into descriptor结构
+
+* buffer：view的buffer
+* byte offset：view的offset
+* byte length：view的length
+* bytes filled：view已写入的字节数
+* element size：view每个单位的字节数
+* view constructor：view构造器
+* reader type：读取器类型，default或byob
+
+### 内部方法
+
+#### [[pullSteps]] (readRequest)
+
+default reader读取chunk时byob controller的操作
+
+```
+1. controller.[[queue]]为空时
+  a. autoAllocateChunkSize有值时，生成pull into descriptor，view constructor为Uint8Array，reader type为default，将descriptor追加到[[pendingPullIntos]]中
+  b. read request存储到reader.[[readRequests]]中
+  c. controller从source中读取下一个chunk
+2. controller.[[queue]]不为空时，从队列中取出chunk转换为Uint8Array交给read request的chunks step处理
+  a. controller.[[closeRequested]]为true且[[queue]]为空时，重置controller，关闭stream
+  b. 其他情况从source中读取下一个chunk
+```
+
+#### [[CancelSteps]] (reason)
+
+流取消时的default controller操作
+
+```
+1. 第一个descriptor的bytes filled不为0时，抛出TypeError
+2. 重置controller
+3. 执行controller的[[cancelAlgorithm]]
+```
+
+### 抽象操作
+
+#### ReadableByteStreamControllerShouldCallPull(controller)
+
+byob controller是否可以从source中读取chunk
+
+```
+1. controller.[[closeRequested]]为false，controller.[[started]]为true
+2. stream.[[state]]为readable
+3. stream有read request或read into request或controller的desiredSize大于0
+```
+
+#### ReadableByteStreamControllerCallPullIfNeeded(controller)
+
+byob controller从source中读取chunk
+
+```
+1. 不可以从source中读取chunk时，直接返回
+2. controller.[[pulling]]为false时，设置[[pulling]]为true，执行controller的[[pullAlgorithm]]
+  a. 成功时，重置controller.[[pulling]]为false，controller.[[pullAgain]]为true时，重置[[pullAgain]]为false并读取下一个chunk
+  b. 失败时，controller抛出错误
+3. controller.[[pulling]]为true时，设置controller.[[pullAgain]]为true
+```
+
+#### ReadableByteStreamControllerProcessPullIntoDescriptorsUsingQueue(controller)
+
+将queue中的chunk写入pull into描述列表中，写入完成后提供给reader
+
+```
+1. [[pendingPullIntos]]不为空且[[queueTotalSize]]大于0时，将queue中的chunk不断写入第一个descriptor中
+  a. descriptor的bytes filled不足一个element size时， 直接返回
+  b. descriptor的bytes filled为多个element size（最大为byte length / element size）时
+    i. 取出descriptor，转换为ArrayBufferView，length为bytes filled / element size
+    ii. descriptor的reader type为default时，将ArrayBufferView提供给第一个read request处理（closed时使用close steps处理）
+    iii. descriptor的reader type为byob时，将ArrayBufferView提供给第一个read into request处理
+  c. 继续写入下一个descriptor（closed时使用close steps处理）
+```
+
+### 特征属性
+
+* desiredSize：内部队列的desired size
+
+#### byobRequest
+
+第一个pull into 描述对应的byob request
+
+```
+1. controller.[[byobRequest]]不存在且controller.[[pendingPullIntos]]不为空时
+  a. 获取[[pendingPullIntos]]中的第一个pull descriptor
+  b. 创建Uint8ArrayView，buffer为descriptr的buffer，offset为descriptor的byte offset加上bytes filled，length为descriptor的byte length减去bytes.filled
+  c. 创建byob request，[[controller]]为controller，[[view]]为Unit8ArrayView，设置controller.[[byobRequest]]为byob request
+2. 返回controller.[[byobRequest]]
+```
+
+### 特征方法
+
+#### enqueue(chunk)
+
+chunk进入byob controller队列
+
+```
+1. reader不存在时，将chunk追加到内部队列中
+2. reader为default reader时
+  a. read requests为空，将chunk追加到内部队列中
+  b. read requests不为空时，将chunk转换为Uint8Array，提供给第一个read request的chunk steps处理
+3. reader为byob reader，将chunk追加到内部队列中，将queue中的chunk写入pull into描述列表中，写入完成后提供给reader
+4. 拉取下一个chunk
+```
+
+#### error(e)
+
+byob controller抛出错误
+
+```
+1. 重置controller
+  a. 重置内部队列，controller的[[queue]]重置为空list，[[queueTotalSize]]重置为0
+  b. 清除controller算法，controller的[[[pullAlgorithm]]、[[cancelAlgorithm]]重置为undefined
+2. 清除[[pendingPullIntos]]队列
+3. stream抛出错误
+```
+
+#### close()
+
+byob controller关闭
+
+```
+1. controller.[[queue]]不为空时，[[closeRequested]]设置为true，直接返回
+2. controller.[[queue]]为空时
+  a. 第一个descriptor的bytes filled大于0时，抛出TypeError
+  b. 重置controller，执行stream关闭
+```
+
+## ReadableStreamBYOBRequest接口
+
+```javascript
+interface ReadableStreamBYOBRequest {
+  readonly attribute ArrayBufferView? view;
+
+  void respond(unsigned long long bytesWritten);
+  void respondWithNewView(ArrayBufferView view);
+}
+```
+
+### 内部属性
+
+| 内部属性 | 类型 | 描述 |
+| --- | --- | --- |
+| [[controller]] | ReadableByteStreamController | 所属的byob控制器 |
+| [[view]] | TypedArray | 控制器写入数据区域 |
+
+### 特征属性
+
+* view：byob request的[[View]]
+
+### 特征方法
+
+#### respond(byteswritten)
+
+写入数据后响应
+
+```
+1. stream.[[state]]为readable时，第一个descriptor的bytes filled加上byteswritten
+  a. bytes filled小于element size时，直接返回
+  b. bytes filled大于element size时
+    i. 余数部分对应的chunk加入到内部队列中
+    ii. 整数部分队员的chunk转换为ArrayBufferView，提供给reader
+    iii. 将queue中的chunk写入pull into描述列表中，写入完成后提供给reader
+2. stream.[[state]]为closed时
+  a. bytesWritten不为0时，抛出TypeError
+  b. 将pull into descriptor转换为ArrayBufferView，提供给相应的read into request的closed step处理
+```
+
+### respondWithNewView(view)
+
+
 
 ## ReadableStream接口
 
@@ -289,6 +550,39 @@ dictionary ReadableWritablePair {
 * [[readableStreamController]]：可读流控制器
 * [[reader]]：可读流读取器
 * [[storedError]]：可读流错误
+
+### 抽象操作
+
+#### ReadableStreamError(stream, e)
+
+stream抛出错误
+
+```
+1. stream.[[state]]设置为errored，[[storedError]]设置为e
+2. reader为default reader时，遍历[[readRequests]]，执行error steps，执行完后[[readRequests]]置空
+2. reader为byob reader时，遍历[[readIntoRequests]]，执行error steps，执行完后[[readIntoRequests]]置空
+3. reader的[[closedPromise]] reject e
+```
+
+#### ReadableStreamClose(stream)
+
+stream关闭
+
+```
+1. stream.[[state]]设置为closed
+2. reader为default reader时，遍历[[readRequests]]，执行close steps，执行完后[[readRequests]]置空
+3. reader的[[closedPromise]] resolve undefined
+```
+
+#### ReadableStreamCancel(stream, reason)
+
+stream取消
+
+```
+1. stream.[[disturbed]]设置为true
+2. 执行stream关闭
+3. 执行controller的[[CancelSteps]]
+```
 
 ### new ReadableStream(underlyingSource, strategy)
 

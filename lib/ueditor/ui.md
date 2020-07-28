@@ -24,7 +24,7 @@ callback RegisterUIExecCallback = UE.ui.uiBase? (UE.Editor editor, DOMString too
 * RegisterUI：注册UI，通过回调函数execFn创建UI对象
  * execFn：UI对象执行函数
  * id：指定生成的UI对象所属的editor实例，不指定时所有editor实例都有该UI对象
- * index：指定生成的UI对象在最后一栏工具栏的位置，不指定时防止所在栏的最后
+ * index：指定生成的UI对象在最后一栏工具栏的位置，不指定时在所在栏的最后
 
 ## UE.ui.uiBase接口
 
@@ -114,9 +114,10 @@ interface EditorUI: UE.ui.uiBase {
 ```
 1. 将editorUI对象挂载到editor实例的ui字段上和window.$EDITORUI上
 2. 初始化工具栏
-3. 初始化底部栏
+3. ready后初始化底部栏
   a. options中允许元素路径时，设置元素路径的初始显示，监听光标变化
-  b. options中允许字符统计时，设置字符统计的初始显示，监听字符数据的变化
+  b. options中允许字符统计时，设置字符统计的初始显示，监听wordcount事件
+  c. options中允许缩放时，拖拽缩放初始化，允许通过拖拽缩放编辑区域
 ```
 
 ### _initToolbars()
@@ -130,6 +131,10 @@ interface EditorUI: UE.ui.uiBase {
   a. toobarItem对应的是BuiltInUI时，使用构造器实例化UI对象
   b. toobarItem对应的是RegisterUI时，调用execFn创建UI对象
 ```
+
+### _scale()
+
+拖拽缩放初始化
 
 ### 内部属性
 
@@ -174,11 +179,11 @@ interface UE.ui.Toolbar: UE.ui.uiBase {
 
 ## UE.ui.Seperate接口
 
-分隔线
+工具栏分隔线
 
 ```javascript
 interface UE.ui.Separate: UE.ui.uiBase {
-  constructor(options);
+  constructor(object options);
 
   string getHtmlTpl();
 }
@@ -190,7 +195,7 @@ interface UE.ui.Separate: UE.ui.uiBase {
 
 ```javascript
 interface UE.ui.Break: UE.ui.uiBase {
-  constructor(options);
+  constructor(object options);
 
   string getHtmlTpl();
 }
@@ -198,11 +203,11 @@ interface UE.ui.Break: UE.ui.uiBase {
 
 ## UE.ui.Popup接口
 
-工具栏弹框
+工具栏下拉列表
 
 ```javascript
 interface UE.ui.Popup: UE.ui.uiBase {
-  constructor(options);
+  constructor(object options);
 
   boolean _hidden;
 
@@ -226,17 +231,17 @@ interface UE.ui.Popup: UE.ui.uiBase {
 3. 将PopupUI对象记录在内部变量allPopups数组中
 ```
 
-### 静态方法
-
-* closeAllPopup(Event, el)：关闭所有弹框，触发afterhidepop事件
- * 编辑器内滚动、编辑器外滚动、Popup外点击时自动关闭所有弹框
-* postHide(Event, el)：closeAllPopup的别名
-
 ### 内部属性
 
-* _hidden：是否隐藏
+* _hidden：下拉列表是否隐藏
+
+### 静态方法
+
+* closeAllPopup(Event, el)：关闭所有下拉列表，触发afterhidepop事件
+ * 编辑器内滚动、编辑器外滚动、Popup外点击时自动关闭所有下拉列表
+* postHide(Event, el)：closeAllPopup的别名
 
 ### 显示隐藏操作
 
-* isHidden()：弹框是否是隐藏的
-* queryAutoHide(el)：是否要隐藏弹框
+* isHidden()：下拉列表是否是隐藏的
+* queryAutoHide(el)：是否要隐藏下拉列表

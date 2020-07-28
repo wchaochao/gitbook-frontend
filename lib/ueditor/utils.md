@@ -78,7 +78,8 @@ dictionary UE.browser {
 interface UE.utils {
   void each((object or sequence) obj, IteratorCallback iterator, object context);
 
-  object extend(object target, object source, boolean isKeepTarget)
+  object extend(object target, object source, boolean isKeepTarget);
+  object extend2(object target, object... sources)
   object clone(object source, object target);
 
   object makeInstance((object or null) obj)
@@ -132,6 +133,7 @@ callback LoadFileSuccessCallback = void ()
 ### 复制方法
 
 * extend(target, source, isKeepTarget)：浅复制source对象到target对象，isKeepTarget为true时不覆盖
+* extend2(target, ...sources)：浅复制多个source对象到target对象，不覆盖
 * clone(source, target)：深复制source对象到target对象
 
 ### 继承方法
@@ -227,14 +229,28 @@ UEditor的文档类型定义
 
 ```javascript
 dictionary UE.dtd {
-  record<DOMString, unsigned short> $empty;
-  record<DOMString, unsigned short> $isNotEmpty;
-  record<DOMString, unsigned short> $cdata;
+  record<DOMString, unsigned short> anyCategory;
 }
 ```
 
 ### 元素分类
 
+* `$nonBodyContent`：body外的元素
+* `$body`：body内的元素
+* `$block`：块级元素
+* `$inline`：内联元素
+* `$inlineWithA`：包括a元素的内联元素
+* `$cdata`：内部的标签会当作文本的元素
 * `$empty`：自闭合元素
 * `$isNotEmpty`：没有内容也不能认为是空的元素
-* `$cdata`：内部的标签会当作文本的元素
+* `$removeEmpty`：内容为空时可以移除的元素
+* `$removeEmptyBlock`：内容为空时可以移除的块元素
+* `$nonChild`：无子元素节点的元素
+* `$tableContent`：表格元素
+* `$notTransContent`：内容不需要进行HTML转义的元素
+* `$list`：列表元素
+* `$listItem`：列表项元素
+
+### 子元素限定
+
+各类元素下允许的子元素，如UE.dom.dtd.html表示html下允许的子元素

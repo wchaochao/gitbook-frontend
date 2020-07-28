@@ -20,7 +20,7 @@ interface UE.ui.Editor {
 
 ### new UE.ui.Editor(options)
 
-创建UE.ui.Editor对象
+实例化UE.ui.Editor
 
 ```
 1. 创建editor实例，记录到editor.options.editor中
@@ -34,11 +34,17 @@ interface UE.ui.Editor {
 渲染id对应的编辑器实例
 
 ```
-1. 将字符串id记录到editor实例的key属性中
-2. 设置labelMap选项值为国际化中的labelMap字段
+1. id为字符串时，设置editor.key为id
+2. editor.options.labelMap未设置时，设置为国际化中的labelMap字段
 3. 为editor实例创建EditorUI对象
-4. id对应的DOM为script时，创建一个div，复制DOM的class、style、id属性，替换DOM
-5. id对应的DOM为textarea时，创建一个div，复制DOM的class、style、id，隐藏DOM，记录DOM到editor实例的textarea字段中
+4. 编辑器容器为script时
+  a. script中有内容时设置为initialContent
+  b. 创建一个div，复制DOM的class、style、id属性，替换DOM
+5. 编辑器容器为textarea时
+  a. textarea中有内容时设置为initialContent
+  b. 创建一个div，复制DOM的class、style、id
+  c. editor.options.textarea设置为textarea，隐藏textarea
+6.
 ```
 
 ### UE.getEditor(id, opt)
@@ -46,9 +52,8 @@ interface UE.ui.Editor {
 获取编辑器实例
 
 ```
-1. id对应的编辑器不存在时，创建UE.ui.Editor对象，存在时直接使用
-2. 调用editor实例的render方法，渲染编辑器
-3. 返回编辑器实例
+1. id对应的容器有编辑器时，直接返回编辑器实例
+2. id对应的容器没有编辑器时，实例化UE.ui.Editor，执行render方法，返回编辑器实例
 ```
 
 ### UE.delEditor(id)

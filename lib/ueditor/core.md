@@ -129,13 +129,23 @@ interface UE.Editor: UE.EventBase {
   readonly Window window;
   readonly Document document;
   readonly HTMLBodyElement body;
+  readonly DOMString key;
 
   UE.ui.Dialog getDialog(DOMString name);
 
   string getLang(DOMString path);
 
   void ready(ReadyCallback fn);
+
+  boolean hasContent();
+  DOMString getContent();
+  void setContent(DOMString html, boolean isAppendTo);
+  unsigned long getContentLength(boolean ignoreHtml, sequence<DOMString> tagNames);
+  DOMString getContentTxt();
+  DOMString getPlainTxt();
+  DOMString getAllHtml();
 }
+
 callback uNodeFilter = void (uNode root)
 ```
 
@@ -159,12 +169,22 @@ editor实例的标志符
 * editor：editor实例
 * textarea：文本域DOM
 * lang：语言类型
-* labelMap：工具栏的国际化
+* theme：主题
 * toolbars：工具栏按钮名称
+* labelMap：工具栏的国际化
 * elementPathEnabled：是否启用元素路径
 * wordCount：是否启用字数统计
-* initialFrameHeight：默认的编辑区域高度
+* scaleEnabled：是否启用缩放，启用缩放时不允许自动长高
+* initialContent：初始化内容
 * autoClearinitialContent：聚焦时是否自动清空初始化时的内容
+* focus：是否自动聚焦
+* initialFrameWidth：初始化编辑器宽度
+* initialFrameHeight：初始化编辑器高度
+* autoHeightEnabled：是否自动长高
+* minFrameWidth：编辑器最小宽度
+* minFrameHeight：编辑器最小高度
+* autoFloatEnabled：是否固定工具栏
+* topOffset：工具栏固定时距离顶部的距离
 
 操作
 
@@ -256,8 +276,9 @@ editor实例的EditorUI对象
 
 * container：EditorUI对象对应的DOM
 * window：编辑区域的window对象
-* documnt：编辑区域的document对象
+* document：编辑区域的document对象
 * body: 编辑区域的body对象
+* key：编辑器容器id
 
 操作
 
@@ -274,10 +295,13 @@ editor实例的EditorUI对象
 ### 内容操作
 
 * hasContent()：编辑器是否有内容（editor.body不为空元素）
+* getContentTxt()：获取编辑器文本内容
+* getPlainTxt()：获取编辑器文本内容，p、br转换为换行符
+* getAllHtml()：获取完整的HTML文档
 
 #### getContent()
 
-获取编辑器内容
+获取编辑器HTML内容
 
 ```
 1. 没有内容时直接返回空字符串
@@ -286,6 +310,34 @@ editor实例的EditorUI对象
 4. 触发aftergetcontent事件
 5. 将过滤后的uNode转换为html返回
 ```
+
+#### setContent(html, isAppendTo)
+
+设置编辑器HTML内容
+
+```
+1. 触发beforesetcontent事件
+2. 将html解析为uNode，执行所有输入过滤规则，再转换为html
+3. 覆盖时替换原editor.body.innerHTML，追加时添加到editor.body.innerHTML后
+4. 给新的HTML内容补充p标签
+5. 触发aftersetcontent、contentchange事件
+6. 触发beforeselectionchange、selectionchange、afterselectionchange事件
+7. editor.options.autoSyncData为true时，自动同步HTML内容到textarea中
+```
+
+#### getContentLength(ignoreHtml, tagNames)
+
+```
+1. 计算html长度时，获取编辑器HTML内容，返回长度
+2. 计算文本长度时
+  a. 获取编辑器文本内容，去除\t\r\n
+  b. 计算算为文本内容的标签（tagNames.concat(['hr', 'img', 'iframe'])）个数
+  c. 返回两个个数相加
+```
+
+### 选区操作
+
+* _bakRange：备份选区
 
 ## UE.instants接口
 

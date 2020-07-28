@@ -20,7 +20,7 @@ interface UE.uNode {
   sequence<UE.uNode>? children;
 
   static UE.uNode createElement(DOMString html);
-  static UE.uNode createText(DOMString data);
+  static UE.uNode createText(DOMString data, boolean noTrans);
 
   UE.uNode? previousSibling();
   UE.uNode? nextSibling();
@@ -33,10 +33,27 @@ interface UE.uNode {
   UE.uNode insertAfter(UE.uNode newChild, UE.uNode referenceChild);
   UE.uNode replaceChild(UE.uNode newChild, UE.uNode referenceChild);
 
+  unsigned long getIndex();
+  UE.uNode? getNodeById();
+  sequence<UE.uNode> getNodesByTagName();
+  UE.uNode traversal(fn);
+
   DOMString getAttr(DOMString attrName);
   void setAttr(DOMString attrName, optional DOMString attrVal);
   void setAttr(record<DOMString, DOMString or boolean> attrObj);
   void setAttr();
+
+  DOMString getStyle(DOMString name);
+  void setStyle(DOMString name, DOMString val);
+  void setStyle(record<DOMString, DOMString> styleObj)
+
+  DOMString toHtml(boolean formatter);
+
+  DOMString innerHTML();
+  UE.uNode innerHTML(optional DOMString htmlstr);
+  DOMString innerText();
+  UE.uNode innerHext(DOMString textStr, optional boolean noTrans);
+  DOMString getData();
 }
 ```
 
@@ -62,7 +79,7 @@ interface UE.uNode {
 * createElement(html)：创建元素节点
  * html为标签时，根据标签创建uNode节点
  * html为html字符串时，将html字符串解析为uNode节点，返回根节点的第一个子元素
-* createText(data)：创建文本节点
+* createText(data, noTrans)：创建文本节点，noTrans为true时不对data进行HTML转义
 
 ### 节点关系
 
@@ -79,6 +96,13 @@ interface UE.uNode {
 * insertAfter(newChild, referenceChild)：插入到指定子节点后
 * replaceChild(newChild, referenceChild)：替换子节点
 
+### 节点查找
+
+* getIndex()：获取当前节点在父节点下的位置索引
+* getNodeById(id)：根据id查找节点
+* getNodesByTagName(tagNames)：根据tagName查找节点列表，tagNames可以说空格分隔的tagName
+* traversal()：遍历所有后代节点，后序遍历
+
 ### 属性操作
 
 * getAttr(attrName)：获取属性
@@ -86,9 +110,15 @@ interface UE.uNode {
 * setAttr(attrObj)：设置多个属性，属性值为false时删除属性
 * setAttr()：删除所有属性
 
-### 内容操作
+### 样式操作
 
-## UE.htmlparser(htmlstr, ignoreBlank)
+* getStyle(name)：获取style属性中的样式值
+* setStyle(name, val)：设置单个style属性的样式值
+* setStyle(styleObj)：设置多个style属性的样式值
+
+### HTML转换
+
+#### UE.htmlparser(htmlstr, ignoreBlank)
 
 将html字符串转换为uNode节点
 
@@ -112,3 +142,30 @@ interface UE.uNode {
   a. 当前节点不需要特定子元素时，生成文本节点，append进parent
   b. 当前节点需要特定子元素时，生成特定子元素的节点，append进parent，生成文本节点append进子元素节点
 ```
+
+#### toHtml(formatter)
+
+将uNode节点转换为html字符串
+
+```
+1. 按深度递归uNode节点，根据type类型生成相应的html
+2. type为element时
+  a. 元素为自闭合元素，输出<tagName attrhtml/>
+  b. 元素为非闭合元素，输出<tagName attrhtml>children</tagName>
+3. type为txet时
+  a. parent为pre时，不做任何处理直接输出
+  b. parent为script、style时，对data进行html反转义输出
+  c. parent为其他时，将data中的空格转换为&nbsp;输出
+4. type为comment时，输出<!--data-->
+5. formatter为true时，添加换行符和缩进
+  a. root从第二个子元素开始的块级元素前进行换行
+  b. element不为pre且有子元素时，在开始标签后、结束标签前进行换行符，子元素进行缩进，从第二个子元素开始的块级元素前进行换行
+```
+
+### 内容操作
+
+* innerHTML()：获取innerHTML
+* innerHTML(htmlStr)：设置innerHTML
+* innerText()：获取innerText
+* innerText(textStr, noTrans)：设置innerText
+* getData()：获取文本或注释内容
