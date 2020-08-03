@@ -192,22 +192,66 @@ class AcmeBicycleShop extends BicycleShop {
 }
 ```
 
+## 代理模式
+
+代理本体
+
+* 使用代理对象包装本体，控制对本体的访问
+* 代理对象与本体实现相同的接口，代理对象执行接口时调用本体的同名接口
+
+### 虚拟代理
+
+将本体的实例化推迟到需要的时候
+
+```javascript
+class LibraryVirtualProxy {
+  constructor (catalog) {
+    this.catalog = catalog
+    this.library = null
+  }
+
+  _init () {
+    if (!this.library) {
+      this.library = new Library(this.catalog)
+    }
+  }
+
+  findBooks (searchString) {
+    this._init()
+    return this.library.findBooks(searchString)
+  }
+}
+```
+
+### 远程代理
+
+将网络请求当作本地方法处理
+
+```javascript
+const StatsProxy = {
+  getPageViews (callback, startDate, endData, page) {
+    fetchData(urls.pageviews, callback, startDate, endData, page)
+  },
+
+  getUniques (callback, startDate, endData, page) {
+    fetchData(urls.uniques, callback, startDate, endData, page)
+  }
+}
+```
+
 ## 装饰者模式
 
-封装一个对象
+装饰对象
 
 ### 类装饰者
 
-* 使用装饰对象包装组件，装饰对象与组件形成线性结构
-* 装饰对象与组件实现相同的接口
- * 装饰对象执行接口时执行自定义操作，可以使用或不使用组件的接口
+* 使用装饰对象包装组件，装饰对象对组件的接口进行装饰
+* 装饰对象与组件实现相同的接口，装饰对象执行接口时执行自定义操作，可以选择调用组件的同名接口
+* 装饰对象可以被另一个装饰对象装饰
 
 ```javascript
-const Bicycle = new Interface('Bicycle', ['assemble', 'repair', 'getPrice'])
-
 class BicycleDecorator {
   constructor (bicycle) {
-    Interface.ensureImplements(bicycle, Bicycle)
     this.bicycle = bicycle
   }
 
@@ -235,7 +279,7 @@ class BicycleDecorator {
 
 ### 函数装饰者
 
-给原函数添加功能
+给原函数添加新功能
 
 ```javascript
 function before (fn, beforeFn) {
@@ -259,93 +303,23 @@ function after (fn, afterFn) {
 
 ## 组合模式
 
-封装一组对象
+组合对象
 
-* 使用组合对象包装子对象，组合对象与子对象形成树结构
-* 组合对象与子对象实现相同的接口
- * 组合对象执行接口时往下传递
- * 叶对象执行接口时执行具体操作
+* 使用组合对象包装一组子对象，组合对象与子对象组形成树结构
+* 组合对象与子对象实现相同的接口，组合对象执行接口时调用所有子对象的同名接口
 
 ```javascript
-const Composite = new Interface('Composite', ['add', 'remove', 'getChild'])
-const FormItem = new Interface('FormItem', ['save', 'restore'])
-
-class CompositeForm {
-  constructor (id, method = 'POST', action = '#') {
-    this.formComponents = []
-
-    this.element = document.createElement('form')
-    this.element.id = id
-    this.element.method = method
-    this.element.action = action
-  }
-
-  has (child) {
-    const index = this.formComponents.indexOf(child)
-    return index !== -1
+class Composite {
+  constructor () {
+    this.children = []
   }
 
   add (child) {
-    if (this.has(child)) {
-      return
-    }
-    Interface.ensureImplements(child, Composite, FormItem)
-    this.formComponents.push(child)
-    this.element.appendChild(child.getElement())
+    this.children.push(child)
   }
 
-  remove (child) {
-    const index = this.formComponents.indexOf(child)
-    if (index !== -1) {
-      this.formComponents.splice(index, 1)
-      this.element.removeChild(child)
-    }
-  }
-
-  getChild (i) {
-    return this.formComponents[i]
-  }
-
-  forEach (callback) {
-    this.formComponents.forEach(item => {
-      callback.call(this, item)
-    })
-  }
-
-  save () {
-    this.forEach(item => item.save())
-  }
-
-  restore () {
-    this.forEach(item => item.restore())
-  }
-}
-
-class Field {
-  constructor (id) {
-    this.id = id
-    this.element = document.createElement('div')
-    this.element.className = 'input-field'
-  }
-
-  add () {}
-  remove () {}
-  getChild () {}
-
-  save () {
-    setCookie(this.id, this.getValue)
-  }
-
-  getValue () {
-    return this.element.value
-  }
-
-  restore () {
-    this.element.value = getCookie(this.id)
-  }
-
-  getElement () {
-    return this.element
+  display () {
+    this.children.forEach(child => child.display())
   }
 }
 ```
@@ -355,9 +329,8 @@ class Field {
 将大量类似对象转换为少量共享对象
 
 * 将对象的内部状态划分为内在数据和外在数据
-* 内在数据组成享元对象
-* 使用工厂控制享元对象的实例化，通过单体模式、缓存、对象池将实例的数目限制在刚好够用的范围
-* 使用管理器对象保存外在数据并将其提供给享元实例的方法
+ * 内在数据组成享元对象，使用工厂控制享元对象的实例化
+ * 外在数据由管理器对象保存并将其提供给享元实例的方法
 
 ### 单体控制
 

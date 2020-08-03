@@ -32,6 +32,7 @@
 * [Infra](lib/web-api/infra.md)
 * [Streams](lib/web-api/stream.md)
 * [Encoding](lib/web-api/encoding.md)
+* [MIME Sniffing](lib/web-api/mime.md)
 * [Web Component](lib/web-api/web-component.md)
 
 ### 计算机基础
@@ -39,6 +40,7 @@
 * [URI](lib/computer-base/uri.md)
 * [MIME](lib/computer-base/mime.md)
 * [字符编码](lib/computer-base/encode.md)
+* [图片格式](lib/computer-base/image.md)
 
 ### HTTP协议
 

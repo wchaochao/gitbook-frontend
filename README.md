@@ -26,6 +26,7 @@
 * 类型操作
 * 数字操作
 * 对象操作
+* 迭代器操作
 * 规范类型
 * 执行上下文
 * 表达式
@@ -65,7 +66,7 @@
 * Infra
 * Streams
 * Encoding
-* MIME
+* MIME Sniffing
 * URL
 * XMLHttpRequest
 * Fetch
@@ -78,6 +79,7 @@
 * URI
 * MIME
 * 字符编码
+* 图片格式
 
 ### HTTP协议篇
 
