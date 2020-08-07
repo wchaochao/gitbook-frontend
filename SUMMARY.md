@@ -4,6 +4,11 @@
 
 ## 目录
 
+### XML
+
+* [XML基础](lib/xml/base.md)
+* [DTD](lib/xml/dtd.md)
+
 ### HTML
 
 * [HTML基础](lib/html/base.md)
@@ -12,8 +17,15 @@
 
 * [词法](lib/javascript-base/lexical.md)
 * [数据类型](lib/javascript-base/data-type.md)
+* [类型操作](lib/javascript-base/type-operation.md)
 * [数字操作](lib/javascript-base/number-operation.md)
 * [规范类型](lib/javascript-base/specification.md)
+
+### JavaScript编程
+
+* [面向对象](lib/javascript-pattern/oop.md)
+* [对象式模式](lib/javascript-pattern/object-pattern.md)
+* [函数式模式](lib/javascript-pattern/function-pattern.md)
 
 ### DOM标准
 
@@ -61,19 +73,9 @@
 * [数据链路层](lib/tcp-ip/data-link.md)
 * [网络层](lib/tcp-ip/network.md)
 
-### XML
-
-* [XML基础](lib/xml/base.md)
-
 ### htmlparser2
 
 * [Tokenizer](lib/htmlparser2/tokenzier.md)
-
-### JavaScript设计模式
-
-* [面向对象](lib/javascript-pattern/oop.md)
-* [对象式模式](lib/javascript-pattern/object-pattern.md)
-* [函数式模式](lib/javascript-pattern/function-pattern.md)
 
 ### JavaScript模块化
 

@@ -8,18 +8,25 @@
 
 ## 前端基础系列
 
-### HTML篇
+### XML
+
+* XML基础
+* DTD
+* XSLT
+* XPath
+
+### HTML
 
 * HTML基础
 
-### CSS篇
+### CSS
 
 * CSS基础
 * CSS接口
 * CSS布局
 * CSS渲染
 
-### JavaScript基础篇
+### JavaScript基础
 
 * 词法
 * 数据类型
@@ -34,7 +41,7 @@
 * 函数
 * 严格模式
 
-### JavaScript API篇
+### JavaScript API
 
 * Object对象
 * Array对象
@@ -49,7 +56,15 @@
 * Math对象
 * JSON对象
 
-### DOM标准篇
+### JavaScript编程
+
+* 面向对象
+* 函数式编程
+* 对象式模式
+* 函数式模式
+* 设计原则
+
+### DOM标准
 
 * 节点树
 * 节点基础
@@ -61,7 +76,7 @@
 * 选区
 * 树遍历
 
-### Web API篇
+### Web API
 
 * Infra
 * Streams
@@ -74,14 +89,14 @@
 * Console
 * Web Component
 
-### 计算机基础篇
+### 计算机基础
 
 * URI
 * MIME
 * 字符编码
 * 图片格式
 
-### HTTP协议篇
+### HTTP协议
 
 * HTTP报文
 * HTTP请求
@@ -93,7 +108,7 @@
 * HTTP安全
 * HTTP增强
 
-### TCP/IP协议篇
+### TCP/IP协议
 
 * 计算机网络
 * 物理层
@@ -105,34 +120,23 @@
 * 音视频
 * 无线网络
 
-### 网络硬件篇
+### 网络硬件
 
 ## HTML扩展系列
 
-### XML篇
-
-* XML基础
-* DTD
-* XSLT
-* XPath
-
-### htmlparser2篇
+### htmlparser2
 
 * Tokenizer
 * Parser
 * DOMHandler
 
-### 模板引擎篇
-
-* EJS使用
+### EJS
 
 ## CSS扩展系列
 
-### CSSOM篇
+### CSSOM源码
 
-* cssom源码
-
-### CSS模块化篇
+### CSS模块
 
 * BEM
 * Less
@@ -143,21 +147,17 @@
 
 ## JavaScript扩展系列
 
-### Acorn篇
+### Lodash源码
 
-* acorn源码
+### RxJS源码
 
-### JavaScript工具库篇
+### Acorn源码
 
-* Lodash源码
+### Babel源码
 
-### JavaScript设计模式篇
+### webpack源码
 
-* 面向对象
-* 对象式模式
-* 函数式模式
-
-### JavaScript模块化篇
+### JavaScript模块化
 
 * JavaScript模块
 * CommonJS规范
@@ -194,6 +194,8 @@
 
 ## DOM扩展系列
 
+### jQuery源码
+
 ### UEditor源码
 
 * UEditor源码结构
@@ -205,14 +207,9 @@
 * UEditor适配层
 * UEditor插件
 
-### DOM库
-
-* jQuery源码
-* ZTree源码
-
 ## Web API扩展系列
 
-### Web请求篇
+### Axios源码
 
 * axios源码
 * Rxjs
