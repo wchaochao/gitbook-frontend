@@ -27,32 +27,24 @@
 * 使用{[[Field1]]: value1, [[Field2]]: value2,...}表示
 * 使用record.[[Field]]访问[[Field]]的值
 
-## Completion类型
-
-完结类型，用于描述语句执行情况的Record类型
-
-| Field | Value | 描述 |
-| --- | --- | --- |
-| [[Type]] | One of normal, break, continue, return, or throw | 语句类型 |
-| [[Value]] | Any or empty | 语句产生的值 |
-| [[Target]] | String or empty | 语句跳转的目标 |
-
 ## Reference类型
 
-引用类型，用于描述引用
+引用类型，用于描述引用的Record类型
 
 | Component | Value | 描述 |
 | --- | --- | --- |
 | base value | either Undefined、Boolean、Number、BigInt、String、Symbol、Object or EnvironmentRecord | 基值 |
 | referenced name | String or Symbol | 引用名称 |
 | strict reference flag | Boolean | 严格引用标志 |
-| thisValue | Object | Super引用的this值 |
+| thisValue | Object | super引用的this值 |
 
 ### 分类
 
 * Unresolvable引用：base为Undefined类型，表示未声明的变量
 * Property引用：base为Boolean、Number、BigInt、String、Symbol、Object类型，表示对象属性
- * Super引用：super属性
+ * 原始值引用：原始值属性
+ * 对象引用：对象属性
+ * super引用：super属性
 * Environment引用：base为Environment Record类型，表示环境记录项中绑定的标识符
 
 ### 操作
@@ -62,9 +54,9 @@
 * IsStrictReference(V)：是否是严格引用
 * IsUnresolvableReference(V)：是否是Unresolvable引用
 * IsPropertyReference(V)：是否是Property引用
-* HasPrimitiveBase(V)：base值是否为Boolean、Number、BigInt、String、Symbol
-* IsSuperReference(V)：是否是Super引用
-* GetThisValue(V)：获取Property引用的this值，Super引用时为thisValue，否则为base
+* HasPrimitiveBase(V)：是否是原始值引用
+* IsSuperReference(V)：是否是super引用
+* GetThisValue(V)：获取Property引用的this值，super引用时为thisValue，否则为base
 * InitializeReferencedBinding(V, W)：初始化Environment引用绑定的标识符的值
 
 ### GetValue(V)
@@ -136,9 +128,19 @@ interface Property Identifier {
 * name: 属性名
 * descriptor: 属性描述符
 
+## Completion类型
+
+完结类型，用于描述语句执行情况的Record类型
+
+| Field | Value | 描述 |
+| --- | --- | --- |
+| [[Type]] | One of normal, break, continue, return, or throw | 语句类型 |
+| [[Value]] | Any or empty | 语句产生的值 |
+| [[Target]] | String or empty | 语句跳转的目标 |
+
 ## Abstract Closure类型
 
-抽象闭包类型，描述一系列的算法步骤
+抽象闭包类型，用于描述函数的Record类型
 
 ```
 1. Let addend be 41.
@@ -147,16 +149,6 @@ interface Property Identifier {
 3. Let val be closure(1).
 4. Assert: val is 42.
 ```
-
-## Data Block类型
-
-数据块类型，用于描述字节序列
-
-### 操作
-
-* createByteDataBlock(size)：创建数据块，每个字节默认为0
-* createSharedByteDateBlock(size)：创建进程间共享的数据块
-* copyDataBlockBytes(toBlock, toIndex, fromBlock, fromIndex, count)：复制数据块
 
 ## Environment Record类型
 
@@ -273,3 +265,13 @@ interface Lexical Environment Operator {
 
 1. 标识符在词法环境里，返回引用
 2. 标识符不在词法环境里，沿着作用链查找，返回相应的引用
+
+## Data Block类型
+
+数据块类型，用于描述字节序列
+
+### 操作
+
+* createByteDataBlock(size)：创建数据块，每个字节默认为0
+* createSharedByteDateBlock(size)：创建进程间共享的数据块
+* copyDataBlockBytes(toBlock, toIndex, fromBlock, fromIndex, count)：复制数据块

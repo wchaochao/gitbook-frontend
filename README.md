@@ -56,14 +56,6 @@
 * Math对象
 * JSON对象
 
-### JavaScript编程
-
-* 面向对象
-* 函数式编程
-* 对象式模式
-* 函数式模式
-* 设计原则
-
 ### DOM标准
 
 * 节点树
@@ -147,15 +139,13 @@
 
 ## JavaScript扩展系列
 
-### Lodash源码
+### JavaScript编程
 
-### RxJS源码
-
-### Acorn源码
-
-### Babel源码
-
-### webpack源码
+* 面向对象
+* 函数式编程
+* 对象式模式
+* 函数式模式
+* 设计原则
 
 ### JavaScript模块化
 
@@ -167,6 +157,16 @@
 * SeaJS使用
 * ES6 Module
 * SystemJS使用
+
+### Lodash源码
+
+### RxJS源码
+
+### Acorn源码
+
+### Babel源码
+
+### webpack源码
 
 ### JavaScript编译篇
 
@@ -209,10 +209,9 @@
 
 ## Web API扩展系列
 
-### Axios源码
+### Webkit内核
 
-* axios源码
-* Rxjs
+### Axios源码
 
 ## 虚拟DOM系列
 

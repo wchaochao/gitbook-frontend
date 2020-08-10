@@ -94,7 +94,7 @@ StrUnsignedDecimalLiteral:::
 ```
 1. 忽略前置、后置空白
 2. 空字符串转换为+0
-3. 十进制数字字符串转换为相应的十进制数字，忽略前导零
+3. Infinity、十进制数字字符串、科学计数法转换为相应的十进制数字，忽略前导零
 4. 非十进制整数字符串转换为相应的十进制整数
 5. 转换的数字有超过20位有效数字时，将20位后的数字置为0, 20位加或不加一
 ```
@@ -171,18 +171,6 @@ StrUnsignedDecimalLiteral:::
 4. int进行modulo 2^8运算，返回余数
 ```
 
-### ToUInt8Clamp(input)
-
-转换为8位无符号整数，范围为[0, 2^8 - 1]，范围之外的值对应端点值
-
-```
-1. input转换为Number类型
-2. number为NaN时，返回+0
-3. number小于等于0时，返回0+
-4. number大于等于255时，返回255
-5. number四舍五入，正好为0.5时，奇入偶不入
-```
-
 ### ToInt8(input)
 
 转换为8位有符号整数，范围为[-2^7, 2^7-1]
@@ -194,6 +182,18 @@ StrUnsignedDecimalLiteral:::
 4. int进行modulo 2^8运算
   a. 余数小于2^7时，直接返回
   b. 余数大于等于2^7时，返回余数 - 2^8
+```
+
+### ToUInt8Clamp(input)
+
+转换为8位无符号整数，范围为[0, 2^8 - 1]，范围之外的值对应端点值
+
+```
+1. input转换为Number类型
+2. number为NaN时，返回+0
+3. number小于等于0时，返回0+
+4. number大于等于255时，返回255
+5. number四舍五入，正好为0.5时，奇入偶不入
 ```
 
 ### ToBigInt(input)
@@ -326,7 +326,7 @@ StrUnsignedDecimalLiteral:::
 是否是整数
 
 ```
-1. input为Number类型且input不为NaN、无穷大且floor(abs(input)) === abs(input)，返回true
+1. input为Number类型且有限且floor(abs(input)) === abs(input)，返回true
 2. 其他返回false
 ```
 
@@ -423,10 +423,10 @@ p是否是q的字符串前缀
 ```
 1. 都是Undefined类型，返回true
 2. 都是Null类型，返回true
-3. 都是Boolean类型，为同一个布尔值时返回true，其他返回false
-4. 都是String类型，是相同的字符串系列时返回true，其他返回false
-5. 都是Symbol类型，是同一个Symbol值时返回true，其他返回false
-6. 都是Object类型，是同一个对象时返回true，其他返回false
+3. 都是Boolean类型，为同一个布尔值时返回true，否则返回false
+4. 都是String类型，是相同的字符串系列时返回true，否则返回false
+5. 都是Symbol类型，是同一个Symbol值时返回true，否则返回false
+6. 都是Object类型，是同一个对象时返回true，否则返回false
 ```
 
 ### SameValue(x, y)
@@ -442,7 +442,7 @@ p是否是q的字符串前缀
 
 ### SameValueZero(x, y)
 
-是否是同一个值，0当作同一个值
+是否是同一个值，+0、-0当作同一个值
 
 ```
 1. x、y类型不同，返回false

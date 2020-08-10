@@ -15,14 +15,115 @@
 2. 其他情况返回-x
 ```
 
-### Number::bitwiseNOT(x)
+### Number::add(x, y)
 
-取反
+加法
 
 ```
-1. x转换为Int32类型
-2. 按位取反，结果为Int32类型
+1. x、y有一个为NaN，返回NaN
+2. x、y一个为正无穷，一个为负无穷，返回NaN
+3. x、y有一个为无穷，返回这个操作数
+4. x、y都为0
+  a. 都为-0时，返回-0
+  b. 其他情况返回+0
+5. x、y为相反数，返回+0
+6. 其他情况进行加法运算
 ```
+
+### Number::subtract(x, y)
+
+减法
+
+```
+1. 相当于x + (-y)
+```
+
+### Number::multiply(x, y)
+
+乘法
+
+```
+1. x、y有一个为NaN，返回NaN
+2. x、y一个为0，一个为无穷，返回NaN
+3. x、y有一个为无穷，返回无穷，符号为两个操作数的符号之积
+4. 其他情况进行乘法运算
+```
+
+### Number::divide(x, y)
+
+除法
+
+```
+1. x、y有一个为NaN，返回NaN
+2. x、y都为无穷，返回NaN
+3. x为无穷，返回无穷，符号为两个操作数的符号之积
+4. y为无穷，返回0，符号为两个操作数的符号之积
+5. x、y都为0 ，返回NaN
+6. x为0，返回0，符号为两个操作数的符号之积
+7. y为0，返回无穷，符号为两个操作数的符号之积
+8. 其他情况进行除法运算
+```
+
+### Number::remainder(x, y)
+
+求余
+
+```
+1. x、y有一个为NaN，返回NaN
+2. x为无穷或y为0，返回NaN
+3. x为0或y为无穷，返回被除数
+4. 其他情况进行绝对值求余运算，符号为被除数符号
+```
+
+### Number::lessThan(x, y)
+
+小于
+
+```
+1. x、y有一个为NaN，返回undefined
+2. x、y为相同的数，返回false
+3. x、y一个为+0、一个为-0，返回false
+4. x为正无穷，返回false
+5. y为正无穷，返回true
+6. x为负无穷，返回true
+7. y为负无穷，返回false
+8. x小于y，返回true
+9. 其他情况返回false
+```
+
+### Number::equal(x, y)
+
+相等
+
+```
+1. x、y有一个为NaN，返回false
+2. x、y都为0，返回true
+3. x、y为相同的数，返回true
+4. 其他情况返回false
+```
+
+### Number::sameValue(x, y)
+
+同一个数
+
+```
+1. x、y都为NaN时，返回true
+2. x、y一个为+0，一个为-0，返回false
+3. x、y为相同的数，返回true
+4. 其他情况返回false
+```
+
+### Number::sameValueZero(x, y)
+
+同一个数，包括+0、-0
+
+```
+1. x、y都为NaN时，返回true
+2. x、y一个为+0，一个为-0，返回true
+3. x、y为相同的数，返回true
+4. 其他情况返回false
+```
+
 ### Number::exponentiate(base, exponent)
 
 指数
@@ -58,143 +159,13 @@
 11. 其他情况进行指数运算
 ```
 
-### Number::multiply(x, y)
+### Number::bitwiseNOT(x)
 
-乘法
-
-```
-1. x、y有一个为NaN，返回NaN
-2. x、y一个为0，一个为无穷，返回NaN
-3. x、y有一个为无穷，返回无穷，符号为两个操作数的符号之积
-4. 其他情况进行乘法运算
-```
-
-### Number::divide(x, y)
-
-除法
-
-```
-1. x、y有一个为NaN，返回NaN
-2. x、y都为无穷，返回NaN
-3. x为无穷，返回无穷，符号为两个操作数的符号之积
-4. y为无穷，返回0，符号为两个操作数的符号之积
-5. x、y都为0 ，返回NaN
-6. x为0，返回0，符号为两个操作数的符号之积
-7. y为0，返回无穷，符号为两个操作数的符号之积
-8. 其他情况进行除法运算
-```
-
-### Number::remainder(n, d)
-
-求余
-
-```
-1. n、d有一个为NaN，返回NaN
-2. n为无穷或d为0，返回NaN
-3. d为无穷或n为0，返回被除数
-4. 其他情况进行绝对值求余运算，符号为被除数符号
-```
-
-### Number::add(x, y)
-
-加法
-
-```
-1. x、y有一个为NaN，返回NaN
-2. x、y一个为正无穷，一个为负无穷，返回NaN
-3. x、y有一个为无穷，返回这个操作数
-4. x、y都为0
-  a. 都为-0时，返回-0
-  b. 其他情况返回+0
-5. x、y为相反数，返回+0
-6. 其他情况进行加法运算
-```
-
-### Number::subtract(x, y)
-
-减法
-
-```
-1. 相当于x + (-y)
-```
-
-### Number::leftShift(x, y)
-
-左移
+取反
 
 ```
 1. x转换为Int32类型
-2. y转换为Uint32类型，取最后5位为ShiftCount
-3. x左移ShiftCount位，右补0，结果为Int32类型
-```
-
-### Number::signedRightShift(x, y)
-
-有符号右移
-
-```
-1. x转换为Int32类型
-2. y转换为Uint32类型，取最后5位为ShiftCount
-3. x右移ShiftCount位，左补符号位，结果为Int32类型
-```
-
-### Number::unsignedRightShift(x, y)
-
-无符号右移
-
-```
-1. x转换为Uint32类型
-2. y转换为Uint32类型，取最后5位为ShiftCount
-3. x右移ShiftCount位，左补0，结果为Uint32类型
-```
-
-### Number::lessThan(x, y)
-
-小于
-
-```
-1. x、y有一个为NaN，返回undefined
-2. x、y为相同的数，返回false
-2. x、y一个为+0、一个为-0，返回false
-3. x为正无穷，返回false
-4. y为正无穷，返回true
-5. y为负无穷，返回false
-6. x为负无穷，返回true
-7. x小于y，返回true
-8. 其他情况返回false
-```
-
-### Number::equal(x, y)
-
-相等
-
-```
-1. x、y有一个为NaN，返回false
-2. x、y都为0，返回true
-3. x、y为相同的数，返回true
-4. 其他情况返回false
-```
-
-### Number::sameValue(x, y)
-
-同一个数
-
-```
-1. x、y都为NaN时，返回true
-2. x、y一个为+0，一个为-0，返回false
-3. x、y为相同的数，返回true
-4. 其他情况返回false
-```
-
-### Number::sameValueZero(x, y)
-
-同一个数，包括+0、-0
-
-```
-1. x、y都为NaN时，返回true
-2. x、y一个为+0，一个为-0，返回true
-3. x、y为相同的数，返回true
-4. 其他情况返回false
+2. 按位取反，结果为Int32类型
 ```
 
 ### NumberBitwiseOp(op, x, y)
@@ -233,6 +204,36 @@
 1. 相当于NumberBitwiseOp(^, x, y)
 ```
 
+### Number::leftShift(x, y)
+
+左移
+
+```
+1. x转换为Int32类型
+2. y转换为Uint32类型，取最后5位为ShiftCount
+3. x左移ShiftCount位，右补0，结果为Int32类型
+```
+
+### Number::signedRightShift(x, y)
+
+有符号右移
+
+```
+1. x转换为Int32类型
+2. y转换为Uint32类型，取最后5位为ShiftCount
+3. x右移ShiftCount位，左补符号位，结果为Int32类型
+```
+
+### Number::unsignedRightShift(x, y)
+
+无符号右移
+
+```
+1. x转换为Uint32类型
+2. y转换为Uint32类型，取最后5位为ShiftCount
+3. x右移ShiftCount位，左补0，结果为Uint32类型
+```
+
 ### Number::toString(x)
 
 字符串表示
@@ -257,51 +258,6 @@
 2. 其他情况返回-x
 ```
 
-### BigInt::bitwiseNOT(x)
-
-整数取反
-
-```
-1. 按位取反，返回-x-1
-```
-
-### BigInt::exponentiate(base, exponent)
-
-整数指数
-
-```
-1. exponent小于0n, 抛出RangeError
-2. base为0n且exponent为0n，返回1n
-3. 其他情况进行指数运算
-```
-
-### BigInt::multiply(x, y)
-
-整数乘法
-
-```
-1. 进行乘法运算
-```
-
-### BigInt::divide(x, y)
-
-整数除法
-
-```
-1. y为0n，返回NaN
-2. 其他情况进行除法运算，向0近似
-```
-
-### BigInt::remainder(n, d)
-
-整数求余
-
-```
-1. d为0n，返回NaN
-2. n为0n，返回0n
-3. 其他情况进行绝对值求余运算，符号为被除数符号
-```
-
 ### BigInt::add(x, y)
 
 整数加法
@@ -318,29 +274,31 @@
 1. 进行减法运算
 ```
 
-### BigInt::leftShift(x, y)
+### BigInt::multiply(x, y)
 
-整数左移
-
-```
-1. y小于0n, 返回x / 2^y, 向最近整数近似
-2. 其他情况返回x * 2^y
-```
-
-### BigInt::signedRightShift(x, y)
-
-整数有符号右移
+整数乘法
 
 ```
-1. 相当于BigInt::leftShift(x, -y)
+1. 进行乘法运算
 ```
 
-### BigInt::unsignedRightShift(x, y)
+### BigInt::divide(x, y)
 
-整数无符号右移
+整数除法
 
 ```
-1. 抛出TypeError
+1. y为0n，抛出RangeError
+2. 其他情况进行除法运算，向下取整
+```
+
+### BigInt::remainder(x, y)
+
+整数求余
+
+```
+1. y为0n，抛出RangeError
+2. x为0n，返回0n
+3. 其他情况进行绝对值求余运算，符号为被除数符号
 ```
 
 ### BigInt::lessThan(x, y)
@@ -363,7 +321,7 @@
 
 ### BigInt::sameValue(x, y)
 
-整数同一个数
+同一个整数
 
 ```
 1. 相当于BigInt::equal(x, y)
@@ -371,10 +329,28 @@
 
 ### BigInt::sameValueZero(x, y)
 
-整数同一个数，包括0
+同一个整数，包括0
 
 ```
 1. 相当于BigInt::equal(x, y)
+```
+
+### BigInt::exponentiate(base, exponent)
+
+整数指数
+
+```
+1. exponent小于0n, 抛出RangeError
+2. base为0n且exponent为0n，返回1n
+3. 其他情况进行指数运算
+```
+
+### BigInt::bitwiseNOT(x)
+
+整数取反
+
+```
+1. 按位取反，返回-x-1
 ```
 
 ### BigIntBitwiseOp(op, x, y)
@@ -409,6 +385,31 @@
 
 ```
 1. 相当于BigIntBitwiseOp(^, x, y)
+```
+
+### BigInt::leftShift(x, y)
+
+整数左移
+
+```
+1. y小于0n, 返回x / 2^y, 向最近整数近似
+2. 其他情况返回x * 2^y
+```
+
+### BigInt::signedRightShift(x, y)
+
+整数有符号右移
+
+```
+1. 相当于BigInt::leftShift(x, -y)
+```
+
+### BigInt::unsignedRightShift(x, y)
+
+整数无符号右移
+
+```
+1. 抛出TypeError
 ```
 
 ### BigInt::toString(x)

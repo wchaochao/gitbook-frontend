@@ -21,12 +21,6 @@
 * [数字操作](lib/javascript-base/number-operation.md)
 * [规范类型](lib/javascript-base/specification.md)
 
-### JavaScript编程
-
-* [面向对象](lib/javascript-pattern/oop.md)
-* [对象式模式](lib/javascript-pattern/object-pattern.md)
-* [函数式模式](lib/javascript-pattern/function-pattern.md)
-
 ### DOM标准
 
 * [节点树](lib/dom/node-tree.md)
@@ -76,6 +70,12 @@
 ### htmlparser2
 
 * [Tokenizer](lib/htmlparser2/tokenzier.md)
+
+### JavaScript编程
+
+* [面向对象](lib/javascript-pattern/oop.md)
+* [对象式模式](lib/javascript-pattern/object-pattern.md)
+* [函数式模式](lib/javascript-pattern/function-pattern.md)
 
 ### JavaScript模块化
 
