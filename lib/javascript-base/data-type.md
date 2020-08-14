@@ -76,7 +76,7 @@ E = 2047，表示无限数
 
 ## BigInt类型
 
-任意长度的整数值
+任意整数
 
 ### 创建
 
@@ -104,6 +104,7 @@ const bigintFromNumber = BigInt(10)
 ### 编码
 
 UTF-16编码
+
 1. 字符串转换为对应的Code Point
 2. Code Point使用UTF-16编码
  * 基本平面字符使用两个字节表示
