@@ -149,18 +149,8 @@ dictionary GetRootNodeOptions {
 
 ### 节点克隆
 
-* cloneNode(deep): 克隆节点，deep为true时同时克隆后代节点
- * Element节点：标签、属性相同
- * Attr节点：属性名、属性值相同
- * Text、Comment节点：data相同
- * ProcessingInstruction节点：target、data相同
- * Document、DocumentType节点：内部属性相同
-* isEqualNode(otherNode): 是否是相同节点（类型相同、内部属性相同）
- * Element节点：标签、属性、子节点相同
- * Attr节点：属性名、属性值相同
- * Text、Comment节点：data相同
- * ProcessingInstruction节点：data、target相同
- * DocumentType节点：内部属性相同
+* cloneNode(deep): 按内部属性克隆节点，deep为true时同时克隆后代节点
+* isEqualNode(otherNode): 是否是相同节点，类型相同、内部属性相同、后代节点相同
 
 ### 节点位置
 
@@ -259,8 +249,12 @@ dictionary ElementCreationOptions {
 
 ### new Document()
 
+创建Document节点
+
+```
 1. 创建Document对象
 2. 初始化内部属性
+```
 
 ### 特征属性
 
@@ -284,86 +278,120 @@ dictionary ElementCreationOptions {
 
 根据qualifiedName匹配后代元素节点
 
+```
 1. qualifiedName为'*'时匹配所有后代元素节点
-2. document为HTML document节点时
- a. 元素命名空间为HTML namespace时匹配小写qualifiedName
- b. 元素命名空间不为HTML namespace时匹配qualifiedName
+2. document为HTML document时匹配小写qualifiedName
 3. 其他情况匹配qualifiedName
+```
 
 #### getElementsByTagNameNS(namespace, localName)
 
 根据namespace和localName匹配后代元素节点
 
+```
 1. namespace和localName都为'*'时，匹配所有后代元素节点
 2. namespace为'*'，localName不为'*'时，匹配localName
 3. namespace不为'*'，localName为'*'时，匹配namespace
-4. namespace不为'*'，localName不为为'*'时，匹配namespace和localName
+4. namespace不为'*'，localName不为'*'时，匹配namespace和localName
+```
 
 #### getElementsByClassName(classNames)
 
 根据classNames匹配后代元素节点
 
+```
 1. 将classNames转换为ordered set
-2. 匹配classList包含ordered set所有元素的后端元素节点
+2. 匹配classList包含ordered set的元素节点
+```
 
 ### 创建节点
 
 #### createDocumentFragemnt()
 
-创建DocumentFragment节点，初始化node document
+创建DocumentFragment节点
+
+```
+1. 创建DocumentFragment对象
+2. 初始化node document属性
+```
 
 #### createElement(localName[, options])
 
 根据localName创建元素节点
 
+```
 1. document为HTML document时，localName自动转换为小写
 2. document为HTML document时，namespace为HTML namespace，否则为null
 3. prefix为null
 4. options提供is选项时，is为传入的is，否则为null
 5. 使用document, localName, namespace, prefix, is创建元素节点
+```
 
 #### createElementNS(namespace, qualifiedName[, options])
 
 根据namespace, qualifiedName创建元素节点
 
+```
 1. 从qualifiedName中拆出prefix, localName
 2. 校验namespace, prefix是否匹配
 3. options提供is选项时，is为传入的is，否则为null
 4. 使用document, localName, namespace, prefix, is创建元素节点
+```
 
 #### createAttribute(localName)
 
 根据localName创建属性节点
 
+```
 1. document为HTML document时，localName自动转换为小写
-2. 创建Attr节点，初始化local name、node document
+2. 创建Attr节点，初始化local name、node document属性
+```
 
 #### createAttributeNS(namespace, qualifiedName)
 
-根据localName创建属性节点
+根据namespace、qualifiedName创建属性节点
 
+```
 1. 从qualifiedName中拆出prefix, localName
 2. 校验namespace, prefix是否匹配
-3. 创建Att节点，初始化localName、namespace、prefix、node document
+3. 创建Att节点，初始化localName、namespace、prefix、node document属性
+```
 
 #### createTextNode(data)
 
-创建Text节点，初始化data、node document
+创建Text节点
+
+```
+1. 创建Text节点
+2. 初始化data、node document属性
+```
 
 #### createCDATASection(data)
 
 创建CDATA节点
 
+```
 1. document为HTML document时，抛出不支持的错误
-1. 创建CDATASection节点，初始化data、node document
+1. 创建CDATASection对象，初始化data、node document属性
+```
 
 #### createComment(data)
 
-创建Comment节点，初始化data、node document
+创建Comment节点
+
+```
+1. 创建Comment对象
+2. 初始化data、node document属性
+```
 
 #### createProcessionInstruction(target, data)
 
 创建ProcessionInstruction节点，初始化target、data、node document
+
+```
+1. 创建ProcessionInstruction对象
+2. 初始化target、data、node document属性
+```
 
 ### 外部节点
 
@@ -371,31 +399,43 @@ dictionary ElementCreationOptions {
 
 复制外部节点
 
+```
 1. node为document或shadow root节点时，抛出错误
 2. 复制外部节点node, deep为true时复制后代节点
-3. 设置复制节点的node document为document
+3. 设置复制节点及其后代节点的node document为document
+```
 
 #### adoptNode(node)
 
 移动外部节点
 
+```
 1. node为document或shadow root节点时，抛出错误
 2. 外部节点从它的树中移除，并设置移动节点及其后代节点的node document为document
 3. 节点或后代节点为自定义元素时触发adoptedCallback事件
+```
 
 ### 创建遍历器
 
 #### createNodeIterator(root, whatToShow, filter)
 
+创建NodeIterator
+
+```
 1. 创建NodeIterator对象
-2. 初始化root、whatToShow、filter
-3. 设置referenceNode为root，pointerBeforeReferenceNode为true
+2. 初始化root、whatToShow、filter属性
+3. 设置referenceNode属性为root，pointerBeforeReferenceNode属性为true
+```
 
 #### createTreeWalker(root, whatToShow, filter)
 
+创建TreeWalker
+
+```
 1. 创建TreeWalker对象
-2. 初始化root、whatToShow、filter
-3. 设置current为root
+2. 初始化root、whatToShow、filter属性
+3. 设置current属性为root
+```
 
 ### 创建其他
 
@@ -416,24 +456,33 @@ interface DOMImplementation {
 
 创建XMLDocument节点及XML基本结构
 
-* 创建XMLDocument节点
-* doctype提供时，append到XMLDocument节点
-* 使用namespace, qualifiedName创建根元素节点，append到XMLDocument节点
+```
+1. 创建XMLDocument节点
+3. doctype提供时，append到XMLDocument节点
+3. 使用namespace, qualifiedName创建根元素节点，append到XMLDocument节点
+```
 
 ### createHTMLDocument(title)
 
 创建HTMLDocument节点及HTML基本结构
 
+```
 1. 创建HTMLDocument节点
 2. 创建HTML的doctype节点，并append到HTMLDocument节点中
 3. 创建html根元素节点，并append到HTML节点
 4. 创建head元素节点，并append到html节点
 5. 创建body元素节点，并append到html节点
 6. title提供时，创建title元素节点，文本为title，并append到head节点
+```
 
 ### createDocumentType(qulifiedName, publicId, systemId)
 
 创建DocumentType节点，初始化name、publicId、systemId、node document
+
+```
+1. 创建DocumentType对象
+2. 初始化name、publicId、systemId、node document属性
+```
 
 ## Doctype接口
 
@@ -447,9 +496,9 @@ interface DocumentType: Node {
 
 ### 内部属性
 
-* name: 名称
-* publicId: 公共ID，默认为空字符串
-* systemId: 系统Id，默认为空字符串
+* name: 根元素名称
+* publicId: 标准DTD地址，默认为空字符串
+* systemId: 私有DTD地址，默认为空字符串
 
 ### 特征属性
 
@@ -473,8 +522,10 @@ interface DocumentFragment: Node {
 
 创建DocumentFragment节点
 
-1. 创建DocumentFragment节点
-2. 设置node document为全局对象的document属性
+```
+1. 创建DocumentFragment对象
+2. 设置node document属性为全局对象的document属性
+```
 
 ## ShadowRoot接口
 
@@ -541,8 +592,8 @@ interface Element: Node {
   readonly attribute ShadowRoot? shadowRoot;
   ShadowRoot attachShadow(ShadowRootInit init);
 
-  Element? closest(DOMString selectors);
   boolean matches(DOMString selectors);
+  Element? closest(DOMString selectors);
 
   HTMLCollection getElementsByTagName(DOMString qualifiedName);
   HTMLCollection getElementsByTagNameNS(DOMString? namespace, DOMString localName);
@@ -617,32 +668,42 @@ element的attribute list
 
 #### 属性改变
 
+```
 1. 触发attribute mutation
 2. 元素为自定义元素时，触发attributeChangedCallback
+```
 
 #### 修改属性节点
 
+```
 1. 触发属性改变，由oldValue变为newValue
 2. 属性节点的属性值设为新值
+```
 
 #### 追加属性节点
 
+```
 1. 触发属性改变，由null变为value
 2. 将attr追加到element的attribute list
 3. 设置attr的element属性为element
+```
 
 #### 移除属性节点
 
+```
 1. 触发属性改变，由value变为null
 2. 从element的attribute list中移除attr
 3. 设置attr的element属性为null
+```
 
 #### 替换属性节点
 
+```
 1. 触发属性改变，由oldValue变为newValue
 2. 将element的attribute list的oldAttr替换为newAttr
 3. 设置newAttr的element属性为element
 4. 设置oldAttr的element属性为null
+```
 
 ### 属性节点操作
 
@@ -650,22 +711,28 @@ element的attribute list
 
 根据qualifiedName获取匹配的第一个属性节点
 
+```
 1. 元素节点namespace为HTML namespace且node document为HTML时，qualifiedName转换为小写
 2. 从元素节点的属性列表中获取第一个qualified name为qualifiedName的属性节点
+```
 
 #### getAttributeNodeNS(namespace, localName)
 
 根据namespace、localName获取匹配的第一个属性节点
 
+```
 1. 从元素节点的属性列表中获取第一个namespace为namespace, local name为localName的属性节点
+```
 
 #### setAttributeNode(attr)
 
 设置属性节点
 
+```
 1. 根据attr的namespace、localName获取匹配的第一个属性节点oldAttr
 2. oldAttr存在时，替换属性节点
 3. oldAttr不存在时，追加属性节点
+```
 
 #### setAttributeNodeNS(attr)
 
@@ -675,8 +742,10 @@ element的attribute list
 
 移除属性节点
 
+```
 1. attr不在元素节点的属性列表中时，抛出错误
 2. 移除属性节点attr
+```
 
 ### 属性操作
 
@@ -690,20 +759,25 @@ element的attribute list
 * setAttributeNS(namspace, qualifiedName, value): 根据namespace、localName获取匹配的第一个属性节点，存在时修改，不存在时追加
 * removeAttribute(qualifiedName): 根据qualifiedName获取匹配的第一个属性节点，移除该节点
 * removeAttributeNS(namespace, localName): 根据namespace、localName获取匹配的第一个属性节点，移除该节点
-* toggleAttribute(qualifiedName, force): 根据qualifiedName获取匹配的第一个属性节点，存在且force不存在或为false时移除节点，不存在且force未提供或为true时追加属性节点
+* toggleAttribute(qualifiedName, force): 根据qualifiedName获取匹配的第一个属性节点，移除或追加属性
+ * force未提供时，有属性时移除，没有属性时追加
+ * force提供时，为true时追加，为false时移除
 
 ### shadow操作
 
-* shadowRoot: element的shadow root, shadow root的mode为closed时，返回null
+* shadowRoot: element的shadow root,
+ * shadow root的mode为closed时，返回null
 
 #### attachShadow(init)
 
 挂载shadow tree
 
+```
 * element的local name不为自定义元素名或`article, aside, blockquote, body, div, footer, h1, h2, h3, h4, h5, h6, header, main, nav, p, section, span`时抛出错误
 * element已挂载shadow tree时抛出错误
-* 创建shadowRoot节点，初始化mode, delegates focus, host
-* 设置element的shadow root为创建的shadowRoot节点
+* 创建shadowRoot节点，初始化mode, delegates focus, host属性
+* 设置shadow root属性为创建的shadowRoot节点
+```
 
 ### 匹配元素
 
@@ -791,13 +865,17 @@ interface DOMTokenList {
 
 ### 创建
 
+```
 1. 获取element的local name属性
 2. 将属性值转换为token set
+```
 
 ### 校验token
 
-* token为空字符串，抛出错误
-* token含有ASCII空白符，抛出错误
+```
+* token为空字符串时，抛出错误
+* token含有ASCII空白符时，抛出错误
+```
 
 ### 特征属性
 
@@ -818,9 +896,8 @@ interface DOMTokenList {
 * add(tokens...): 添加tokens
 * remove(tokens...): 移除tokens
 * toggle(token[, force]): 切换token
- * force未提供时，token存在时移除，不存在时添加
- * force为true时，添加token
- * force为false时，移除token
+ * force未提供时，token存在时移除，不存在时追加
+ * force提供时，为true时追加，为false时移除
 * replace(token, newToken): 替换token
 
 ## Attr接口
@@ -894,8 +971,8 @@ interface CharacterData: Node {
 interface Text: CharacterData {
   constructor(optional DOMString data = "");
 
-  Text splitText(unsigned long offset);
   readonly attribute DOMString wholeText;
+  Text splitText(unsigned long offset);
 }
 ```
 
@@ -907,7 +984,12 @@ interface Text: CharacterData {
 
 ### new Text([data = ""])
 
-创建Text节点，初始化data, node document
+创建Text节点
+
+```
+1. 创建Text对象
+2. 初始化data, node document属性
+```
 
 ### 属性
 
@@ -950,4 +1032,9 @@ interface Comment: CharacterData {
 
 ### new Comment([data = ""])
 
-创建Comment节点，初始化data, node document
+创建Comment节点
+
+```
+1. 创建Comment对象
+2. 初始化data, node document属性
+```

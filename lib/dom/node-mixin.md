@@ -15,11 +15,11 @@ interface mixin ParentNode {
   readonly attribute Element? firstElementChild;
   readonly attribute Element? lastElementChild;
 
-  void prepend((Node or DOMString)... nodes);
-  void append((Node or DOMString)... nodes);
-
   Element? querySelector(DOMString selectors);
   NodeList querySelectorAll(DOMString selectors);
+
+  void prepend((Node or DOMString)... nodes);
+  void append((Node or DOMString)... nodes);
 }
 ```
 
@@ -30,15 +30,15 @@ interface mixin ParentNode {
 * firstElementChild: 第一个子元素节点
 * lastElementChild: 最后一个子元素节点
 
+### 查找节点
+
+* querySelector(selectors): 根据选择器查找第一个匹配的元素节点
+* querySelectorAll(selectors): 根据选择器查找匹配的元素节点集合
+
 ### 追加节点
 
 * prepend(...nodes): 在第一个子节点前追加多个节点，字符串被自动处理为文本节点
 * append(...nodes): 在最后一个子节点后追加多个节点，字符串被自动处理为文本节点
-
-### 查找节点
-
-* querySelector(selectors): 根据选择器查找第一个匹配的元素节点
-* querySelectorAll(selectors): 根据选择器查找匹配的元素节点集合，静态集合
 
 ## NonElementParentNode接口
 
@@ -119,6 +119,7 @@ Node节点集合
 ```javascript
 interface NodeList {
   readonly attribute unsigned long length;
+
   getter Node? item(unsigned long index);
   iterable<Node>
 }
@@ -170,7 +171,7 @@ interface HTMLCollection {
 ### 创建
 
 * children
-* document集合属性
+* HTMLDocument集合属性
  * document.scripts
  * document.images
  * document.links

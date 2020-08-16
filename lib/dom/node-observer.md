@@ -44,30 +44,38 @@ interface MutationObserver {
 
 创建变动观察者
 
-1. 创建MutationObserver对象，初始化callback
+```
+1. 创建MutationObserver对象，初始化callback属性
 2. 将创建的MutationObserver对象放入Mutation observers队列中
+```
 
 ### observer(target, options)
 
 观察节点
 
+```
 1. 检验观察配置
 2. 如果observer已被注册进target的观察者列表，设置变动观察配置为option
 3. 如果没有，将observer, options注册进target的观察者列表，将target加入observer的node list列表
+```
 
 ### disconnect()
 
 解除观察
 
+```
 1. 遍历node list列表，移除已注册的observer
 2. record queue置空
+```
 
 ### takeRecords()
 
 取出观察记录
 
+```
 * 克隆一份record queue
 * record queue置空
+```
 
 ## MutationCallback
 
@@ -110,9 +118,11 @@ dictionary MutationObserverInit {
 
 ### 校验
 
-* 设置了attributeOldValue或attributeFilter时，attributes省略（会被设为true）或为true
-* 设置了characterDataOldValue时，characterData省略（会被设为true）或为true
-* attributes、characterData、childList至少一个为true
+```
+1. 设置了attributeOldValue或attributeFilter时，attributes省略（会被设为true）或为true
+2. 设置了characterDataOldValue时，characterData省略（会被设为true）或为true
+3. attributes、characterData、childList至少一个为true
+```
 
 ## MutationRecord
 
@@ -152,6 +162,8 @@ interface MutationRecord {
 
 ## 触发
 
+```
 1. 遍历变动的节点及其祖先节点，将MutationRecord存入符合的MutationObserver的record queue中
 2. 生成一个mutation observer微任务，放入微任务队列中（已经有mutation observer微任务时不用再生成）
 3. mutation observer微任务执行时从mutation observers队列中找出有变动记录的mutation observer，执行回调
+```

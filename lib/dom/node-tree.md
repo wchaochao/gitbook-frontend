@@ -83,6 +83,8 @@ Shadow Tree的插槽，引用Slottables
 
 当slot引用的slottables发生变化时会触发slot change事件
 
+```
 1. 将slot放入signal slots队列中
 2. 生成一个mutation observer微任务，放入微任务队列中（已经有mutation observer微任务时不用再生成）
 3. mutation observer微任务执行时从signal slots队列中取出所有slot，触发它的slot change事件
+```

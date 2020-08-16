@@ -451,7 +451,31 @@ p是否是q的字符串前缀
 4. x、y为非数字类型，返回SameValueNonNumeric(x, y)
 ```
 
-### Abstract Relational Comparison
+### Strict Equality Comparison(x, y)
+
+全等比较
+
+```
+1. x、y类型不同，返回false
+2. x、y为Number类型，返回数字操作Number::equal(x, y)
+3. x、y为BigInt类型，返回数字操作BigInt::equal(x, y)
+4. x、y为非数字类型，返回SameValueNonNumeric(x, y)
+```
+
+### Abstract Equality Comparison(x, y)
+
+相等比较
+
+```
+1. x、y类型相同，返回Strict Equality Comparison(x, y)
+2. x、y一个为Undefined类型、一个为Null类型，返回true
+3. x、y一个为Number类型、一个为BigInt类型，比较数字大小
+4. x、y一个为数字类型、一个为String类型，String转换为相应的数字类型进行比较
+5. x、y有一个为Boolean类型，转换为Number类型进行比较
+6. x、y有一个为Object类型，转换为原始值类型进行比较，无偏向
+```
+
+### Abstract Relational Comparison(x, y, LeftFirst)
 
 x是否小于y，LeftFirst指定是否x先执行
 
@@ -468,20 +492,4 @@ x是否小于y，LeftFirst指定是否x先执行
   c. 转换的数字类型一个为BigInt类型，一个为Number类型
     i. 有NaN时，返回undefined
     ii. 无NaN时，比较值大小
-```
-
-### Strict Equality Comparison
-
-全等比较
-
-```
-
-```
-
-### Abstract Equality Comparison
-
-相等比较
-
-```
-
 ```
