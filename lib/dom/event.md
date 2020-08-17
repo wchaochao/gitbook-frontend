@@ -67,8 +67,8 @@ dictionary AddEventListenerOptions: EventListenerOptions {
  * removed: 是否已从列表中移除，默认为false
 * get the parent：获取父EventTarget
  * slottable节点的父EventTarget为slot节点
- * shadow root节点的父EventTarget为shadow host，event的composed flag为false时父EventTarget为null
- * document节点的父EventTarget为全局对象，event的type为load时父EventTarget为null
+ * event的composed flag为true时shadow root节点的父EventTarget为shadow host
+ * event的type不为load时document节点的父EventTarget为全局对象
  * 其他node节点的父EventTarget为父节点
 * activation behavior：默认行为
 
@@ -102,7 +102,7 @@ dictionary AddEventListenerOptions: EventListenerOptions {
 2. 设置event的dispatch flag为true，isTrusted属性为false
 3. 根据get the parent算法计算event的path属性
   a. target的shadow-adjusted target为target本身
-  b. 上一个shadow-adjusted target不为slot节点时shadow host的shadow-adjusted target为shadow host本身
+  b. 上一个shadow-adjusted target不为slottable节点时shadow host的shadow-adjusted target为shadow host本身
   c. 其他EventTarget的shadow-adjusted target为null
 4. path按照倒序触发invocation target的event listener
  a. shadow-adjusted target不为null时，设置event的eventPhase属性为AT_TARGET
@@ -133,8 +133,8 @@ interface Event {
   constructor(DOMString type, optional EventInit eventInitDict = {});
 
   readonly attribute DOMString type;
-  readonly attribute boolean bubbles;
   readonly attribute boolean composed;
+  readonly attribute boolean bubbles;
   readonly attribute boolean cancelable;
 
   readonly attribute EventTarget? target;
@@ -158,8 +158,8 @@ interface Event {
 }
 
 dictionary EventInit {
-  boolean bubbles = false;
   boolean composed = false;
+  boolean bubbles = false;
   boolean cancelable = false;
 }
 ```
@@ -169,6 +169,7 @@ dictionary EventInit {
 目标
 
 * target: 事件触发的目标对象
+ * target为Shadow Tree的非slotted节点时，跨越阴影边界时target会被重置为shadow host
 * relatedTarget: 事件触发的相关目标对象
 * touch target list: touch事件目标对象列表
 * path: 事件传播信息列表，从target开始
@@ -178,42 +179,43 @@ dictionary EventInit {
  * root-of-closed-tree: invocation target是否是closed shadow tree的root节点
  * slot-in-closed-tree: invocation target是否是closed shadow tree的slot节点
  * shadow-adjusted target: 调整后的target对象
- * releatedTarget: relatedTarget相对invocation target进行retarget
+ * releatedTarget: relatedTarget相对invocation target进行retarget（relatedTarget和invocation target在一个ShadowTree下重置为shadow host）
  * touch target list: touch target list相对invocation target进行retarget
 
 标志
 
 * initialized flag：初始化标志
 * composed flag：能否跨越阴影边界标志
-* dispatch flag：吃法标志
+* dispatch flag：触发标志
 * stop propagation flag：阻止传播标志
-* stop immediate propagation flag：阻止立即传播标志
+* stop immediate propagation flag：立即阻止传播标志
 * canceled flag：取消标志
-* in passive listener flag：不可取消标志
+* in passive listener flag：在当前listener不可取消标志
 
 ### new Event(type[, eventInitDict])
 
-创建Event对象
+创建事件
 
+```
 1. 创建Event对象
-2. 初始化type、bubbles、composed、cancleable属性
+2. 初始化type、composed、bubbles、cancleable属性
 3. 设置initialized flag、composed flag
 4. 设置isTrusted、timestamp属性
+```
 
 ### 初始化属性
 
 * type: 事件类型
+* composed: 事件是否可以传播通过阴影边界
 * bubbles: 事件是否可以冒泡
-* composed: 事件是否可以冒泡通过阴影边界
-* cancelable: 是否可以取消事件默认行为
+* cancelable: 事件是否可以取消默认行为
 
 ### 目标属性
 
 * target: event的target
- * target为Shadow Tree的非slotted节点时，跨越阴影边界时target会被重置为shadow host
 * currentTarget：当前执行的监听器绑定的EventTarget对象
 * composedPath(): 事件传播经过的所有节点，从target开始
- * shadow root的mode为closed时，跨越阴影边界后隐藏shadow root里的路径
+ * shadow root的mode为closed时，隐藏shadow root里的路径
 
 ### 传播行为
 
@@ -238,7 +240,7 @@ dictionary EventInit {
 
 ## CustomEvent接口
 
-携带自定义数据的Event
+自定义事件
 
 ```javascript
 interface CustomEvent: Event {
@@ -254,7 +256,12 @@ dictionary CustomEventInit: EventInit {
 
 ### new CustomEvent(type[, eventInitDict])
 
-创建CustomEvent对象，比Event多初始化一个detail属性
+创建自定义事件
+
+```
+1. 创建CustomEvent对象
+2. 比Event多初始化一个detail属性
+```
 
 ### 特征属性
 

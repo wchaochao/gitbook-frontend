@@ -4,31 +4,9 @@
 
 ---
 
-## AbortController接口
-
-```javascript
-interface AbortController {
-  constructor();
-
-  readonly attribute AbortSignal signal;
-  void abort()
-}
-```
-
-### 内部属性
-
-* signal: 中断对象
-
-### new AbortController()
-
-创建AbortController对象，设置signal属性为AbortSignal对象
-
-### 属性
-
-* signal: controller的signal
-* abort(): 触发signal的中断
-
 ## AbortSignal接口
+
+中断信号
 
 ```javascript
 interface AbortSignal: EventTarget {
@@ -51,13 +29,46 @@ interface AbortSignal: EventTarget {
 
 中断signal
 
+```
 1. signal的aborted flag已设置时，直接返回
 2. 设置aborted flag
 3. 触发abort事件
+```
+
+## AbortController接口
+
+中断控制器
+
+```javascript
+interface AbortController {
+  constructor();
+
+  readonly attribute AbortSignal signal;
+  void abort()
+}
+```
+
+### 内部属性
+
+* signal: 中断对象
+
+### new AbortController()
+
+创建中断控制器
+
+```
+1. 创建AbortController对象
+2. 设置signal属性为AbortSignal对象
+```
+
+### 属性
+
+* signal: controller的signal
+* abort(): 触发signal的中断
 
 ## 应用
 
-* 接收AbortSignal参数确定何时中断，中断后执行什么操作
+* 接收AbortSignal参数确定中断后执行什么操作
 * 执行abort()中断AbortSignal
 
 ```javascript
@@ -65,7 +76,7 @@ const controller = new AbortController()
 const signal = controller.signal
 
 function doAmazingness({signal}) {
-  if (signal) {
+  if (signal.aborted) {
     return Promise.reject(new DOMException('Aborted', 'AbortError'))
   }
 

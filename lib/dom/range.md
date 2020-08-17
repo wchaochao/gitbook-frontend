@@ -27,11 +27,13 @@
 
 ### 位置比较
 
+```
 1. node相同时，比较offset，相同时返回0
 2. nodeA在nodeB前
- a. nodeB为nodeA的后代节点，比较nodeB的祖先节点在nodeA的索引和offsetA和，小于offsetA返回1，其他返回-1
+ a. nodeB为nodeA的后代节点，比较nodeB的祖先节点在nodeA的索引和offsetA，小于offsetA返回1，其他返回-1
  b. nodeB不为nodeA的后代节点，返回-1
 3. nodeA在nodeB后，相当于-（nodeA在nodeB前）
+```
 
 ## AbstractRange接口
 
@@ -76,7 +78,12 @@ dictionary StaticRangeInit {
 
 ### new StaticRange()
 
-创建StaticRange对象，初始化startContainer、startOffset、endContainer、endOffset属性
+创建静态Range
+
+```
+1. 创建StaticRange对象
+2. 初始化startContainer、startOffset、endContainer、endOffset属性
+```
 
 ## Range接口
 
@@ -130,7 +137,12 @@ interface Range: AbstractRange {
 
 ### new Range()
 
-创建Range对象，设置start和end为(document, 0)
+创建动态Range
+
+```
+1. 创建Range对象
+2. 设置start和end为(document, 0)
+```
 
 ### 祖先属性
 
@@ -138,10 +150,12 @@ interface Range: AbstractRange {
 
 ### 设置边界点
 
+```
 1. node为doctype节点，抛出错误
 2. offset超过node length, 抛出错误
 3. 设置开始边界点，start设为(node, offset), 若start在end后，则end也设为start
 4. 设置结束边界点，end设为(node, offset), 若end在start前，则start也设为end
+```
 
 ### 设置操作
 
@@ -167,7 +181,7 @@ interface Range: AbstractRange {
 * intersectsNode(node): node和range是否有交集，
  * (parent, node index) before end且(parent, node index + 1) after start时返回true
  * 其他返回false
-* compareBoundaryPoints(how, sourceRange): 比较range和sourceRange的便捷点
+* compareBoundaryPoints(how, sourceRange): 比较range和sourceRange的边界点
  * Range.START_TO_START: 比较range的start和sourceRange的start
  * Range.START_TO_END: 比较range的end和sourceRange的start
  * Range.END_TO_END: 比较range的end和sourceRange的end
@@ -178,16 +192,16 @@ interface Range: AbstractRange {
 * deleteContents(): 删除选区内容
 * extractContents(): 剪切选区内容
 * cloneContents(): 复制选区内容
-* insertNode(node): 节点从start位置插入选区
-* surroundContents(newParent): 将newParent从start位置插入选区，剪切原选区内容替换newParent所有子节点
+* surroundContents(newParent):选区内容被newParent包围
+* insertNode(node): 在start位置插入节点
 
 ### 选区操作
 
-* cloneRange(): 复制Range对象
+* cloneRange(): 克隆选区
 * detach(): 无需做什么，用于向后兼容
-* toString(): 返回range内容中的所有文本
+* toString(): 返回选区内容中的所有文本
 
 ### 视口操作
 
-* getBoundingClientRect(): 获取range的视口信息
-* getClientRects(): 获取range中所有盒模型的视口信息
+* getBoundingClientRect(): 获取选区的视口信息
+* getClientRects(): 获取选区中所有盒模型的视口信息
