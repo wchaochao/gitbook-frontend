@@ -110,7 +110,7 @@ dictionary AddEventListenerOptions: EventListenerOptions {
 5. path按照顺序触发invocation target的event listener
  a. shadow-adjusted target不为null时，设置event的eventPhase属为AT_TARGET
  b. bubble为false时continue
- c. bubble不为false且shadow-adjusted target为null时，eventPhase为BUBBLING_PHASE
+ c. 且shadow-adjusted target为null且bubble不为false时，eventPhase为BUBBLING_PHASE
 6. 触发invation target的event listener
  a. 设置target为前面最近的不为null的shadow-adjusted target
  b. 设置relatedTarget、touch target list为当前struct的relatedTarget、touch target list

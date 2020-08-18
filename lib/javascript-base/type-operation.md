@@ -218,6 +218,14 @@ StrUnsignedDecimalLiteral:::
     DecimalDigits
 ```
 
+BigInt字符串转换为BigInt
+
+```
+1. 忽略前置、后置空白
+2. 空字符串转换为+0
+3. 十进制整数字符串转换为相应的十进制整数
+```
+
 ### ToBigUint64(input)
 
 转换为64位无符号整数，范围为[0, 2^64 - 1]
