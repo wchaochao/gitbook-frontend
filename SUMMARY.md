@@ -13,14 +13,6 @@
 
 * [HTML基础](lib/html/base.md)
 
-### JavaScript基础
-
-* [词法](lib/javascript-base/lexical.md)
-* [数据类型](lib/javascript-base/data-type.md)
-* [类型操作](lib/javascript-base/type-operation.md)
-* [数字操作](lib/javascript-base/number-operation.md)
-* [规范类型](lib/javascript-base/specification.md)
-
 ### DOM标准
 
 * [节点树](lib/dom/node-tree.md)
@@ -33,6 +25,14 @@
 * [选区](lib/dom/range.md)
 * [树遍历](lib/dom/traversal.md)
 
+### JavaScript基础
+
+* [词法](lib/javascript-base/lexical.md)
+* [数据类型](lib/javascript-base/data-type.md)
+* [类型操作](lib/javascript-base/type-operation.md)
+* [数字操作](lib/javascript-base/number-operation.md)
+* [规范类型](lib/javascript-base/specification.md)
+
 ### Web API
 
 * [Infra](lib/web-api/infra.md)
@@ -40,6 +40,10 @@
 * [Encoding](lib/web-api/encoding.md)
 * [MIME Sniffing](lib/web-api/mime.md)
 * [Web Component](lib/web-api/web-component.md)
+
+### 浏览器
+
+* [页面渲染](lib/browser/reader.md)
 
 ### 计算机基础
 

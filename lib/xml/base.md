@@ -129,6 +129,9 @@
 ```xml
 <?xml version="1.0"?> <!-- xml声明 在开头 -->
 <?xml-stylesheet type="text/css" href="./demo.css"?>
+<!DOCTYPE root [
+  <!-- 文档类型声明 -->
+]>
 <!-- 注释 -->
 <![CDATA[ 字符数据 ]]>
 <root attrName="attrValue"> <!-- 根元素 -->
