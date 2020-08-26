@@ -58,6 +58,198 @@
 * 可读流/可写流最多只能有一个读取器/写入器
 * 绑定读取器/写入器后，流处于锁定状态，只有解锁后才能接受下一个读取器/写入器
 
+## ReadableStream接口
+
+```javascript
+interface ReadableStream {
+  constructor(optional object underlyingSource, optional QueuingStrategy strategy = {});
+
+  readonly attribute boolean locked;
+
+  ReadableStreamReader getReader(optional ReadableStreamGetReaderOptions options = {});
+  Promise<void> cancel(optional any reason);
+
+  Promise<void> pipeTo(WritableStream destination, optional StreamPipeOptions options = {})
+  ReadableStream pipeThrough(ReadableWritablePair transform, optional StreamPipeOptions options = {})
+
+  sequence<ReadableStream> tee();
+
+  async iterable<any>(optional ReadableStreamIteratorOptions options = {})；
+}
+
+typedef (ReadableStreamDefaultReader or ReadableStreamBYOBReader) ReadableStreamReader
+
+dictionary ReadableStreamGetReaderOptions {
+  ReadableStreamReaderMode mode;
+}
+
+enum ReadableStreamReaderMode {
+  "byob"
+}
+
+directionary StreamPipeOptions {
+  boolean preventAbort = false;
+  boolean preventCancel = false;
+  boolean preventClose = false;
+
+  AbortSignal signal;
+}
+
+dictionary ReadableWritablePair {
+  required ReadableStream readable;
+  required WritableStream writable;
+}
+```
+
+### 内部属性
+
+* [[state]]：可读流状态
+ * readable：可读
+ * closed：已关闭
+ * errored：发生错误
+* [[disturbed]]：可读流是否被读取或被取消
+* [[controller]]：可读流控制器
+* [[reader]]：可读流读取器
+* [[storedError]]：可读流错误
+* [[Detached]]：可读流是否被转让
+
+### 抽象操作
+
+#### ReadableStreamError(stream, e)
+
+stream抛出错误
+
+```
+1. stream.[[state]]设置为errored，[[storedError]]设置为e
+2. reader为default reader时，遍历[[readRequests]]，执行error steps，执行完后[[readRequests]]置空
+3. reader为byob reader时，遍历[[readIntoRequests]]，执行error steps，执行完后[[readIntoRequests]]置空
+4. reader的[[closedPromise]] reject e
+```
+
+#### ReadableStreamClose(stream)
+
+stream关闭
+
+```
+1. stream.[[state]]设置为closed
+2. reader为default reader时，遍历[[readRequests]]，执行close steps，执行完后[[readRequests]]置空
+3. reader的[[closedPromise]] resolve undefined
+```
+
+#### ReadableStreamCancel(stream, reason)
+
+stream取消
+
+```
+1. stream.[[disturbed]]设置为true
+2. stream.[[state]]为closed时，返回Promise.resolve(undefined)
+3. stream.[[state]]为errored时，返回Promise.reject(stream.[[storedError]])
+4. stream.[[state]]为readable时，执行stream关闭，执行controller的[[CancelSteps]]
+```
+
+### new ReadableStream(underlyingSource, strategy)
+
+创建可读流
+
+```
+1. 创建ReadableStream对象，设置[[state]]为readable，[[disturbed]]为false
+2. underlyingSource无type时，stream.[[controller]]为default controller
+  a. controller.[[stream]]为stream
+  b. controller.[[queue]]为空列表，[[queueTotalSize]]为0
+  c. controller.[[strategySizeAlgorithm]]为strategy.size的封装（默认为() => 1），[[strategyHWM]]为strategy.highWaterMark
+  d. controller的[[started]]、[[pulling]]、[[pullAgain]]、[[closeRequested]]为false
+  e. controller.[[pullAlgorithm]]为underlyingSource.pull的封装（默认为(controller) => Promise<undefined>），[[cancelAlgorithm]]为underlyingSource.cancel的封装（默认为(controller) => Promise<undefined>）
+  f. 执行underlysingSource.start（默认为() => undefined），结果封装为Promise
+    i. 成功时，controller.[[started]]设为true，controller读取chunk
+    ii. 失败时，controller抛出错误
+3. underlyingSource.type为bytes，stream.[[controller]]为byob controller
+  a. controller.[[stream]]为stream
+  b. controller.[[queue]]为空列表，[[queueTotalSize]]为0
+  c. controller.[[autoAllocateChunkSize]]为strategy.autoAllocateChunkSize，[[strategyHWM]]为strategy.highWaterMark
+  d. controller的[[started]]、[[pulling]]、[[pullAgain]]、[[closeRequested]]为false
+  e. controller.[[pullAlgorithm]]为underlyingSource.pull的封装（默认为(controller) => Promise<undefined>），[[cancelAlgorithm]]为underlyingSource.cancel的封装（默认为(controller) => Promise<undefined>）
+  f. controller.[[pendingPullIntos]]为空列表，[[byobRequest]]为null
+  f. 执行underlysingSource.start（默认为() => undefined），结果封装为Promise
+    i. 成功时，controller.[[started]]设为true，controller读取chunk
+    ii. 失败时，controller抛出错误
+```
+
+### 特征属性
+
+* locked：是否有[[reader]]
+ * 锁定后stream不能取消
+ * 锁定后stream不能再生成reader
+
+### 特征方法
+
+#### cancel(reason)
+
+流取消
+
+```
+1. 流锁定时返回Promise.resolve(TypeError)
+2. 执行ReadableStreamCancel(stream, reason)
+```
+
+#### getReader(options)
+
+生成reader
+
+```
+1. options.mode未提供时，获取default reader
+  a. stream锁定时，抛出TypeError
+  b. 创建ReadstreamDefaultReader对象，reader.[[stream]]为stream，stream.[[reader]]为reader
+  c. reader.[[readRequests]]为空列表
+  d. stream.[[state]]为readable时，reader.[[closePromise]]为new promise
+  e. stream.[[state]]为closed时，reader.[[closePromise]]为Promise.resolve(undefined)
+  f. stream.[[state]]为errored时，reader.[[closePromise]]为Promise.reject(stream.[[storedError]])
+2. options.mode为byob时，获取byob reader
+  a. stream锁定时，抛出TypeError
+  b. controller不为byob controller时，抛出TypeError
+  c. 创建ReadstreamDefaultReader对象，reader.[[stream]]为stream，stream.[[reader]]为reader
+  d. reader.[[readIntoRequest]s]为空列表
+  e. stream.[[state]]为readable时，reader.[[closePromise]]为new promise
+  f. stream.[[state]]为closed时，reader.[[closePromise]]为Promise.resolve(undefined)
+  g. stream.[[state]]为errored时，reader.[[closePromise]]为Promise.reject(stream.[[storedError]])
+```
+
+### 管道方法
+
+#### pipeTo(destination, options)
+
+写入可写流
+
+```
+1. source、destination锁定时，返回Promise.resolve(TypeError)
+2. source生成reader，destination生成writer
+3. source.[[disturbed]]设为true
+4. reader从underlying source中读取chunk交给writer写入underlying sink
+5. 出现以下情况是关闭pipeTo，释放reader、writer
+  a. source error时，如果options.preventAbort为false，中断destination
+  b. source close时，如果options.preventClose为false，关闭destination
+  c. destination error或close时，如果options.preventCancel为false，取消source
+  d. abortSignal触发时，中断destination，取消source
+```
+
+### pipeThrough(transform, options)
+
+写入转换流
+
+```
+1. source、transform.writable锁定时，抛出TypeError
+2. source pipeTo transform.writable
+3. 返回transform.readable
+```
+
+### tee()
+
+流分支
+
+```
+
+```
+
+
 ## UnderlyingSource接口
 
 ```javascript
@@ -474,14 +666,13 @@ chunk进入byob controller队列
 
 #### error(e)
 
-byob controller抛出错误
+controller抛出错误
 
 ```
-1. 重置controller
-  a. 重置内部队列，controller的[[queue]]重置为空list，[[queueTotalSize]]重置为0
-  b. 清除controller算法，controller的[[[pullAlgorithm]]、[[cancelAlgorithm]]重置为undefined
-2. 清除[[pendingPullIntos]]队列
-3. stream抛出错误
+1. 清空队列，[[queue]]置空，[[queueTotalSize]]置0
+2. 清除算法，[[pullAlgorithm]]、[[cancelAlgorithm]]置为undefined
+3. 清空pull into，[[pendingPullIntos]]置空，[[byobRequest]]置null
+4. stream抛出错误
 ```
 
 #### close()
@@ -562,108 +753,3 @@ interface ReadableStreamBYOBRequest {
 ```
 
 ### respondWithNewView(view)
-
-## ReadableStream接口
-
-```javascript
-interface ReadableStream {
-  constructor(optional object underlyingSource, optional QueuingStrategy strategy = {});
-
-  readonly attribute boolean locked;
-
-  ReadableStreamReader getReader(optional ReadableStreamGetReaderOptions options = {});
-  Promise<void> cancel(optional any reason);
-
-  Promise<void> pipeTo(WritableStream destination, optional StreamPipeOptions options = {})
-  ReadableStream pipeThrough(ReadableWritablePair transform, optional StreamPipeOptions options = {})
-
-  sequence<ReadableStream> tee();
-
-  async iterable<any>(optional ReadableStreamIteratorOptions options = {})；
-}
-
-typedef (ReadableStreamDefaultReader or ReadableStreamBYOBReader) ReadableStreamReader
-
-dictionary ReadableStreamGetReaderOptions {
-  ReadableStreamReaderMode mode;
-}
-
-enum ReadableStreamReaderMode {
-  "byob"
-}
-
-directionary StreamPipeOptions {
-  boolean preventAbort = false;
-  boolean preventCancel = false;
-  boolean preventClose = false;
-
-  AbortSignal signal;
-}
-
-dictionary ReadableWritablePair {
-  required ReadableStream readable;
-  required WritableStream writable;
-}
-```
-
-### 内部属性
-
-* [[state]]：可读流状态
- * readable：可读
- * closed：已关闭
- * errored：发生错误
-* [[disturbed]]：可读流是否被读取或被取消
-* [[controller]]：可读流控制器
-* [[reader]]：可读流读取器
-* [[storedError]]：可读流错误
-* [[Detached]]：可读流是否被转让
-
-### 抽象操作
-
-#### ReadableStreamError(stream, e)
-
-stream抛出错误
-
-```
-1. stream.[[state]]设置为errored，[[storedError]]设置为e
-2. reader为default reader时，遍历[[readRequests]]，执行error steps，执行完后[[readRequests]]置空
-2. reader为byob reader时，遍历[[readIntoRequests]]，执行error steps，执行完后[[readIntoRequests]]置空
-3. reader的[[closedPromise]] reject e
-```
-
-#### ReadableStreamClose(stream)
-
-stream关闭
-
-```
-1. stream.[[state]]设置为closed
-2. reader为default reader时，遍历[[readRequests]]，执行close steps，执行完后[[readRequests]]置空
-3. reader的[[closedPromise]] resolve undefined
-```
-
-#### ReadableStreamCancel(stream, reason)
-
-stream取消
-
-```
-1. stream.[[disturbed]]设置为true
-2. 执行stream关闭
-3. 执行controller的[[CancelSteps]]
-```
-
-### new ReadableStream(underlyingSource, strategy)
-
-创建可读流
-
-```
-1. 创建ReadableStream对象，设置[[state]]为readable，[[disturbed]]为false
-2. underlyingSource无type时，stream.[[controller]]为default controller
-  a. controller.[[stream]]为stream
-  b. controller.[[queue]]为空列表，[[queueTotalSize]]为0
-  c. controller.[[strategySizeAlgorithm]]为strategy.size的封装（默认为() => 1），[[strategyHWM]]为strategy.highWaterMark
-  d. controller的[[started]]、[[pulling]]、[[pullAgain]]、[[closeRequested]]为false
-  e. controller.[[pullAlgorithm]]为underlyingSource.pull的封装（默认为(controller) => Promise<undefined>），[[cancelAlgorithm]]为underlyingSource.cancel的封装（默认为(controller) => Promise<undefined>）
-  f. 执行underlysingSource.start（默认为() => undefined），结果封装为Promise
-    i. 成功时，controller.[[started]]设为true，controller读取chunk
-    ii. 失败时，controller抛出错误
-```
