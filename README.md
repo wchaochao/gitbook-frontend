@@ -94,6 +94,14 @@
 * 字符编码
 * 图片格式
 
+### Linux
+
+* Linux基础
+* Bash命令
+* Bash脚本
+* SSH
+* 文件系统
+
 ### HTTP协议
 
 * HTTP报文
@@ -209,9 +217,10 @@
 * UEditor辅助接口
 * UEditor HTML操作
 * UEditor DOM操作
+* UEditor插件
 * UEditor UI层
 * UEditor适配层
-* UEditor插件
+
 
 ## Web API扩展系列
 

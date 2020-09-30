@@ -53,6 +53,14 @@
 * [图片格式](lib/computer-base/image.md)
 * [Linux基础](lib/computer-base/linux.md)
 
+### Linux
+
+* [Linux基础](lib/linux/base.md)
+* [Bash命令](lib/linux/command.md)
+* [Bash脚本](lib/linux/script.md)
+* [SSH](lib/linux/ssh.md)
+* [文件系统](lib/linux/filesystem.md)
+
 ### HTTP协议
 
 * [HTTP报文](lib/http/message.md)
