@@ -4,103 +4,136 @@
 
 ---
 
-在单个网络中将数据从一台主机传送到另一台主机
+## 包
 
-## 封装成帧
+网络传输的最小单位
 
-在上层数据的前后分别添加首部和尾部，构成帧
+* 首部：包定界符，标志包的开始
+* 载荷：承载上层消息，如以太网消息、PPP消息
+* 尾部：帧检验序列FCS，用于检测比特差错
 
-* 帧首部：帧定界符、控制信息
-* 帧数据：上层数据
- * 小于最大传送单元MTU
- * 对数据中出现的帧定界符转义
-* 帧尾部：帧检验序列FCS、帧定界符
- * 接收端可以通过FCS检测比特差错
+![包](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/nic-package.png)
 
-## 网络适配器
+## 网卡
 
-网卡，计算机通过适配器与局域网相连
+网络适配器、接口，发送和接收包的计算机硬件
 
-* 混杂方式：接收以太网上广播的帧，不管是否是发往本站的
-* 过滤：通过MAC地址检测是否是发往本站的帧
+![网卡](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/nic.png)
+
+### 分类
+
+* 以太网卡
+* 无线网卡
+* 环回网卡
+* 蓝牙网卡
+* 虚拟网卡
 
 ### MAC地址
 
-适配器地址，固化在适配器的ROM中，用6字节表示
+网卡的硬件地址，用6字节表示
 
-* 第1位：单播地址（0）/ 多播地址（1）
-* 第2位：全局地址（0）/ 本地地址（1）
-* 第3~24位：厂商识别码
-* 第25~48位：厂商内识别码
+* 前24位：厂商识别码
+* 后24位：厂商内识别码
 
-## 以太网
+![MAC地址](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/mac-address.png)
 
-使用最广的局域网，采用一对多的广播通信
+### ipconfig命令
 
-### 帧格式
+windows系统的网卡配置
 
-* 首部
- * 目的地址字段：目的站的MAC地址
- * 源地址字段：当前站的MAC地址
- * 类型：上层协议类型，0x0800（IP数据报）
-* 数据
- * 数据字段：46到1500字节
-* 尾部
- * 帧检验序列FCS
+| 命令 | 说明 |
+| --- | --- |
+| `ipconfig` | 查看所有网卡的基本信息 |
+| `ipconfig /all` | 查看所有网卡的全部信息 |
+| `ipconfig /release` | 释放动态分配的IP地址 |
+| `ipconfig /renew` | 更新动态分配的IP地址 |
+| `ipconfig /displaydns` | 显示DNS缓存 |
+| `ipconfig /flushdns` | 清除DNS缓存 |
 
-向下传到物理层时插入了8个字节
+### ifconfig命令
 
-* 前同步码：7个字节，用于接收端的适配器同步发送端的时钟
-* 帧开始定界符：1个字节，标识帧的开始
+Linux系统的网卡配置
 
-### CSMA/CD协议
+| 命令 | 说明 |
+| --- | --- |
+| `ifconfig` | 查看所有网卡的基本信息 |
+| `ifconfig -a` | 查看所有网卡的全部信息 |
+| `ifconfig <interface> hw ether <MAC>` | 配置网卡的MAC地址，重启后失效 |
+| `ifconfig <interface> <ip> [netmask <netmask> [broadcast <broadcast>]]` | 配置网卡的IP地址、子网掩码、广播地址，重启后失效 |
+| `ifconfig <interface> -arp` | 关闭网卡的arp协议 |
+| `ifconfig <interface> arp` | 开启网卡的arp协议 |
 
-Carrier Sense Multiple Access with Collsion Detection，载波监听多点接入/碰撞检测，总线型网络的数据链路层协议
+## 以太网协议
 
-* 准备发送：适配器从网络层获得一个分组，封装成以太网帧，放入适配器缓存中
-* 检测信道：检测到信道空闲，且在96比特时间内保持空闲（保证帧最小间隔），发送帧
-* 碰撞检测：发送帧的过程中继续检测信道
+使用一对多的广播通信
+
+![以太网](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/ethernet.png)
+
+### 格式
+
+首部
+
+| 字段 | 长度 | 含义 |
+| --- | --- | --- |
+| Destination | 6byte | 目的MAC地址 |
+| Source | 6byte | 源MAC地址 |
+| Type | 2byte | 上层协议类型，如0x0806 （ARP协议），0x0800（IP协议）|
+
+载荷：46到1500字节
+
+### 总线型
+
+采用CSMA/CD（Carrier Sense Multiple Access with Collsion Detection）协议
+
+* 准备发送：网卡从网络层获得一个分组，封装成以太网包，放入缓存中
+* 检测信道：检测到信道空闲，且在96比特时间内保持空闲（保证包最小间隔），发送包
+* 碰撞检测：发送包的过程中继续检测信道
  * 在争用期内未检测到碰撞，帧发送成功
- * 在争用期内检测到碰撞，立即停止发送数据并发送人为干扰信号，接着执行指数退避算法，等待随机个争用期时间后重新发送帧，重传16次仍未成功时向上报错
+ * 在争用期内检测到碰撞，立即停止发送数据并发送人为干扰信号，接着执行指数退避算法，等待随机个争用期时间后重新发送包，重传16次仍未成功时向上报错
 
-### 集线器方式
+![CSMA/CD1](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-base/ethernet-CSMA.png)
 
-多接口转发器，在物理层简单的转发比特
+![CSMA/CD2](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-base/ethernet-CD.png)
 
-* 每个站通过一根电缆内的两对双绞线（分别用于发送和接收）与集线器的接口相连，形成星形拓扑
+### 集线器型
+
+接收到信号时对连接到集线器上的所有设备进行广播
+
+* 每个主机通过一根电缆内的两对双绞线（分别用于发送和接收）与集线器的接口相连，形成星形拓扑
 * 使用集线器的以太网逻辑上仍是个总线网，仍使用CSMA/CD协议
 
-### 交换机方式
+![集线器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/hub.png)
 
-根据交换机的转发表在以太网内转发帧，以全双工方式工作，不使用CSMA/CD协议
+### 交换机型
+
+根据CAM表（MAC地址-端口映射表）将包转发给目的地
 
 * 源主机将数据发送给交换机
-* 交换机将源MAC地址和对应的接口记录到转发表中
-* 交换机在转发表中查找目标MAC地址的接口
+* 交换机将源MAC地址和接入交换机的端口记录到CAM表中
+* 交换机在CAM表中查找目标MAC地址的端口
  * 未找到，向其他主机广播
- * 已找到，通过该接口转发给目标主机
+ * 已找到，通过该端口转发给目标主机
+
+![交换机](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/switch.png)
 
 ## PPP协议
 
-Point-to-Point Protocol，点对点协议，用户与ISP进行通信时使用的数据链路层协议
+Point-to-Point Protocol，点对点协议，拨号上网使用的协议
+
+### 格式
+
+首部
+
+| 字段 | 长度 | 含义 |
+| --- | --- | --- |
+| Type | 2byte | 上层协议类型，0x0021（IP协议）、0xC021（LCP协议）、0x8021（NCP协议） |
+
+载荷
 
 * LCP：Link Control Protocol，链路控制协议，用于建立、配置、测试连接
 * NCP：Network Control Protocol，网络控制协议，支持网络层协议
 
-### 帧格式
-
-* 首部
- * 标志字段F: 0x7E，帧定界符
- * 地址字段A：0xFF，目前无意义
- * 控制字段C：0x03，目前无意义
- * 协议字段：2字节，0x0021（IP数据）、0xC021（LCP数据）、0x8021（NCP数据）
-* 数据
- * 数据字段：不超过1500字节
-* 尾部
- * 帧检验系列FCS
- * 标志字段F: 0x7E，帧定界符
-
-### 流程
+### 交互
 
 * 建立LCP链接
 * 协商LCP配置
@@ -110,12 +143,42 @@ Point-to-Point Protocol，点对点协议，用户与ISP进行通信时使用的
 * 协商NCP配置
 * 传输网络层数据
 
-## PPPoE
+![PPP交互](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/PPP-protocol.png)
 
-在以太网上运行PPP，宽带上网使用的链路层协议
+### 数据流
 
-* MAC首部
-* PPPoE首部
-* PPP首部
-* PPP数据
-* FCS
+PPP消息装入HDLC包中进行传输
+
+![PPP消息流](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/PPP-auth.png)
+
+## PPPoE协议
+
+Point-to-Point Protocol over Ethernet，以太网的点对点协议，宽带上网使用的协议
+
+### 格式
+
+首部
+
+| 字段 | 长度 | 含义 |
+| --- | --- | --- |
+| Version | 4bit | PPPoE的版本号 |
+| Type | 4bit | 类型，未使用 |
+| Encode | 1byte | 编码 |
+| SessionID | 2byte | 会话ID |
+| Length | 2byte | 载荷长度 |
+
+载荷：承载PPP消息
+
+### ADSL接入
+
+![ADSL接入](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/ADSL-PPP.png)
+
+### FTTH接入
+
+![FTTH接入](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/FTTH-PPP.png)
+
+## PPPOA协议
+
+Point-to-Point Protocol over ATM，ATM的点对点协议，ADSL接入网可使用的方式
+
+![PPPOA](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/PPPoA.png)

@@ -12,14 +12,18 @@
 
 * 不归零制：正电平代表1，负电平代表0
 * 归零制：正脉冲代表1，负脉冲代表0
-* 曼侧斯特编码：周期中心的向下跳变代表1，向上跳变代表0
-* 差分曼侧斯特编码：开始边界的无跳变代表1，有跳变代表0，周期中心始终有跳变
+* 曼侧斯特编码：周期中心向下跳变代表1，向上跳变代表0
+* 差分曼侧斯特编码：开始边界无跳变代表1，有跳变代表0
+
+![基带调制](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/baseband-modulation.png)
 
 ### 载波调制
 
 * 调幅：载波的振幅随基带数字信号而变化，如0对应无载波，1对应有载波
 * 调频：载波的频率随基带数字信号而变化，如0对应频率f0，1对应频率f1
 * 调相：载波的初始相位随基带数字信号而变化，如0对应相位0度，1对应相位180度
+
+![载波调制](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/carrier-modumlation.png)
 
 ## 传输媒介
 
@@ -29,8 +33,8 @@
 * 双绞线：两根相互绝缘的铜导线绞合在一起
  * 屏蔽双绞线：在双绞线外面加上一层用金属丝编织成的屏蔽层
 * 光纤：由纤芯和包层构成
- * 多模光纤：存在多条不同角度入射的光线在一条光纤中传输，只适合于近距离传输
- * 单模光纤：光纤的直径为光的波长，光线一直向前传播而不会发生多次反射，适合与远距离传输
+ * 多模光纤：存在多条不同角度入射的光线在一条光纤中传输，适合近距离传输
+ * 单模光纤：光纤的直径为光的波长，光线一直向前传播而不会发生多次反射，适合远距离传输
 
 ### 非导引型
 
@@ -80,13 +84,6 @@ Asymmetric Digital Subscriber Line，非对称数字用户线，对现有的模�
 
 ![ADSL接入2](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/ADSL-2.png)
 
-### HFC
-
-Hybrid Fiber Coax，光纤同轴混合网，在有线电视网的基础上开发的宽度接入网
-
-1. 数字电视信号通过光纤干线传输到光纤节点转换为电信号
-2. 电信号通过同轴电缆传送到每个用户家庭，通过机顶盒内的电缆调整解调器解调为电视信号显示
-
 ### FFTH
 
 光纤到户
@@ -98,3 +95,10 @@ Hybrid Fiber Coax，光纤同轴混合网，在有线电视网的基础上开发
 ![FFTH接入](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/fiber-split.png)
 
 ![FFTH接入2](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-network-base/fiber-split-2.png)
+
+### HFC
+
+Hybrid Fiber Coax，光纤同轴混合网，在有线电视网的基础上开发的宽度接入网
+
+* 数字电视信号通过光纤干线传输到光纤节点转换为电信号
+* 电信号通过同轴电缆传送到每个用户家庭，通过机顶盒内的电缆调整解调器解调为电视信号显示
