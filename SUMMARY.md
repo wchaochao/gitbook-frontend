@@ -51,7 +51,12 @@
 * [MIME](lib/computer-base/mime.md)
 * [字符编码](lib/computer-base/encode.md)
 * [图片格式](lib/computer-base/image.md)
-* [Linux基础](lib/computer-base/linux.md)
+
+### 计算机组成
+
+* [计算机概述](lib/computer-composition/overview.md)
+* [硬件组成](lib/computer-composition/hardware.md)
+* [数字逻辑层](lib/computer-composition/digital-logic-layer.md)
 
 ### Linux
 
