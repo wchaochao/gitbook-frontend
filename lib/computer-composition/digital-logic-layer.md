@@ -154,6 +154,14 @@
 
 有多个输入信号和多个输出信号，且输出信号由输入信号决定
 
+#### 译码器
+
+根据输入信号选中某个输出信号，有n个输入信号，2^n个输出信号
+
+* 每种输入信号的组合都会有对应的输出信号为1，其他为0
+
+![译码器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/decoder.png)
+
 #### 多路选择器
 
 根据控制信号选择某个输入，有n个控制信号，2^n个输入信号，1个输出信号
@@ -162,15 +170,7 @@
 * 输入信号确定时，相当于一个确定的真值表
 * 通过遍历控制信号的组合，可以将并行信号转换为串行信号
 
-![多路选择器](112)
-
-#### 译码器
-
-根据输入信号选中某个输出信号，有n个输入信号，2^n个输出信号
-
-* 每种输入信号的组合都会有对应的输出信号为1，其他为0
-
-![译码器](114)
+![多路选择器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Multiplexer.png)
 
 #### 比较器
 
@@ -178,7 +178,7 @@
 
 * 输入信号两两相同时，输出为1，否则为0
 
-![比较器](114)
+![比较器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Comparator.png)
 
 ### 算术电路
 
@@ -188,19 +188,19 @@
 
 * 控制信号为0时左移，1时右移，空位补0
 
-![移位器](115)
+![移位器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Shifter.png)
 
 #### 半加器
 
 两个1位数相加产生和、进位
 
-![半加器](116)
+![半加器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/half-adder.png)
 
 #### 全加器
 
 两个1位数、低位进位相加产生和、高位进位
 
-![全加器](116)
+![全加器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/full-adder.png)
 
 #### 加法器
 
@@ -218,7 +218,7 @@
 * ENB为0时会强制B为0
 * INVA为1时会对A求反
 
-![算术逻辑单元](117)
+![算术逻辑单元](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/ALU.png)
 
 ### 时钟
 
@@ -228,7 +228,7 @@
 * 子时钟周期：在主时钟周期上接出一个信号，延迟一个已知的延时，用于处理同一时钟周期的事件顺序
 * 非对称时钟：时钟信号在高位和低位的时间不同
 
-![时钟](119)
+![时钟](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/clock.png)
 
 ### 集成电路
 
@@ -238,9 +238,14 @@
 * PGA：引脚阵列封装
 * LGA：触点阵列封装
 
+![IC](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/IC.png)
+
 ### 现场可编程门阵列
 
-FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线PI组成，通过配置数据可以转变成任意功能的逻辑电路，用于产品的原型设计
+FPGA，包含可编辑逻辑的芯片
+
+* 由查找表LUT和可编程内部连线PI组成
+* 通过配置数据可以转变成任意功能的逻辑电路，用于产品的原型设计
 
 ## 内存
 
@@ -259,7 +264,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * S=0，R=1时，输出信号Q只能为0，重置锁存器
 * S=R=1时，输出信号Q、Q反都为0，当输入都变为0时，输出将由后一个变为0的输入决定
 
-![SR锁存器](119)
+![SR锁存器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Latches.png)
 
 #### 时钟SR锁存器
 
@@ -268,7 +273,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * 时钟信号为0时，不会改变锁存器状态
 * 时钟信号为1时，锁存器对S和R的变化起反应
 
-![时钟SR锁存器](121)
+![时钟SR锁存器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/clock-latches.png)
 
 #### 时钟D锁存器
 
@@ -277,7 +282,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * 时钟信号为0时，不会改变锁存器状态
 * 时钟信号为1时，锁存器存入D值
 
-![时钟D锁存器](121)
+![时钟D锁存器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/D-Latches.png)
 
 ### 触发器
 
@@ -287,19 +292,19 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 
 利用非门有个微小的、但不为0的传输延迟，在时钟上升沿时制造一个短脉冲
 
-![脉冲发生器](121)
+![脉冲发生器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/plus-generator.png)
 
 #### D触发器
 
 脉冲发生器加D锁存器
 
-![D触发器](122)
+![D触发器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/D-trigger.png)
 
 ### 寄存器
 
 多个触发器组合在一起组成寄存器，保存超过一位长的数据
 
-![寄存器](123)
+![寄存器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/register.png)
 
 ### 三态器
 
@@ -312,7 +317,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * 控制信号为1时，电路连通
 * 控制信号为0时，电路断开
 
-![非反向缓冲器](125)
+![非反向缓冲器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Not-inverting-buffer.png)
 
 #### 反向缓冲器
 
@@ -321,7 +326,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * 控制信号为1时，为非门
 * 控制信号为0时，电路断开
 
-![反向缓冲器](125)
+![反向缓冲器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/inverting-buffer.png)
 
 ### 内存组成
 
@@ -334,7 +339,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
  * 读写信号RD为1，进行读操作，输出使能信号OE为1时可以输出
  * 读写信号RD为0，进行写操作，不能输出
 
-![4×3存储器](124)
+![4×3存储器](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Memory.png)
 
 ### 内存芯片
 
@@ -347,7 +352,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * 列地址信号CAS表示选中列
 * 存储体信号Bank表示选中芯片中的某个存储体
 
-![内存芯片](127)
+![内存芯片](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/Memory-IC.png)
 
 ### RAM
 
@@ -387,7 +392,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
  * 状态信号：提供或接收状态信息
  * 其他控制信号：如电源、接地、时钟信号
 
-![CPU管脚](131)
+![CPU管脚](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/CPU-Pin.png)
 
 ### Intel Core i7
 
@@ -400,7 +405,7 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 * 既能做主设备又能做从设备的设备通过总线转发器和总线相连
 * 总线接口芯片通常是三态门，设备不需要和总线连接时和总线断开，需要时采用类似集电极开路的方式与总线连接
 
-![多总线计算机系统](132)
+![多总线计算机系统](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/bus-system.png)
 
 ### 总线宽度
 
@@ -413,13 +418,13 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 
 有总线时钟，总线操作都占用整数个总线周期
 
-![同步总线](136)
+![同步总线](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/sync-bus.png)
 
 #### 异步总线
 
 无总线时钟，总线操作总是尽快完成
 
-![异步总线](138)
+![异步总线](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/async-bus.png)
 
 ### 总线仲裁
 
@@ -429,13 +434,13 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 
 总线控制器发现总线请求后，发起总线授权，授权给优先级高、距离近的设备
 
-![集中式总线仲裁](139)
+![集中式总线仲裁](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/central-bus-arbitration.png)
 
 #### 竞争式
 
 所有设备监听总线使用情况，总线空闲时由优先级高的设备使用总线
 
-![竞争式总线仲裁](140)
+![竞争式总线仲裁](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/competitive-bus-arbitration.png)
 
 ### 总线操作
 
@@ -443,10 +448,10 @@ FPGA，包含可编辑逻辑的芯片，由查找表LUT和可编程内部连线P
 
 一次传送多个字
 
-![成块传送](141)
+![成块传送](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/block-transfer.png)
 
 #### 中断处理
 
 由中断控制器统一处理
 
-![中断处理](141)
+![中断处理](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/interrupt-controller.png)
