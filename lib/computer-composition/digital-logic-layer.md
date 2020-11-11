@@ -394,7 +394,84 @@ FPGA，包含可编辑逻辑的芯片
 
 ![CPU管脚](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/CPU-Pin.png)
 
-### Intel Core i7
+### Core i7
+
+4核64位处理器
+
+* 4核CPU，每个CPU最多可执行4个指令
+* 三级高速缓存
+ * 每个核都有的32KB一级数据高速缓存、32KB一级指令高速缓存、256KB二级高速缓存
+ * 所有核共享的4~15M三级高速缓存
+* 两条外部总线
+ * DDR3内存总线用来访问DRAM构成的主存储器
+ * PCIe总线用于和输入/输出设备通信
+* LGA封装，1155个针脚，286个连接电源，360个接地，447个信号线
+* 5个状态级别，在空闲时进入睡眠状态，减少耗电
+
+![Core i7](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/core-i7.png)
+
+#### Core i7 引脚
+
+Intel公司的i7芯片，实现了x86指令集，面向桌面应用，高能耗高性能
+
+* DDR3总线信号：提供给DRAM存储体的地址、数据、控制、时钟信号
+* PCIe总线信号：每条串行链路构成一个和外部设备通信的信道
+* DMI总线信号：直接媒体访问接口，连接伴随芯片组
+ * P67芯片提供SATA、USB、声频、PCIe、Flash存储器接口
+ * ICH10芯片提供旧接口支持，如PCI、中断控制器
+* 电源管理信号：自动选择电源电压，管理不同的睡眠状态
+* 散热管理信号：解决热量问题，检测芯片何时过热
+* 时钟信号：提供系统时钟，进行分频和倍频，以生成所需的各类时钟
+
+![Core i7 引脚](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/core-i7-bin.png)
+
+#### DDR3总线流水
+
+对同一DRAM芯片中的多个存储体进行并行访问，单个DDR3信道最多允许4个并发访问
+
+* 总线时钟：协调所有总线活动
+* 总线命令：指示所连接的DRAM进行何种操作
+ * ACTIVATE命令：通过地址信号给出要访问的DRAM行地址，使它做好接收后续存储访问请求的准备
+ * READ/WRITE命令：给出总线列地址，进行读、写操作
+ * PRECHARGE命令：对存储体进行充电，做好下次进入ACTIVATE的准备
+* 地址：DRAM存储地址
+* 数据：传输的数据
+
+![DDR3总线流水](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/DDR3-stream.png)
+
+### OMAP4430
+
+德州仪器的OMAP4430片上系统，实现了ARM指令集，面向移动应用，低能耗高性能
+
+* 2个ARM A9核，每个A9核最多可执行2个指令
+* 3个以上的加速处理器，可在较低能耗下提供更高的计算力
+ * 图形处理器SGX540：与GPU类似，提供有效的可编程3D渲染
+ * 图像信号处理器ISP：用于图像处理的可编程处理器
+ * 视频信号处理器IVA3：视频编码、解码
+* 二级高速缓存
+ * 每个核都有的32KB一级数据高速缓存、32KB一级指令高速缓存
+ * 所有核共享的1M二级高速缓存
+* 使用LPDDR2接口与内存连接，采用流水方式并行访问内存
+* PBGA封装，547个针脚
+* 应用了许多能量管理手段
+ * 动态电压调节：让组件在一个较低的电压下工作，大幅减少能量的需求
+ * 门控电源技术：当组件不需要时，断掉电源
+
+![OMAP4430](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/OMAP4430.png)
+
+### ATmega168
+
+Atmel公司的ATmega168片上，实现了AVR指令集，面向嵌入式应用，低价格多用途
+
+* 存储系统集成在处理器里
+ * 16KB的内部Flash存储器，存储不常改变的非电易失性信息
+ * 1KB的SRAM，存储临时的数据变量
+ * 1KB的EEPROM，存储系统的配置数据
+* 28管脚，没有地址和数据线，仅需和设备连接
+ * Port B/Port D：各8根管脚，数字输入/输出口，用来连接I/O设备
+ * Port C：7根管脚，模拟输入/输出口
+
+![ATmega168](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/ATmega168.png)
 
 ## 总线
 
