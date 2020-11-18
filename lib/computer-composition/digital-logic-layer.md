@@ -486,6 +486,8 @@ Atmel公司的ATmega168片上，实现了AVR指令集，面向嵌入式应用，
 
 ### 总线宽度
 
+为减少管脚，会复用地址线和数据线
+
 * 地址信号线：越多寻址空间越大，
 * 数据信号线：越多数据带宽越大
 
@@ -532,3 +534,99 @@ Atmel公司的ATmega168片上，实现了AVR指令集，面向嵌入式应用，
 由中断控制器统一处理
 
 ![中断处理](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/interrupt-controller.png)
+
+### PCI总线
+
+通过多条总线兼容旧设备
+
+* PCI桥：连接CPU、内存、PCI总线
+* ISA桥：连接PCI总线、ISA总线
+
+![PCI总线结构](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/PCI-structure.png)
+
+#### PCI总线信号
+
+* 必备信号：用于读写操作
+* 可选信号：用于64位和多处理器系统
+
+![PCI总线信号](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/PCI-signal.png)
+
+#### PCI总线事务
+
+在时钟下降沿开启操作
+
+![PCI总线事务](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/PCI-affair.png)
+
+### PCIe总线
+
+基于高速点到点串行连接设备，一个微型的包交换网络
+
+* 两个DDR3总线，连接主存储器
+* 一个16位PCIe总线或两个8位PCIe总线，连接图形卡
+* 芯片P67提供多个现代高性能I/O接口，如PCIe、SATA、USB、以太网口、音频接口
+* ICH10为老设备提供传统的接口支持
+
+![PCIe总线结构](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/PCIe-structure.png)
+
+#### PCIe协议栈
+
+* 物理层：解决点到点连接上从发送方到接收方的数据位的传送
+ * 每个点到点的连接由一对或多对单工的连接线组成
+ * 没有主时钟，通过8b/10b编码同步
+* 链路层：解决数据包的传输
+ * 添加顺序号和CRC检错纠错码
+* 事务层：处理总线事务
+ * 将每个传输信道分解成最多8个虚电路，每个虚电路处理一种不同类型的流量
+ * 根据数据包类型的不同，加上不同的标签，根据这些标签决定下一个要处理的数据包
+* 软件层：操作系统与PCIe系统的接口
+
+![PCIe协议栈](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/PCIe-protocol.png)
+
+## 输入输出接口
+
+计算机通过输入输出接口与外部交换信息
+
+### 类型
+
+* 按通用性分类：通用接口、专用接口
+* 按数据传送方式分类：串行接口、并行接口
+* 按信号类型分析：数字接口、模拟接口
+
+### 功能
+
+* 设备识别和选择
+* 数据缓冲和控制
+* 控制命令和状态信息传递
+* 数据转换和传输
+
+### PIO接口
+
+并行输入输出接口
+
+* 地址信号用于选定端口A、B、C对应的数据寄存器和另一个配置寄存器
+* 数据信号用于传递和接收数据
+* 命令信号用于片选、读、写、重置
+
+![PIO接口](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/PIO.png)
+
+### USB接口
+
+通用串行接口，将低速输入/输出设备连接到计算机
+
+* 由一个插在主总线上的根集线器组成，根集线器的电缆插口可以连接输入/输出设备或扩展集线器
+* 电缆中有四根导线，两根用于数据传输，一根用作电源，一根接地
+* 当插入一个新的输入/输出设备时，根集线器检测到这个事件，并发出中断信号给操作系统，操作系统查询设备并识别，赋给设备一个唯一的地址（1~127），记录到设备内部的配置寄存器中
+
+#### USB接口帧
+
+* 支持四种类型的帧
+ * 控制帧用于配置设备，对设备发出命令，查询设备状态
+ * 同步帧用于需要以精确的时间间隔发送和接收数据的实时设备
+ * 块传送帧用于对数据没有实时要求的设备
+ * 中断帧用于支持中断
+* 每个帧由一个或多个包组成，可能两个方向传输数据
+ * 令牌包由根传送到设备，用于系统控制，如SOF（帧开始），IN（请求设备数据）、OUT（给设备的数据）、SETUP（配置设备）
+ * 数据包用来双向传递数据，由SYN（同步）、PID（数据类型）、PAYLOAD（载荷）、CRC（纠错码）
+ * 握手包包括三种，ACK（前面的数据包正确接收）、NAK（CRC错）、STALL（请稍候）
+
+![USB总线](https://raw.githubusercontent.com/wchaochao/images/master/gitbook-computer-composition/USB-frame.png)
